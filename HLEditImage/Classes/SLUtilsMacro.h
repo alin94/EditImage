@@ -15,15 +15,12 @@
 
 #define kColorWithHex_A(hexColor,alpha) [UIColor colorWithRed:((float)((hexColor & 0xFF0000) >> 16))/255.0 green:((float)((hexColor & 0xFF00) >> 8))/255.0 blue:((float)(hexColor & 0xFF))/255.0 alpha:alpha]
 
-#define kSafeAreaTopHeight 0
-#define kSafeAreaBottomHeight 0
-
 
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
 #define kNavigationHeight (FuncIsIPhoneX?88:64)
-//#define kSafeAreaBottomHeight (FuncIsIPhoneX ? 34 : 0)
-//#define kSafeAreaTopHeight (FuncIsIPhoneX ? 24 : 0)
+#define kSafeAreaBottomHeight (FuncIsIPhoneX ? 34 : 0)
+#define kSafeAreaTopHeight (FuncIsIPhoneX ? 24 : 0)
 
 #define FuncIsIPhoneX (IS_IPHONE_X || IS_IPHONE_Xr || IS_IPHONE_Xs || IS_IPHONE_Xs_Max)
 

@@ -21,7 +21,7 @@
 @property (nonatomic, strong) SLRoundCornerTextView *textView;  //文本输入
 @property (nonatomic, strong) NSArray *colors;  //颜色集合
 
-@property (nonatomic, assign) int currentIndex; // 当前颜色索引
+@property (nonatomic, assign) NSInteger currentIndex; // 当前颜色索引
 @property (nonatomic, strong) UIColor *currentColor; // 当前颜色
 @property (nonatomic, assign) BOOL colorSwitch;  // 颜色开关 0：默认设置文本颜色  1：背景颜色
 @property (nonatomic, strong) UIColor *currentTextColor;//当前文字颜色
@@ -73,7 +73,7 @@
         weakSelf.currentColor = weakSelf.textView.textColor;
         for (UIColor *color in weakSelf.colors) {
             if (CGColorEqualToColor(color.CGColor, weakSelf.currentColor.CGColor)) {
-                weakSelf.currentIndex = (int)[weakSelf.colors indexOfObject:color];
+                weakSelf.currentIndex = (NSInteger)[weakSelf.colors indexOfObject:color];
             }
         }
         [weakSelf textViewDidChange:weakSelf.textView];
@@ -93,10 +93,10 @@
         }
         [subView removeFromSuperview];
     }
-    int count = (int)_colors.count + 1;
+    NSInteger count = _colors.count + 1;
     CGSize itemSize = CGSizeMake(24, 24);
     CGFloat space = (self.frame.size.width - count * itemSize.width)/(count + 1);
-    for (int i = 0; i < count; i++) {
+    for (NSInteger i = 0; i < count; i++) {
         UIButton * colorBtn = [[UIButton alloc] initWithFrame:CGRectMake(space + (itemSize.width + space)*i, self.sl_height - keyboardHeight - 20 - 20, itemSize.width, itemSize.height)];
         [self addSubview:colorBtn];
         if (i == 0) {
@@ -145,7 +145,7 @@
 #pragma mark - Getter
 - (UIButton *)cancelEditBtn {
     if (_cancelEditBtn == nil) {
-        _cancelEditBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 20 + kSafeAreaTopHeight, 50, 22)];
+        _cancelEditBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 20, 50, 22)];
         [_cancelEditBtn setTitle:@"取消" forState:UIControlStateNormal];
         _cancelEditBtn.contentMode = UIViewContentModeLeft;
         [_cancelEditBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

@@ -13,8 +13,8 @@
 #import "UIView+SLFrame.h"
 #import "SLUtilsMacro.h"
 
-#define KBottomMenuHeight (100+kSafeAreaBottomHeight)  //底部菜单高度
-#define KGridTopMargin (20+kSafeAreaTopHeight)  //顶部间距
+#define KBottomMenuHeight 100  //底部菜单高度
+#define KGridTopMargin 20  //顶部间距
 #define KGridBottomMargin 30  //底部间距
 #define KGridLRMargin 16   //左右边距
 
