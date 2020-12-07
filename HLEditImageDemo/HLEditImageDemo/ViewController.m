@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "SLEditImageController.h"
-#import "SLEditImage.h"
+#import "SLUtilsMacro.h"
 @interface ViewController () <UIImagePickerControllerDelegate,UINavigationBarDelegate>
 @property (nonatomic, strong) UIImageView *imageView;
 

@@ -10,7 +10,7 @@
 #import "UIView+SLFrame.h"
 #import "SLRoundCornerTextView.h"
 #import "SLRoundCornerLabel.h"
-#import "SLEditImage.h"
+#import "SLUtilsMacro.h"
 
 @interface SLEditTextView ()<UITextViewDelegate>
 {
