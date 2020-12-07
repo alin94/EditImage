@@ -69,9 +69,8 @@ Pod::Spec.new do |s|
 
   #  When using multiple platforms
   s.ios.deployment_target = "9.0"
-  # s.osx.deployment_target = "10.7"
-  # s.watchos.deployment_target = "2.0"
-  # s.tvos.deployment_target = "9.0"
+
+  # s.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64' }
 
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -80,7 +79,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/alin94/HLEditImage.git", :tag => s.version.to_s}
+  s.source       = { :git => "https://github.com/alin94/HLEditImage.git", :tag => s.version.to_s, :commit => "bc35a382140dded5526ff7a13538d76498333217"}
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -90,28 +89,30 @@ Pod::Spec.new do |s|
   #  For header files it will include any header in the folder.
   #  Not including the public_header_files will make all headers public.
   #
-  s.source_files = "HLEditImage/Classes/*.h"
+  s.source_files = "HLEditImage/Classes/*.h" ,"HLEditImage/Classes/**/*.{h,m}"
 
 
-  s.subspec 'Classes' do |ss|
-    ss.subspec 'Tool' do  |sss|
-      sss.source_files = "HLEditImage/Classes/Tool/*.{h,m}"
-    end
-    ss.subspec 'Category' do  |sss|
-      sss.source_files = "HLEditImage/Classes/Category/*.{h,m}"
-    end
-    ss.subspec 'AnimateImageView' do  |sss|
-      sss.source_files = "HLEditImage/Classes/AnimateImageView/*.{h,m}"
-    end
-    ss.subspec 'Controller' do  |sss|
-      sss.source_files = "HLEditImage/Classes/Controller/*.{h,m}"
-    end
+  # s.subspec 'Classes' do |ss|
+  #   ss.source_files = "HLEditImage/Classes/SLUtilsMacro.h"
+  #   ss.subspec 'Tool' do  |sss|
+  #     sss.source_files = "HLEditImage/Classes/Tool/*.{h,m}"
+  #   end
+  #   ss.subspec 'Category' do  |sss|
+  #     sss.source_files = "HLEditImage/Classes/Category/*.{h,m}"
+  #   end
+  #   ss.subspec 'AnimateImageView' do  |sss|
+  #     sss.source_files = "HLEditImage/Classes/AnimateImageView/*.{h,m}"
+  #   end
 
-    ss.subspec 'View' do  |sss|
-      sss.source_files = "HLEditImage/Classes/View/*.{h,m}"
-    end
+  #   ss.subspec 'View' do  |sss|
+  #     sss.source_files = "HLEditImage/Classes/View/*.{h,m}"
+  #   end
 
-  end
+  #   ss.subspec 'Controller' do  |sss|
+  #     sss.source_files = "HLEditImage/Classes/Controller/*.{h,m}"
+  #   end
+
+  # end
   # s.source_files  =  "HLEditImage/Classes/**/*.{h,m}" , "HLEditImage/Classes/*.h"
   # s.public_header_files = "HLEditImage/Classes/SLEditImage.h"
   # s.exclude_files = "Classes/Exclude"
@@ -146,7 +147,8 @@ Pod::Spec.new do |s|
   #  the lib prefix of their name.
   #
   s.frameworks = 'Foundation', 'UIKit'
-  s.vendored_frameworks = "HLEditImage/Classes/AnimateImageView/WebP.framework"
+  # s.vendored_frameworks = 'HLEditImage/Classes/AnimateImageView/WebP.framework'
+  s.ios.vendored_frameworks = 'Vendor/WebP.framework'
   # s.framework  = "SomeFramework"
   # s.frameworks = "SomeFramework", "AnotherFramework"
 
