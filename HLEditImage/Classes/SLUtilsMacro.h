@@ -5,6 +5,8 @@
 //  Created by alin on 2020/12/4.
 //  Copyright © 2020 alin. All rights reserved.
 //
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 #ifndef SLUtilsMacro_h
 #define SLUtilsMacro_h
