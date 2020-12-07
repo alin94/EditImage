@@ -22,7 +22,7 @@
 #import "SLImageClipController.h"
 #import "SLDelayPerform.h"
 #import "SLRoundCornerLabel.h"
-
+#import "SLEditImage.h"
 #define SL_DISPATCH_ON_MAIN_THREAD(mainQueueBlock) dispatch_async(dispatch_get_main_queue(),mainQueueBlock);
 
 

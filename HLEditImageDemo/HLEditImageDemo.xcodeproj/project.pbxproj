@@ -129,7 +129,6 @@
 		C7683DCD257A2C8F00DA3061 /* SLShotFocusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShotFocusView.h; sourceTree = "<group>"; };
 		C7683DCE257A2C8F00DA3061 /* SLRoundCornerLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLRoundCornerLabel.h; sourceTree = "<group>"; };
 		C7683DE4257A47E200DA3061 /* SLUtilsMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLUtilsMacro.h; sourceTree = "<group>"; };
-		C7683DE7257DBF3600DA3061 /* SLEditImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLEditImage.h; sourceTree = "<group>"; };
 		C7683DE8257DC51800DA3061 /* HLEditImageDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HLEditImageDemo-Prefix.pch"; sourceTree = "<group>"; };
 		C7683DEB257DD6E000DA3061 /* EditTraditionalMosaicSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaicSelected@3x.png"; sourceTree = "<group>"; };
 		C7683DEC257DD6E100DA3061 /* EditMenuTextColor@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuTextColor@3x.png"; sourceTree = "<group>"; };
@@ -309,7 +308,6 @@
 			isa = PBXGroup;
 			children = (
 				C7683DE4257A47E200DA3061 /* SLUtilsMacro.h */,
-				C7683DE7257DBF3600DA3061 /* SLEditImage.h */,
 				C7683DB0257A2C8F00DA3061 /* Tool */,
 				C7683DA1257A2C8F00DA3061 /* Category */,
 				C7683DA8257A2C8F00DA3061 /* AnimateImageView */,

@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "HLEditImage"
-  s.version      = "0.0.1"
+  s.version      = "0.1.2"
   s.summary      = "防微信图片编辑工具"
 
   # This description is used to generate tags and improve search results.
@@ -25,9 +25,10 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
+                    个人编辑图片练习 用了别人的开源代码
                    DESC
 
-  s.homepage     = "http://EXAMPLE/HLEditImage"
+  s.homepage     = "https://github.com/alin94/HLEditImage.git"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -38,8 +39,8 @@ Pod::Spec.new do |s|
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
 
-  s.license      = "MIT (example)"
-  # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
+  # s.license      = "MIT (example)"
+  s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -63,7 +64,7 @@ Pod::Spec.new do |s|
   #  the deployment target. You can optionally include the target after the platform.
   #
 
-  s.platform     = :ios
+  # s.platform     = :ios
   # s.platform     = :ios, "5.0"
 
   #  When using multiple platforms
@@ -79,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "http://EXAMPLE/HLEditImage.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/alin94/HLEditImage.git", :tag => s.version }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -89,8 +90,30 @@ Pod::Spec.new do |s|
   #  For header files it will include any header in the folder.
   #  Not including the public_header_files will make all headers public.
   #
+  s.source_files = "HLEditImage/Classes/*.h"
 
-  s.source_files  = "HLEditImage", "HLEditImage/Classes/**/*.{h,m}"
+
+  s.subspec 'Classes' do |ss|
+    ss.subspec 'Tool' do  |sss|
+      sss.source_files = "HLEditImage/Classes/Tool/*.{h,m}"
+    end
+    ss.subspec 'Category' do  |sss|
+      sss.source_files = "HLEditImage/Classes/Category/*.{h,m}"
+    end
+    ss.subspec 'AnimateImageView' do  |sss|
+      sss.source_files = "HLEditImage/Classes/AnimateImageView/*.{h,m}"
+    end
+    ss.subspec 'Controller' do  |sss|
+      sss.source_files = "HLEditImage/Classes/Controller/*.{h,m}"
+    end
+
+    ss.subspec 'View' do  |sss|
+      sss.source_files = "HLEditImage/Classes/View/*.{h,m}"
+    end
+
+  end
+  # s.source_files  =  "HLEditImage/Classes/**/*.{h,m}" , "HLEditImage/Classes/*.h"
+  # s.public_header_files = "HLEditImage/Classes/SLEditImage.h"
   # s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
@@ -122,7 +145,8 @@ Pod::Spec.new do |s|
   #  Link your library with frameworks, or libraries. Libraries do not include
   #  the lib prefix of their name.
   #
-
+  s.frameworks = 'Foundation', 'UIKit'
+  s.vendored_frameworks = "HLEditImage/Classes/AnimateImageView/WebP.framework"
   # s.framework  = "SomeFramework"
   # s.frameworks = "SomeFramework", "AnotherFramework"
 
@@ -136,9 +160,10 @@ Pod::Spec.new do |s|
   #  where they will only apply to your library. If you depend on other Podspecs
   #  you can include multiple dependencies to ensure it works.
 
-  # s.requires_arc = true
+  s.requires_arc = true
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   # s.dependency "JSONKit", "~> 1.4"
+
 
 end

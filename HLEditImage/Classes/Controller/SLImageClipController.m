@@ -11,7 +11,7 @@
 #import "SLGridView.h"
 #import "UIView+SLImage.h"
 #import "UIView+SLFrame.h"
-
+#import "SLEditImage.h"
 
 #define KBottomMenuHeight (100+kSafeAreaBottomHeight)  //底部菜单高度
 #define KGridTopMargin (20+kSafeAreaTopHeight)  //顶部间距

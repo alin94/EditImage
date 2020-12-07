@@ -9,7 +9,7 @@
 #import "SLEditMenuView.h"
 #import "SLImageView.h"
 #import "SLImage.h"
-
+#import "SLEditImage.h"
 /// 涂鸦子菜单 画笔颜色选择
 @interface SLSubmenuGraffitiView : UIView
 @property (nonatomic, assign) int currentColorIndex; // 当前画笔颜色索引
