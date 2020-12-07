@@ -78,8 +78,9 @@ Pod::Spec.new do |s|
   #  Specify the location from where the source should be retrieved.
   #  Supports git, hg, bzr, svn and HTTP.
   #
+  s.source       = { :git => "https://github.com/alin94/HLEditImage.git", :tag => s.version.to_s}
 
-  s.source       = { :git => "https://github.com/alin94/HLEditImage.git", :tag => s.version.to_s, :commit => "bc35a382140dded5526ff7a13538d76498333217"}
+  # s.source       = { :git => "https://github.com/alin94/HLEditImage.git", :tag => s.version.to_s, :commit => "bc35a382140dded5526ff7a13538d76498333217"}
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
