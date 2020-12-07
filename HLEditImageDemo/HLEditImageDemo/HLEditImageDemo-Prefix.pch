@@ -1,0 +1,15 @@
+//
+//  HLEditImageDemo-Prefix.pch
+//  HLEditImageDemo
+//
+//  Created by alin on 2020/12/7.
+//  Copyright © 2020 alin. All rights reserved.
+//
+#import "SLEditImage.h"
+
+
+#ifndef HLEditImageDemo_Prefix_h
+#define HLEditImageDemo_Prefix_h
+
+
+#endif /* HLEditImageDemo_Prefix_h */
