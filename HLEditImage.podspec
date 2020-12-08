@@ -94,26 +94,32 @@ Pod::Spec.new do |s|
 
     s.source_files = "HLEditImage/Classes/SLUtilsMacro.h"
 
-    s.subspec 'Tool' do  |ss|
-      ss.source_files = "HLEditImage/Classes/Tool/*.{h,m}"
+    s.subspec 'Tool' do  |sst|
+      sst.source_files = "HLEditImage/Classes/Tool/*.{h,m}"
     end
 
-    s.subspec 'Category' do  |ss|
-      ss.source_files = "HLEditImage/Classes/Category/*.{h,m}"
+    s.subspec 'Category' do  |ssc|
+      ssc.source_files = "HLEditImage/Classes/Category/*.{h,m}"
     end
-    s.subspec 'AnimateImageView' do  |ss|
-      ss.source_files = "HLEditImage/Classes/AnimateImageView/*.{h,m}"
-    end
-
-    s.subspec 'View' do  |ss|
-      ss.source_files = "HLEditImage/Classes/View/*.{h,m}"
+    s.subspec 'AnimateImageView' do  |ssa|
+      ssa.vendored_frameworks = 'Vendor/WebP.framework'
+      ssa.source_files = "HLEditImage/Classes/AnimateImageView/*.{h,m}"
     end
 
-    s.subspec 'Controller' do  |ss|
-      ss.source_files = "HLEditImage/Classes/Controller/*.{h,m}"
+    s.subspec 'View' do  |ssv|
+      ssv.dependency  'HLEditImage/AnimateImageView'
+      ssv.dependency 'HLEditImage/Category'
+      ssv.source_files = "HLEditImage/Classes/View/*.{h,m}" , "HLEditImage/Classes/SLUtilsMacro.h"
     end
 
-  end
+    s.subspec 'Controller' do  |ssvc|
+      ssvc.dependency  'HLEditImage/AnimateImageView'
+      ssvc.dependency 'HLEditImage/Category'
+      ssvc.dependency 'HLEditImage/Tool'
+      ssvc.dependency 'HLEditImage/View'
+      ssvc.source_files = "HLEditImage/Classes/Controller/*.{h,m}" , "HLEditImage/Classes/SLUtilsMacro.h"
+    end
+
   # s.source_files  =  "HLEditImage/Classes/**/*.{h,m}" , "HLEditImage/Classes/*.h"
   # s.public_header_files = "HLEditImage/Classes/SLEditImage.h"
   # s.exclude_files = "Classes/Exclude"
@@ -149,7 +155,7 @@ Pod::Spec.new do |s|
   #
   s.frameworks = 'Foundation', 'UIKit'
   # s.vendored_frameworks = 'HLEditImage/Classes/AnimateImageView/WebP.framework'
-  s.ios.vendored_frameworks = 'Vendor/WebP.framework'
+  # s.ios.vendored_frameworks = 'Vendor/WebP.framework'
   # s.framework  = "SomeFramework"
   # s.frameworks = "SomeFramework", "AnotherFramework"
 
