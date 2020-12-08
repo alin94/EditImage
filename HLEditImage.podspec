@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "HLEditImage"
-  s.version      = "0.1.2"
+  s.version      = "0.1.3"
   s.summary      = "防微信图片编辑工具"
 
   # This description is used to generate tags and improve search results.
@@ -90,30 +90,30 @@ Pod::Spec.new do |s|
   #  For header files it will include any header in the folder.
   #  Not including the public_header_files will make all headers public.
   #
-  s.source_files = "HLEditImage/Classes/*.h" ,"HLEditImage/Classes/**/*.{h,m}"
+  # s.source_files = "HLEditImage/Classes/*.h" ,"HLEditImage/Classes/**/*.{h,m}"
 
+    s.source_files = "HLEditImage/Classes/SLUtilsMacro.h"
 
-  # s.subspec 'Classes' do |ss|
-  #   ss.source_files = "HLEditImage/Classes/SLUtilsMacro.h"
-  #   ss.subspec 'Tool' do  |sss|
-  #     sss.source_files = "HLEditImage/Classes/Tool/*.{h,m}"
-  #   end
-  #   ss.subspec 'Category' do  |sss|
-  #     sss.source_files = "HLEditImage/Classes/Category/*.{h,m}"
-  #   end
-  #   ss.subspec 'AnimateImageView' do  |sss|
-  #     sss.source_files = "HLEditImage/Classes/AnimateImageView/*.{h,m}"
-  #   end
+    s.subspec 'Tool' do  |ss|
+      ss.source_files = "HLEditImage/Classes/Tool/*.{h,m}"
+    end
 
-  #   ss.subspec 'View' do  |sss|
-  #     sss.source_files = "HLEditImage/Classes/View/*.{h,m}"
-  #   end
+    s.subspec 'Category' do  |ss|
+      ss.source_files = "HLEditImage/Classes/Category/*.{h,m}"
+    end
+    s.subspec 'AnimateImageView' do  |ss|
+      ss.source_files = "HLEditImage/Classes/AnimateImageView/*.{h,m}"
+    end
 
-  #   ss.subspec 'Controller' do  |sss|
-  #     sss.source_files = "HLEditImage/Classes/Controller/*.{h,m}"
-  #   end
+    s.subspec 'View' do  |ss|
+      ss.source_files = "HLEditImage/Classes/View/*.{h,m}"
+    end
 
-  # end
+    s.subspec 'Controller' do  |ss|
+      ss.source_files = "HLEditImage/Classes/Controller/*.{h,m}"
+    end
+
+  end
   # s.source_files  =  "HLEditImage/Classes/**/*.{h,m}" , "HLEditImage/Classes/*.h"
   # s.public_header_files = "HLEditImage/Classes/SLEditImage.h"
   # s.exclude_files = "Classes/Exclude"
