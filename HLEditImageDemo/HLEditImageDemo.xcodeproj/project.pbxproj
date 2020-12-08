@@ -16,7 +16,6 @@
 		C7683DCF257A2C8F00DA3061 /* UIView+SLFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DA2257A2C8F00DA3061 /* UIView+SLFrame.m */; };
 		C7683DD0257A2C8F00DA3061 /* UIView+SLImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DA6257A2C8F00DA3061 /* UIView+SLImage.m */; };
 		C7683DD1257A2C8F00DA3061 /* UIImage+SLCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DA7257A2C8F00DA3061 /* UIImage+SLCommon.m */; };
-		C7683DD2257A2C8F00DA3061 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7683DA9257A2C8F00DA3061 /* WebP.framework */; };
 		C7683DD3257A2C8F00DA3061 /* SLImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DAB257A2C8F00DA3061 /* SLImageView.m */; };
 		C7683DD4257A2C8F00DA3061 /* SLImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DAC257A2C8F00DA3061 /* SLImage.m */; };
 		C7683DD5257A2C8F00DA3061 /* SLImageDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DAD257A2C8F00DA3061 /* SLImageDecoder.m */; };
@@ -74,6 +73,7 @@
 		C7683E36257DD70400DA3061 /* EditMenuGraffitiBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E20257DD70300DA3061 /* EditMenuGraffitiBack@2x.png */; };
 		C7683E39257DD8B300DA3061 /* EditMosaicBrush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E37257DD8B300DA3061 /* EditMosaicBrush@2x.png */; };
 		C7683E3A257DD8B300DA3061 /* EditMosaicBrush@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E38257DD8B300DA3061 /* EditMosaicBrush@3x.png */; };
+		C7C12EA1257F2D5200B1CC6D /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7C12EA0257F2D5200B1CC6D /* WebP.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,7 +93,6 @@
 		C7683DA5257A2C8F00DA3061 /* UIView+SLFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SLFrame.h"; sourceTree = "<group>"; };
 		C7683DA6257A2C8F00DA3061 /* UIView+SLImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SLImage.m"; sourceTree = "<group>"; };
 		C7683DA7257A2C8F00DA3061 /* UIImage+SLCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SLCommon.m"; sourceTree = "<group>"; };
-		C7683DA9257A2C8F00DA3061 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		C7683DAA257A2C8F00DA3061 /* SLImageDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLImageDecoder.h; sourceTree = "<group>"; };
 		C7683DAB257A2C8F00DA3061 /* SLImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLImageView.m; sourceTree = "<group>"; };
 		C7683DAC257A2C8F00DA3061 /* SLImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLImage.m; sourceTree = "<group>"; };
@@ -170,6 +169,7 @@
 		C7683E20257DD70300DA3061 /* EditMenuGraffitiBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuGraffitiBack@2x.png"; sourceTree = "<group>"; };
 		C7683E37257DD8B300DA3061 /* EditMosaicBrush@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMosaicBrush@2x.png"; sourceTree = "<group>"; };
 		C7683E38257DD8B300DA3061 /* EditMosaicBrush@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMosaicBrush@3x.png"; sourceTree = "<group>"; };
+		C7C12EA0257F2D5200B1CC6D /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebP.framework; path = ../../../Vendor/WebP.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,7 +177,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7683DD2257A2C8F00DA3061 /* WebP.framework in Frameworks */,
+				C7C12EA1257F2D5200B1CC6D /* WebP.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,13 +244,13 @@
 		C7683DA8257A2C8F00DA3061 /* AnimateImageView */ = {
 			isa = PBXGroup;
 			children = (
+				C7C12EA0257F2D5200B1CC6D /* WebP.framework */,
 				C7683DAE257A2C8F00DA3061 /* SLImage.h */,
 				C7683DAC257A2C8F00DA3061 /* SLImage.m */,
 				C7683DAA257A2C8F00DA3061 /* SLImageDecoder.h */,
 				C7683DAD257A2C8F00DA3061 /* SLImageDecoder.m */,
 				C7683DAF257A2C8F00DA3061 /* SLImageView.h */,
 				C7683DAB257A2C8F00DA3061 /* SLImageView.m */,
-				C7683DA9257A2C8F00DA3061 /* WebP.framework */,
 			);
 			path = AnimateImageView;
 			sourceTree = "<group>";
@@ -640,7 +640,7 @@
 				DEVELOPMENT_TEAM = 88U32AS72B;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../HLEditImage/Classes/AnimateImageView\"",
+					"\"$(SRCROOT)/../Vendor\"",
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/HLEditImageDemo/HLEditImageDemo-Prefix.pch";
 				INFOPLIST_FILE = HLEditImageDemo/Info.plist;
@@ -663,7 +663,7 @@
 				DEVELOPMENT_TEAM = 88U32AS72B;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../HLEditImage/Classes/AnimateImageView\"",
+					"\"$(SRCROOT)/../Vendor\"",
 				);
 				GCC_PREFIX_HEADER = "$(SRCROOT)/HLEditImageDemo/HLEditImageDemo-Prefix.pch";
 				INFOPLIST_FILE = HLEditImageDemo/Info.plist;
