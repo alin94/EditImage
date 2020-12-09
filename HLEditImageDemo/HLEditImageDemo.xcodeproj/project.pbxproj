@@ -33,26 +33,20 @@
 		C7683DE1257A2C8F00DA3061 /* SLRoundCornerTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DC8257A2C8F00DA3061 /* SLRoundCornerTextView.m */; };
 		C7683DE2257A2C8F00DA3061 /* SLEditVideoClipping.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DCA257A2C8F00DA3061 /* SLEditVideoClipping.m */; };
 		C7683DE3257A2C8F00DA3061 /* SLEditSelectedBox.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683DCB257A2C8F00DA3061 /* SLEditSelectedBox.m */; };
-		C7683DFB257DD6E300DA3061 /* EditTraditionalMosaicSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DEB257DD6E000DA3061 /* EditTraditionalMosaicSelected@3x.png */; };
 		C7683DFC257DD6E300DA3061 /* EditMenuTextColor@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DEC257DD6E100DA3061 /* EditMenuTextColor@3x.png */; };
-		C7683DFD257DD6E300DA3061 /* EditBrushMosaic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DED257DD6E100DA3061 /* EditBrushMosaic@2x.png */; };
 		C7683DFE257DD6E300DA3061 /* EditMenuTextBackgroundColor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DEE257DD6E100DA3061 /* EditMenuTextBackgroundColor@2x.png */; };
-		C7683DFF257DD6E300DA3061 /* EditTraditionalMosaic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DEF257DD6E100DA3061 /* EditTraditionalMosaic@2x.png */; };
 		C7683E00257DD6E300DA3061 /* EditedImageFlag@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF0257DD6E100DA3061 /* EditedImageFlag@3x.png */; };
 		C7683E01257DD6E300DA3061 /* EditBrushMosaic@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF1257DD6E100DA3061 /* EditBrushMosaic@3x.png */; };
 		C7683E02257DD6E300DA3061 /* EditMenuText@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF2257DD6E100DA3061 /* EditMenuText@3x.png */; };
-		C7683E03257DD6E300DA3061 /* EditBrushMosaicSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF3257DD6E200DA3061 /* EditBrushMosaicSelected@2x.png */; };
 		C7683E04257DD6E300DA3061 /* EditedImageFlag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF4257DD6E200DA3061 /* EditedImageFlag@2x.png */; };
 		C7683E05257DD6E300DA3061 /* EditMenuText@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF5257DD6E200DA3061 /* EditMenuText@2x.png */; };
 		C7683E06257DD6E300DA3061 /* EditBrushMosaicSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF6257DD6E200DA3061 /* EditBrushMosaicSelected@3x.png */; };
 		C7683E07257DD6E300DA3061 /* EditMenuTextColor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF7257DD6E200DA3061 /* EditMenuTextColor@2x.png */; };
 		C7683E08257DD6E300DA3061 /* EditMenuTextBackgroundColor@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF8257DD6E200DA3061 /* EditMenuTextBackgroundColor@3x.png */; };
-		C7683E09257DD6E300DA3061 /* EditTraditionalMosaicSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DF9257DD6E300DA3061 /* EditTraditionalMosaicSelected@2x.png */; };
 		C7683E0A257DD6E300DA3061 /* EditTraditionalMosaic@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683DFA257DD6E300DA3061 /* EditTraditionalMosaic@3x.png */; };
 		C7683E21257DD70300DA3061 /* EditMenuGraffitiBack@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E0B257DD70100DA3061 /* EditMenuGraffitiBack@3x.png */; };
 		C7683E22257DD70300DA3061 /* EditMenuGraffitiBackDisable@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E0C257DD70100DA3061 /* EditMenuGraffitiBackDisable@3x.png */; };
 		C7683E23257DD70300DA3061 /* EditImageClipDone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E0D257DD70100DA3061 /* EditImageClipDone@3x.png */; };
-		C7683E24257DD70300DA3061 /* EditMenuRotate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E0E257DD70100DA3061 /* EditMenuRotate@2x.png */; };
 		C7683E25257DD70300DA3061 /* EditImageClipCancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E0F257DD70100DA3061 /* EditImageClipCancel@2x.png */; };
 		C7683E26257DD70300DA3061 /* EditMenuGraffitiBackDisable@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E10257DD70100DA3061 /* EditMenuGraffitiBackDisable@2x.png */; };
 		C7683E27257DD70300DA3061 /* EditImageClipDone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E11257DD70100DA3061 /* EditImageClipDone@2x.png */; };
@@ -74,6 +68,103 @@
 		C7683E39257DD8B300DA3061 /* EditMosaicBrush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E37257DD8B300DA3061 /* EditMosaicBrush@2x.png */; };
 		C7683E3A257DD8B300DA3061 /* EditMosaicBrush@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7683E38257DD8B300DA3061 /* EditMosaicBrush@3x.png */; };
 		C7C12EA1257F2D5200B1CC6D /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7C12EA0257F2D5200B1CC6D /* WebP.framework */; };
+		C7C12EA7257F6FE900B1CC6D /* SLSubmenuGraffitiView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C12EA6257F6FE900B1CC6D /* SLSubmenuGraffitiView.m */; };
+		C7C12F0C258063C600B1CC6D /* EditMenuArrowDown@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EA8258063BB00B1CC6D /* EditMenuArrowDown@3x.png */; };
+		C7C12F0D258063C600B1CC6D /* EditBrushSize1Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EA9258063BB00B1CC6D /* EditBrushSize1Selected@3x.png */; };
+		C7C12F0E258063C600B1CC6D /* EditMenuBack@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAA258063BC00B1CC6D /* EditMenuBack@3x.png */; };
+		C7C12F0F258063C600B1CC6D /* EditMenuEraserDisable@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAB258063BC00B1CC6D /* EditMenuEraserDisable@3x.png */; };
+		C7C12F10258063C600B1CC6D /* EditBrushSize4Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAC258063BC00B1CC6D /* EditBrushSize4Selected@3x.png */; };
+		C7C12F11258063C600B1CC6D /* EditDragRotate@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAD258063BC00B1CC6D /* EditDragRotate@3x.png */; };
+		C7C12F12258063C600B1CC6D /* EditShapeRectangle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAE258063BC00B1CC6D /* EditShapeRectangle@2x.png */; };
+		C7C12F13258063C600B1CC6D /* EditMenuNext@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAF258063BC00B1CC6D /* EditMenuNext@3x.png */; };
+		C7C12F14258063C600B1CC6D /* EditBrushSize3Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB0258063BC00B1CC6D /* EditBrushSize3Selected@3x.png */; };
+		C7C12F15258063C600B1CC6D /* EditMenuShapeGraffitiSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB1258063BC00B1CC6D /* EditMenuShapeGraffitiSelected@2x.png */; };
+		C7C12F16258063C600B1CC6D /* EditMenuArrowDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB2258063BC00B1CC6D /* EditMenuArrowDown@2x.png */; };
+		C7C12F17258063C600B1CC6D /* EditMenuNextDisable@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB3258063BC00B1CC6D /* EditMenuNextDisable@2x.png */; };
+		C7C12F18258063C600B1CC6D /* EditBrushSize3Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB4258063BC00B1CC6D /* EditBrushSize3Selected@2x.png */; };
+		C7C12F19258063C600B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB5258063BC00B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png */; };
+		C7C12F1A258063C600B1CC6D /* EditBrushSize1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB6258063BD00B1CC6D /* EditBrushSize1@3x.png */; };
+		C7C12F1B258063C600B1CC6D /* EditMenuClipScaleSelected_4:3@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB7258063BD00B1CC6D /* EditMenuClipScaleSelected_4:3@3x.png */; };
+		C7C12F1C258063C600B1CC6D /* EditMenuClipScale_4:3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB8258063BD00B1CC6D /* EditMenuClipScale_4:3@2x.png */; };
+		C7C12F1D258063C600B1CC6D /* EditBrushSize5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB9258063BD00B1CC6D /* EditBrushSize5@2x.png */; };
+		C7C12F1E258063C600B1CC6D /* EditTrash@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EBA258063BD00B1CC6D /* EditTrash@3x.png */; };
+		C7C12F1F258063C600B1CC6D /* EditMenuEraser@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EBB258063BD00B1CC6D /* EditMenuEraser@3x.png */; };
+		C7C12F20258063C600B1CC6D /* EditMenuClipScaleRamSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EBC258063BD00B1CC6D /* EditMenuClipScaleRamSelected@2x.png */; };
+		C7C12F21258063C600B1CC6D /* EditBrushSize4Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EBD258063BD00B1CC6D /* EditBrushSize4Selected@2x.png */; };
+		C7C12F22258063C600B1CC6D /* EditMenuNextDisable@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EBE258063BD00B1CC6D /* EditMenuNextDisable@3x.png */; };
+		C7C12F23258063C600B1CC6D /* EditMenuShapeGraffiti@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EBF258063BD00B1CC6D /* EditMenuShapeGraffiti@3x.png */; };
+		C7C12F24258063C600B1CC6D /* EditShapeArrowSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC0258063BD00B1CC6D /* EditShapeArrowSelected@3x.png */; };
+		C7C12F25258063C600B1CC6D /* EditMenuClipScaleSelected_16:9@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC1258063BD00B1CC6D /* EditMenuClipScaleSelected_16:9@3x.png */; };
+		C7C12F26258063C600B1CC6D /* EditTextAlignCenter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC2258063BE00B1CC6D /* EditTextAlignCenter@2x.png */; };
+		C7C12F27258063C600B1CC6D /* EditMenuBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC3258063BE00B1CC6D /* EditMenuBack@2x.png */; };
+		C7C12F28258063C600B1CC6D /* EditTraditionalMosaicSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC4258063BE00B1CC6D /* EditTraditionalMosaicSelected@3x.png */; };
+		C7C12F29258063C600B1CC6D /* EditMenuClipScaleRam@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC5258063BE00B1CC6D /* EditMenuClipScaleRam@2x.png */; };
+		C7C12F2A258063C600B1CC6D /* EditShapeCircle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC6258063BE00B1CC6D /* EditShapeCircle@2x.png */; };
+		C7C12F2B258063C600B1CC6D /* EditTextAlignRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC7258063BE00B1CC6D /* EditTextAlignRight@2x.png */; };
+		C7C12F2C258063C600B1CC6D /* EditBrushSize5Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC8258063BE00B1CC6D /* EditBrushSize5Selected@3x.png */; };
+		C7C12F2D258063C600B1CC6D /* EditTrashOpen@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC9258063BE00B1CC6D /* EditTrashOpen@3x.png */; };
+		C7C12F2E258063C600B1CC6D /* EditMenuEraserSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ECA258063BE00B1CC6D /* EditMenuEraserSelected@2x.png */; };
+		C7C12F2F258063C600B1CC6D /* EditMenuEraser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ECB258063BE00B1CC6D /* EditMenuEraser@2x.png */; };
+		C7C12F30258063C600B1CC6D /* EditBrushSize4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ECC258063BF00B1CC6D /* EditBrushSize4@2x.png */; };
+		C7C12F31258063C600B1CC6D /* EditMenuDone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ECD258063BF00B1CC6D /* EditMenuDone@3x.png */; };
+		C7C12F32258063C600B1CC6D /* EditMenuClose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ECE258063BF00B1CC6D /* EditMenuClose@2x.png */; };
+		C7C12F33258063C600B1CC6D /* EditBrushSize5@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ECF258063BF00B1CC6D /* EditBrushSize5@3x.png */; };
+		C7C12F34258063C600B1CC6D /* EditMenuBackDisable@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED0258063BF00B1CC6D /* EditMenuBackDisable@3x.png */; };
+		C7C12F35258063C600B1CC6D /* EditMenuEraserSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED1258063BF00B1CC6D /* EditMenuEraserSelected@3x.png */; };
+		C7C12F36258063C600B1CC6D /* EditMenuClipScale_16:9@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED2258063BF00B1CC6D /* EditMenuClipScale_16:9@3x.png */; };
+		C7C12F37258063C600B1CC6D /* EditMenuClipScaleSelected_9:16@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED3258063C000B1CC6D /* EditMenuClipScaleSelected_9:16@3x.png */; };
+		C7C12F38258063C600B1CC6D /* EditTextAlignRight@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED4258063C000B1CC6D /* EditTextAlignRight@3x.png */; };
+		C7C12F3A258063C600B1CC6D /* EditMenuClipScaleRam@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED6258063C000B1CC6D /* EditMenuClipScaleRam@3x.png */; };
+		C7C12F3B258063C600B1CC6D /* EditShapeCircle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED7258063C000B1CC6D /* EditShapeCircle@3x.png */; };
+		C7C12F3C258063C600B1CC6D /* EditMenuEraserDisable@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED8258063C000B1CC6D /* EditMenuEraserDisable@2x.png */; };
+		C7C12F3D258063C600B1CC6D /* EditShapeCircleSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12ED9258063C000B1CC6D /* EditShapeCircleSelected@2x.png */; };
+		C7C12F3E258063C600B1CC6D /* EditTrash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EDA258063C000B1CC6D /* EditTrash@2x.png */; };
+		C7C12F3F258063C600B1CC6D /* EditMenuShape@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EDB258063C000B1CC6D /* EditMenuShape@3x.png */; };
+		C7C12F40258063C600B1CC6D /* EditMenuShapeGraffiti@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EDC258063C100B1CC6D /* EditMenuShapeGraffiti@2x.png */; };
+		C7C12F41258063C600B1CC6D /* EditMenuDone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EDD258063C100B1CC6D /* EditMenuDone@2x.png */; };
+		C7C12F42258063C600B1CC6D /* EditShapeArrowSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EDE258063C100B1CC6D /* EditShapeArrowSelected@2x.png */; };
+		C7C12F43258063C600B1CC6D /* EditMenuClipScale_16:9@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EDF258063C100B1CC6D /* EditMenuClipScale_16:9@2x.png */; };
+		C7C12F44258063C600B1CC6D /* EditBrushSize4@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EE0258063C100B1CC6D /* EditBrushSize4@3x.png */; };
+		C7C12F46258063C600B1CC6D /* EditBrushSize5Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EE2258063C100B1CC6D /* EditBrushSize5Selected@2x.png */; };
+		C7C12F48258063C600B1CC6D /* EditMenuNext@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EE4258063C100B1CC6D /* EditMenuNext@2x.png */; };
+		C7C12F49258063C600B1CC6D /* EditMenuClipScaleSelected_1:1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EE5258063C100B1CC6D /* EditMenuClipScaleSelected_1:1@2x.png */; };
+		C7C12F4A258063C600B1CC6D /* EditMenuShapeGraffitiSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EE6258063C200B1CC6D /* EditMenuShapeGraffitiSelected@3x.png */; };
+		C7C12F4B258063C600B1CC6D /* EditMenuClipScale_9:16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EE7258063C200B1CC6D /* EditMenuClipScale_9:16@2x.png */; };
+		C7C12F4C258063C600B1CC6D /* EditShapeRectangle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EE8258063C200B1CC6D /* EditShapeRectangle@3x.png */; };
+		C7C12F4D258063C600B1CC6D /* EditMenuClipScaleSelected_16:9@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EE9258063C200B1CC6D /* EditMenuClipScaleSelected_16:9@2x.png */; };
+		C7C12F4F258063C600B1CC6D /* EditMenuClipScaleRamSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EEB258063C200B1CC6D /* EditMenuClipScaleRamSelected@3x.png */; };
+		C7C12F50258063C600B1CC6D /* EditMenuClipScaleSelected_4:3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EEC258063C200B1CC6D /* EditMenuClipScaleSelected_4:3@2x.png */; };
+		C7C12F51258063C600B1CC6D /* EditTextAlignLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EED258063C200B1CC6D /* EditTextAlignLeft@2x.png */; };
+		C7C12F53258063C600B1CC6D /* EditTextAlignLeft@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EEF258063C300B1CC6D /* EditTextAlignLeft@3x.png */; };
+		C7C12F54258063C600B1CC6D /* EditMenuClipScaleSelected_9:16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF0258063C300B1CC6D /* EditMenuClipScaleSelected_9:16@2x.png */; };
+		C7C12F55258063C600B1CC6D /* EditBrushSize3@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF1258063C300B1CC6D /* EditBrushSize3@3x.png */; };
+		C7C12F56258063C600B1CC6D /* EditMenuClipScaleSelected_3:4@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF2258063C300B1CC6D /* EditMenuClipScaleSelected_3:4@3x.png */; };
+		C7C12F57258063C600B1CC6D /* EditTextAlignCenter@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF3258063C300B1CC6D /* EditTextAlignCenter@3x.png */; };
+		C7C12F58258063C600B1CC6D /* EditMenuClipScale_3:4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF4258063C300B1CC6D /* EditMenuClipScale_3:4@2x.png */; };
+		C7C12F59258063C600B1CC6D /* EditShapeRectangleSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF5258063C300B1CC6D /* EditShapeRectangleSelected@3x.png */; };
+		C7C12F5A258063C600B1CC6D /* EditDragRotate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF6258063C300B1CC6D /* EditDragRotate@2x.png */; };
+		C7C12F5D258063C600B1CC6D /* EditShapeCircleSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF9258063C400B1CC6D /* EditShapeCircleSelected@3x.png */; };
+		C7C12F5E258063C600B1CC6D /* EditShapeArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFA258063C400B1CC6D /* EditShapeArrow@2x.png */; };
+		C7C12F5F258063C600B1CC6D /* EditBrushSize1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFB258063C400B1CC6D /* EditBrushSize1@2x.png */; };
+		C7C12F60258063C600B1CC6D /* EditBrushSize1Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFC258063C400B1CC6D /* EditBrushSize1Selected@2x.png */; };
+		C7C12F61258063C600B1CC6D /* EditBrushSize3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFD258063C400B1CC6D /* EditBrushSize3@2x.png */; };
+		C7C12F62258063C600B1CC6D /* EditMenuClipScale_4:3@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFE258063C400B1CC6D /* EditMenuClipScale_4:3@3x.png */; };
+		C7C12F63258063C600B1CC6D /* EditMenuClipScaleSelected_3:4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFF258063C400B1CC6D /* EditMenuClipScaleSelected_3:4@2x.png */; };
+		C7C12F65258063C600B1CC6D /* EditShapeArrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F01258063C400B1CC6D /* EditShapeArrow@3x.png */; };
+		C7C12F66258063C600B1CC6D /* EditMenuBackDisable@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F02258063C500B1CC6D /* EditMenuBackDisable@2x.png */; };
+		C7C12F67258063C600B1CC6D /* EditMenuClipScale_1:1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F03258063C500B1CC6D /* EditMenuClipScale_1:1@2x.png */; };
+		C7C12F68258063C600B1CC6D /* EditShapeRectangleSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F04258063C500B1CC6D /* EditShapeRectangleSelected@2x.png */; };
+		C7C12F69258063C600B1CC6D /* EditMenuClipScale_9:16@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F05258063C500B1CC6D /* EditMenuClipScale_9:16@3x.png */; };
+		C7C12F6A258063C600B1CC6D /* EditMenuClose@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F06258063C500B1CC6D /* EditMenuClose@3x.png */; };
+		C7C12F6C258063C600B1CC6D /* EditMenuClipScale_3:4@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F08258063C500B1CC6D /* EditMenuClipScale_3:4@3x.png */; };
+		C7C12F6D258063C600B1CC6D /* EditMenuClipScale_1:1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F09258063C500B1CC6D /* EditMenuClipScale_1:1@3x.png */; };
+		C7C12F6E258063C600B1CC6D /* EditTrashOpen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F0A258063C500B1CC6D /* EditTrashOpen@2x.png */; };
+		C7C12F6F258063C600B1CC6D /* EditMenuShape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F0B258063C500B1CC6D /* EditMenuShape@2x.png */; };
+		C7C12F77258065D500B1CC6D /* EditBrushMosaic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F71258065D500B1CC6D /* EditBrushMosaic@2x.png */; };
+		C7C12F78258065D500B1CC6D /* EditTraditionalMosaic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F72258065D500B1CC6D /* EditTraditionalMosaic@2x.png */; };
+		C7C12F79258065D500B1CC6D /* EditMenuRotate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F73258065D500B1CC6D /* EditMenuRotate@2x.png */; };
+		C7C12F7A258065D500B1CC6D /* EditBrushMosaicSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F74258065D500B1CC6D /* EditBrushMosaicSelected@2x.png */; };
+		C7C12F7B258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F75258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -129,26 +220,20 @@
 		C7683DCE257A2C8F00DA3061 /* SLRoundCornerLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLRoundCornerLabel.h; sourceTree = "<group>"; };
 		C7683DE4257A47E200DA3061 /* SLUtilsMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLUtilsMacro.h; sourceTree = "<group>"; };
 		C7683DE8257DC51800DA3061 /* HLEditImageDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HLEditImageDemo-Prefix.pch"; sourceTree = "<group>"; };
-		C7683DEB257DD6E000DA3061 /* EditTraditionalMosaicSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaicSelected@3x.png"; sourceTree = "<group>"; };
 		C7683DEC257DD6E100DA3061 /* EditMenuTextColor@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuTextColor@3x.png"; sourceTree = "<group>"; };
-		C7683DED257DD6E100DA3061 /* EditBrushMosaic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushMosaic@2x.png"; sourceTree = "<group>"; };
 		C7683DEE257DD6E100DA3061 /* EditMenuTextBackgroundColor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuTextBackgroundColor@2x.png"; sourceTree = "<group>"; };
-		C7683DEF257DD6E100DA3061 /* EditTraditionalMosaic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaic@2x.png"; sourceTree = "<group>"; };
 		C7683DF0257DD6E100DA3061 /* EditedImageFlag@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditedImageFlag@3x.png"; sourceTree = "<group>"; };
 		C7683DF1257DD6E100DA3061 /* EditBrushMosaic@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushMosaic@3x.png"; sourceTree = "<group>"; };
 		C7683DF2257DD6E100DA3061 /* EditMenuText@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuText@3x.png"; sourceTree = "<group>"; };
-		C7683DF3257DD6E200DA3061 /* EditBrushMosaicSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushMosaicSelected@2x.png"; sourceTree = "<group>"; };
 		C7683DF4257DD6E200DA3061 /* EditedImageFlag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditedImageFlag@2x.png"; sourceTree = "<group>"; };
 		C7683DF5257DD6E200DA3061 /* EditMenuText@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuText@2x.png"; sourceTree = "<group>"; };
 		C7683DF6257DD6E200DA3061 /* EditBrushMosaicSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushMosaicSelected@3x.png"; sourceTree = "<group>"; };
 		C7683DF7257DD6E200DA3061 /* EditMenuTextColor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuTextColor@2x.png"; sourceTree = "<group>"; };
 		C7683DF8257DD6E200DA3061 /* EditMenuTextBackgroundColor@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuTextBackgroundColor@3x.png"; sourceTree = "<group>"; };
-		C7683DF9257DD6E300DA3061 /* EditTraditionalMosaicSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaicSelected@2x.png"; sourceTree = "<group>"; };
 		C7683DFA257DD6E300DA3061 /* EditTraditionalMosaic@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaic@3x.png"; sourceTree = "<group>"; };
 		C7683E0B257DD70100DA3061 /* EditMenuGraffitiBack@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuGraffitiBack@3x.png"; sourceTree = "<group>"; };
 		C7683E0C257DD70100DA3061 /* EditMenuGraffitiBackDisable@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuGraffitiBackDisable@3x.png"; sourceTree = "<group>"; };
 		C7683E0D257DD70100DA3061 /* EditImageClipDone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditImageClipDone@3x.png"; sourceTree = "<group>"; };
-		C7683E0E257DD70100DA3061 /* EditMenuRotate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuRotate@2x.png"; sourceTree = "<group>"; };
 		C7683E0F257DD70100DA3061 /* EditImageClipCancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditImageClipCancel@2x.png"; sourceTree = "<group>"; };
 		C7683E10257DD70100DA3061 /* EditMenuGraffitiBackDisable@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuGraffitiBackDisable@2x.png"; sourceTree = "<group>"; };
 		C7683E11257DD70100DA3061 /* EditImageClipDone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditImageClipDone@2x.png"; sourceTree = "<group>"; };
@@ -170,6 +255,104 @@
 		C7683E37257DD8B300DA3061 /* EditMosaicBrush@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMosaicBrush@2x.png"; sourceTree = "<group>"; };
 		C7683E38257DD8B300DA3061 /* EditMosaicBrush@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMosaicBrush@3x.png"; sourceTree = "<group>"; };
 		C7C12EA0257F2D5200B1CC6D /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebP.framework; path = ../../../Vendor/WebP.framework; sourceTree = "<group>"; };
+		C7C12EA5257F6FE900B1CC6D /* SLSubmenuGraffitiView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLSubmenuGraffitiView.h; sourceTree = "<group>"; };
+		C7C12EA6257F6FE900B1CC6D /* SLSubmenuGraffitiView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLSubmenuGraffitiView.m; sourceTree = "<group>"; };
+		C7C12EA8258063BB00B1CC6D /* EditMenuArrowDown@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuArrowDown@3x.png"; sourceTree = "<group>"; };
+		C7C12EA9258063BB00B1CC6D /* EditBrushSize1Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1Selected@3x.png"; sourceTree = "<group>"; };
+		C7C12EAA258063BC00B1CC6D /* EditMenuBack@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuBack@3x.png"; sourceTree = "<group>"; };
+		C7C12EAB258063BC00B1CC6D /* EditMenuEraserDisable@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuEraserDisable@3x.png"; sourceTree = "<group>"; };
+		C7C12EAC258063BC00B1CC6D /* EditBrushSize4Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize4Selected@3x.png"; sourceTree = "<group>"; };
+		C7C12EAD258063BC00B1CC6D /* EditDragRotate@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditDragRotate@3x.png"; sourceTree = "<group>"; };
+		C7C12EAE258063BC00B1CC6D /* EditShapeRectangle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeRectangle@2x.png"; sourceTree = "<group>"; };
+		C7C12EAF258063BC00B1CC6D /* EditMenuNext@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuNext@3x.png"; sourceTree = "<group>"; };
+		C7C12EB0258063BC00B1CC6D /* EditBrushSize3Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize3Selected@3x.png"; sourceTree = "<group>"; };
+		C7C12EB1258063BC00B1CC6D /* EditMenuShapeGraffitiSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuShapeGraffitiSelected@2x.png"; sourceTree = "<group>"; };
+		C7C12EB2258063BC00B1CC6D /* EditMenuArrowDown@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuArrowDown@2x.png"; sourceTree = "<group>"; };
+		C7C12EB3258063BC00B1CC6D /* EditMenuNextDisable@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuNextDisable@2x.png"; sourceTree = "<group>"; };
+		C7C12EB4258063BC00B1CC6D /* EditBrushSize3Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize3Selected@2x.png"; sourceTree = "<group>"; };
+		C7C12EB5258063BC00B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_1:1@3x.png"; sourceTree = "<group>"; };
+		C7C12EB6258063BD00B1CC6D /* EditBrushSize1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1@3x.png"; sourceTree = "<group>"; };
+		C7C12EB7258063BD00B1CC6D /* EditMenuClipScaleSelected_4:3@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_4:3@3x.png"; sourceTree = "<group>"; };
+		C7C12EB8258063BD00B1CC6D /* EditMenuClipScale_4:3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_4:3@2x.png"; sourceTree = "<group>"; };
+		C7C12EB9258063BD00B1CC6D /* EditBrushSize5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize5@2x.png"; sourceTree = "<group>"; };
+		C7C12EBA258063BD00B1CC6D /* EditTrash@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTrash@3x.png"; sourceTree = "<group>"; };
+		C7C12EBB258063BD00B1CC6D /* EditMenuEraser@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuEraser@3x.png"; sourceTree = "<group>"; };
+		C7C12EBC258063BD00B1CC6D /* EditMenuClipScaleRamSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleRamSelected@2x.png"; sourceTree = "<group>"; };
+		C7C12EBD258063BD00B1CC6D /* EditBrushSize4Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize4Selected@2x.png"; sourceTree = "<group>"; };
+		C7C12EBE258063BD00B1CC6D /* EditMenuNextDisable@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuNextDisable@3x.png"; sourceTree = "<group>"; };
+		C7C12EBF258063BD00B1CC6D /* EditMenuShapeGraffiti@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuShapeGraffiti@3x.png"; sourceTree = "<group>"; };
+		C7C12EC0258063BD00B1CC6D /* EditShapeArrowSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeArrowSelected@3x.png"; sourceTree = "<group>"; };
+		C7C12EC1258063BD00B1CC6D /* EditMenuClipScaleSelected_16:9@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_16:9@3x.png"; sourceTree = "<group>"; };
+		C7C12EC2258063BE00B1CC6D /* EditTextAlignCenter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTextAlignCenter@2x.png"; sourceTree = "<group>"; };
+		C7C12EC3258063BE00B1CC6D /* EditMenuBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuBack@2x.png"; sourceTree = "<group>"; };
+		C7C12EC4258063BE00B1CC6D /* EditTraditionalMosaicSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "EditTraditionalMosaicSelected@3x.png"; path = "../../../Downloads/图片编辑图标/EditTraditionalMosaicSelected@3x.png"; sourceTree = "<group>"; };
+		C7C12EC5258063BE00B1CC6D /* EditMenuClipScaleRam@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleRam@2x.png"; sourceTree = "<group>"; };
+		C7C12EC6258063BE00B1CC6D /* EditShapeCircle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeCircle@2x.png"; sourceTree = "<group>"; };
+		C7C12EC7258063BE00B1CC6D /* EditTextAlignRight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTextAlignRight@2x.png"; sourceTree = "<group>"; };
+		C7C12EC8258063BE00B1CC6D /* EditBrushSize5Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize5Selected@3x.png"; sourceTree = "<group>"; };
+		C7C12EC9258063BE00B1CC6D /* EditTrashOpen@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTrashOpen@3x.png"; sourceTree = "<group>"; };
+		C7C12ECA258063BE00B1CC6D /* EditMenuEraserSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuEraserSelected@2x.png"; sourceTree = "<group>"; };
+		C7C12ECB258063BE00B1CC6D /* EditMenuEraser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuEraser@2x.png"; sourceTree = "<group>"; };
+		C7C12ECC258063BF00B1CC6D /* EditBrushSize4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize4@2x.png"; sourceTree = "<group>"; };
+		C7C12ECD258063BF00B1CC6D /* EditMenuDone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuDone@3x.png"; sourceTree = "<group>"; };
+		C7C12ECE258063BF00B1CC6D /* EditMenuClose@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClose@2x.png"; sourceTree = "<group>"; };
+		C7C12ECF258063BF00B1CC6D /* EditBrushSize5@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize5@3x.png"; sourceTree = "<group>"; };
+		C7C12ED0258063BF00B1CC6D /* EditMenuBackDisable@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuBackDisable@3x.png"; sourceTree = "<group>"; };
+		C7C12ED1258063BF00B1CC6D /* EditMenuEraserSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuEraserSelected@3x.png"; sourceTree = "<group>"; };
+		C7C12ED2258063BF00B1CC6D /* EditMenuClipScale_16:9@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_16:9@3x.png"; sourceTree = "<group>"; };
+		C7C12ED3258063C000B1CC6D /* EditMenuClipScaleSelected_9:16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_9:16@3x.png"; sourceTree = "<group>"; };
+		C7C12ED4258063C000B1CC6D /* EditTextAlignRight@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTextAlignRight@3x.png"; sourceTree = "<group>"; };
+		C7C12ED6258063C000B1CC6D /* EditMenuClipScaleRam@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleRam@3x.png"; sourceTree = "<group>"; };
+		C7C12ED7258063C000B1CC6D /* EditShapeCircle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeCircle@3x.png"; sourceTree = "<group>"; };
+		C7C12ED8258063C000B1CC6D /* EditMenuEraserDisable@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuEraserDisable@2x.png"; sourceTree = "<group>"; };
+		C7C12ED9258063C000B1CC6D /* EditShapeCircleSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeCircleSelected@2x.png"; sourceTree = "<group>"; };
+		C7C12EDA258063C000B1CC6D /* EditTrash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTrash@2x.png"; sourceTree = "<group>"; };
+		C7C12EDB258063C000B1CC6D /* EditMenuShape@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuShape@3x.png"; sourceTree = "<group>"; };
+		C7C12EDC258063C100B1CC6D /* EditMenuShapeGraffiti@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuShapeGraffiti@2x.png"; sourceTree = "<group>"; };
+		C7C12EDD258063C100B1CC6D /* EditMenuDone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuDone@2x.png"; sourceTree = "<group>"; };
+		C7C12EDE258063C100B1CC6D /* EditShapeArrowSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeArrowSelected@2x.png"; sourceTree = "<group>"; };
+		C7C12EDF258063C100B1CC6D /* EditMenuClipScale_16:9@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_16:9@2x.png"; sourceTree = "<group>"; };
+		C7C12EE0258063C100B1CC6D /* EditBrushSize4@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize4@3x.png"; sourceTree = "<group>"; };
+		C7C12EE2258063C100B1CC6D /* EditBrushSize5Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize5Selected@2x.png"; sourceTree = "<group>"; };
+		C7C12EE4258063C100B1CC6D /* EditMenuNext@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuNext@2x.png"; sourceTree = "<group>"; };
+		C7C12EE5258063C100B1CC6D /* EditMenuClipScaleSelected_1:1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_1:1@2x.png"; sourceTree = "<group>"; };
+		C7C12EE6258063C200B1CC6D /* EditMenuShapeGraffitiSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuShapeGraffitiSelected@3x.png"; sourceTree = "<group>"; };
+		C7C12EE7258063C200B1CC6D /* EditMenuClipScale_9:16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_9:16@2x.png"; sourceTree = "<group>"; };
+		C7C12EE8258063C200B1CC6D /* EditShapeRectangle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeRectangle@3x.png"; sourceTree = "<group>"; };
+		C7C12EE9258063C200B1CC6D /* EditMenuClipScaleSelected_16:9@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_16:9@2x.png"; sourceTree = "<group>"; };
+		C7C12EEB258063C200B1CC6D /* EditMenuClipScaleRamSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleRamSelected@3x.png"; sourceTree = "<group>"; };
+		C7C12EEC258063C200B1CC6D /* EditMenuClipScaleSelected_4:3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_4:3@2x.png"; sourceTree = "<group>"; };
+		C7C12EED258063C200B1CC6D /* EditTextAlignLeft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTextAlignLeft@2x.png"; sourceTree = "<group>"; };
+		C7C12EEF258063C300B1CC6D /* EditTextAlignLeft@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTextAlignLeft@3x.png"; sourceTree = "<group>"; };
+		C7C12EF0258063C300B1CC6D /* EditMenuClipScaleSelected_9:16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_9:16@2x.png"; sourceTree = "<group>"; };
+		C7C12EF1258063C300B1CC6D /* EditBrushSize3@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize3@3x.png"; sourceTree = "<group>"; };
+		C7C12EF2258063C300B1CC6D /* EditMenuClipScaleSelected_3:4@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_3:4@3x.png"; sourceTree = "<group>"; };
+		C7C12EF3258063C300B1CC6D /* EditTextAlignCenter@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTextAlignCenter@3x.png"; sourceTree = "<group>"; };
+		C7C12EF4258063C300B1CC6D /* EditMenuClipScale_3:4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_3:4@2x.png"; sourceTree = "<group>"; };
+		C7C12EF5258063C300B1CC6D /* EditShapeRectangleSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeRectangleSelected@3x.png"; sourceTree = "<group>"; };
+		C7C12EF6258063C300B1CC6D /* EditDragRotate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditDragRotate@2x.png"; sourceTree = "<group>"; };
+		C7C12EF9258063C400B1CC6D /* EditShapeCircleSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeCircleSelected@3x.png"; sourceTree = "<group>"; };
+		C7C12EFA258063C400B1CC6D /* EditShapeArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeArrow@2x.png"; sourceTree = "<group>"; };
+		C7C12EFB258063C400B1CC6D /* EditBrushSize1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1@2x.png"; sourceTree = "<group>"; };
+		C7C12EFC258063C400B1CC6D /* EditBrushSize1Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1Selected@2x.png"; sourceTree = "<group>"; };
+		C7C12EFD258063C400B1CC6D /* EditBrushSize3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize3@2x.png"; sourceTree = "<group>"; };
+		C7C12EFE258063C400B1CC6D /* EditMenuClipScale_4:3@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_4:3@3x.png"; sourceTree = "<group>"; };
+		C7C12EFF258063C400B1CC6D /* EditMenuClipScaleSelected_3:4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_3:4@2x.png"; sourceTree = "<group>"; };
+		C7C12F01258063C400B1CC6D /* EditShapeArrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeArrow@3x.png"; sourceTree = "<group>"; };
+		C7C12F02258063C500B1CC6D /* EditMenuBackDisable@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuBackDisable@2x.png"; sourceTree = "<group>"; };
+		C7C12F03258063C500B1CC6D /* EditMenuClipScale_1:1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_1:1@2x.png"; sourceTree = "<group>"; };
+		C7C12F04258063C500B1CC6D /* EditShapeRectangleSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeRectangleSelected@2x.png"; sourceTree = "<group>"; };
+		C7C12F05258063C500B1CC6D /* EditMenuClipScale_9:16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_9:16@3x.png"; sourceTree = "<group>"; };
+		C7C12F06258063C500B1CC6D /* EditMenuClose@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClose@3x.png"; sourceTree = "<group>"; };
+		C7C12F08258063C500B1CC6D /* EditMenuClipScale_3:4@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_3:4@3x.png"; sourceTree = "<group>"; };
+		C7C12F09258063C500B1CC6D /* EditMenuClipScale_1:1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_1:1@3x.png"; sourceTree = "<group>"; };
+		C7C12F0A258063C500B1CC6D /* EditTrashOpen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTrashOpen@2x.png"; sourceTree = "<group>"; };
+		C7C12F0B258063C500B1CC6D /* EditMenuShape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuShape@2x.png"; sourceTree = "<group>"; };
+		C7C12F71258065D500B1CC6D /* EditBrushMosaic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushMosaic@2x.png"; sourceTree = "<group>"; };
+		C7C12F72258065D500B1CC6D /* EditTraditionalMosaic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaic@2x.png"; sourceTree = "<group>"; };
+		C7C12F73258065D500B1CC6D /* EditMenuRotate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuRotate@2x.png"; sourceTree = "<group>"; };
+		C7C12F74258065D500B1CC6D /* EditBrushMosaicSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushMosaicSelected@2x.png"; sourceTree = "<group>"; };
+		C7C12F75258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaicSelected@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -282,6 +465,8 @@
 				C7683DBB257A2C8F00DA3061 /* SLDrawView.m */,
 				C7683DC9257A2C8F00DA3061 /* SLEditMenuView.h */,
 				C7683DBC257A2C8F00DA3061 /* SLEditMenuView.m */,
+				C7C12EA5257F6FE900B1CC6D /* SLSubmenuGraffitiView.h */,
+				C7C12EA6257F6FE900B1CC6D /* SLSubmenuGraffitiView.m */,
 				C7683DBF257A2C8F00DA3061 /* SLEditSelectedBox.h */,
 				C7683DCB257A2C8F00DA3061 /* SLEditSelectedBox.m */,
 				C7683DC6257A2C8F00DA3061 /* SLEditTextView.h */,
@@ -320,16 +505,78 @@
 		C7683DEA257DD5A000DA3061 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				C7683E37257DD8B300DA3061 /* EditMosaicBrush@2x.png */,
-				C7683E38257DD8B300DA3061 /* EditMosaicBrush@3x.png */,
+				C7C12F71258065D500B1CC6D /* EditBrushMosaic@2x.png */,
+				C7683DF1257DD6E100DA3061 /* EditBrushMosaic@3x.png */,
+				C7C12F74258065D500B1CC6D /* EditBrushMosaicSelected@2x.png */,
+				C7683DF6257DD6E200DA3061 /* EditBrushMosaicSelected@3x.png */,
+				C7C12EFB258063C400B1CC6D /* EditBrushSize1@2x.png */,
+				C7C12EB6258063BD00B1CC6D /* EditBrushSize1@3x.png */,
+				C7C12EFC258063C400B1CC6D /* EditBrushSize1Selected@2x.png */,
+				C7C12EA9258063BB00B1CC6D /* EditBrushSize1Selected@3x.png */,
+				C7C12EFD258063C400B1CC6D /* EditBrushSize3@2x.png */,
+				C7C12EF1258063C300B1CC6D /* EditBrushSize3@3x.png */,
+				C7C12EB4258063BC00B1CC6D /* EditBrushSize3Selected@2x.png */,
+				C7C12EB0258063BC00B1CC6D /* EditBrushSize3Selected@3x.png */,
+				C7C12ECC258063BF00B1CC6D /* EditBrushSize4@2x.png */,
+				C7C12EE0258063C100B1CC6D /* EditBrushSize4@3x.png */,
+				C7C12EBD258063BD00B1CC6D /* EditBrushSize4Selected@2x.png */,
+				C7C12EAC258063BC00B1CC6D /* EditBrushSize4Selected@3x.png */,
+				C7C12EB9258063BD00B1CC6D /* EditBrushSize5@2x.png */,
+				C7C12ECF258063BF00B1CC6D /* EditBrushSize5@3x.png */,
+				C7C12EE2258063C100B1CC6D /* EditBrushSize5Selected@2x.png */,
+				C7C12EC8258063BE00B1CC6D /* EditBrushSize5Selected@3x.png */,
+				C7C12EF6258063C300B1CC6D /* EditDragRotate@2x.png */,
+				C7C12EAD258063BC00B1CC6D /* EditDragRotate@3x.png */,
+				C7683DF4257DD6E200DA3061 /* EditedImageFlag@2x.png */,
+				C7683DF0257DD6E100DA3061 /* EditedImageFlag@3x.png */,
 				C7683E16257DD70200DA3061 /* EditImageCancel@2x.png */,
 				C7683E19257DD70200DA3061 /* EditImageCancel@3x.png */,
 				C7683E0F257DD70100DA3061 /* EditImageClipCancel@2x.png */,
 				C7683E1D257DD70300DA3061 /* EditImageClipCancel@3x.png */,
 				C7683E11257DD70100DA3061 /* EditImageClipDone@2x.png */,
 				C7683E0D257DD70100DA3061 /* EditImageClipDone@3x.png */,
+				C7C12EB2258063BC00B1CC6D /* EditMenuArrowDown@2x.png */,
+				C7C12EA8258063BB00B1CC6D /* EditMenuArrowDown@3x.png */,
+				C7C12EC3258063BE00B1CC6D /* EditMenuBack@2x.png */,
+				C7C12EAA258063BC00B1CC6D /* EditMenuBack@3x.png */,
+				C7C12F02258063C500B1CC6D /* EditMenuBackDisable@2x.png */,
+				C7C12ED0258063BF00B1CC6D /* EditMenuBackDisable@3x.png */,
 				C7683E15257DD70200DA3061 /* EditMenuClipImage@2x.png */,
 				C7683E17257DD70200DA3061 /* EditMenuClipImage@3x.png */,
+				C7C12F03258063C500B1CC6D /* EditMenuClipScale_1:1@2x.png */,
+				C7C12F09258063C500B1CC6D /* EditMenuClipScale_1:1@3x.png */,
+				C7C12EF4258063C300B1CC6D /* EditMenuClipScale_3:4@2x.png */,
+				C7C12F08258063C500B1CC6D /* EditMenuClipScale_3:4@3x.png */,
+				C7C12EB8258063BD00B1CC6D /* EditMenuClipScale_4:3@2x.png */,
+				C7C12EFE258063C400B1CC6D /* EditMenuClipScale_4:3@3x.png */,
+				C7C12EE7258063C200B1CC6D /* EditMenuClipScale_9:16@2x.png */,
+				C7C12F05258063C500B1CC6D /* EditMenuClipScale_9:16@3x.png */,
+				C7C12EDF258063C100B1CC6D /* EditMenuClipScale_16:9@2x.png */,
+				C7C12ED2258063BF00B1CC6D /* EditMenuClipScale_16:9@3x.png */,
+				C7C12EC5258063BE00B1CC6D /* EditMenuClipScaleRam@2x.png */,
+				C7C12ED6258063C000B1CC6D /* EditMenuClipScaleRam@3x.png */,
+				C7C12EBC258063BD00B1CC6D /* EditMenuClipScaleRamSelected@2x.png */,
+				C7C12EEB258063C200B1CC6D /* EditMenuClipScaleRamSelected@3x.png */,
+				C7C12EE5258063C100B1CC6D /* EditMenuClipScaleSelected_1:1@2x.png */,
+				C7C12EB5258063BC00B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png */,
+				C7C12EFF258063C400B1CC6D /* EditMenuClipScaleSelected_3:4@2x.png */,
+				C7C12EF2258063C300B1CC6D /* EditMenuClipScaleSelected_3:4@3x.png */,
+				C7C12EEC258063C200B1CC6D /* EditMenuClipScaleSelected_4:3@2x.png */,
+				C7C12EB7258063BD00B1CC6D /* EditMenuClipScaleSelected_4:3@3x.png */,
+				C7C12EF0258063C300B1CC6D /* EditMenuClipScaleSelected_9:16@2x.png */,
+				C7C12ED3258063C000B1CC6D /* EditMenuClipScaleSelected_9:16@3x.png */,
+				C7C12EE9258063C200B1CC6D /* EditMenuClipScaleSelected_16:9@2x.png */,
+				C7C12EC1258063BD00B1CC6D /* EditMenuClipScaleSelected_16:9@3x.png */,
+				C7C12ECE258063BF00B1CC6D /* EditMenuClose@2x.png */,
+				C7C12F06258063C500B1CC6D /* EditMenuClose@3x.png */,
+				C7C12EDD258063C100B1CC6D /* EditMenuDone@2x.png */,
+				C7C12ECD258063BF00B1CC6D /* EditMenuDone@3x.png */,
+				C7C12ECB258063BE00B1CC6D /* EditMenuEraser@2x.png */,
+				C7C12EBB258063BD00B1CC6D /* EditMenuEraser@3x.png */,
+				C7C12ED8258063C000B1CC6D /* EditMenuEraserDisable@2x.png */,
+				C7C12EAB258063BC00B1CC6D /* EditMenuEraserDisable@3x.png */,
+				C7C12ECA258063BE00B1CC6D /* EditMenuEraserSelected@2x.png */,
+				C7C12ED1258063BF00B1CC6D /* EditMenuEraserSelected@3x.png */,
 				C7683E1F257DD70300DA3061 /* EditMenuGraffiti@2x.png */,
 				C7683E1A257DD70200DA3061 /* EditMenuGraffiti@3x.png */,
 				C7683E20257DD70300DA3061 /* EditMenuGraffitiBack@2x.png */,
@@ -342,24 +589,52 @@
 				C7683E13257DD70200DA3061 /* EditMenuMosaic@3x.png */,
 				C7683E14257DD70200DA3061 /* EditMenuMosaicSelected@2x.png */,
 				C7683E1E257DD70300DA3061 /* EditMenuMosaicSelected@3x.png */,
-				C7683E0E257DD70100DA3061 /* EditMenuRotate@2x.png */,
+				C7C12EE4258063C100B1CC6D /* EditMenuNext@2x.png */,
+				C7C12EAF258063BC00B1CC6D /* EditMenuNext@3x.png */,
+				C7C12EB3258063BC00B1CC6D /* EditMenuNextDisable@2x.png */,
+				C7C12EBE258063BD00B1CC6D /* EditMenuNextDisable@3x.png */,
+				C7C12F73258065D500B1CC6D /* EditMenuRotate@2x.png */,
 				C7683E1C257DD70300DA3061 /* EditMenuRotate@3x.png */,
-				C7683DED257DD6E100DA3061 /* EditBrushMosaic@2x.png */,
-				C7683DF1257DD6E100DA3061 /* EditBrushMosaic@3x.png */,
-				C7683DF3257DD6E200DA3061 /* EditBrushMosaicSelected@2x.png */,
-				C7683DF6257DD6E200DA3061 /* EditBrushMosaicSelected@3x.png */,
-				C7683DF4257DD6E200DA3061 /* EditedImageFlag@2x.png */,
-				C7683DF0257DD6E100DA3061 /* EditedImageFlag@3x.png */,
+				C7C12F0B258063C500B1CC6D /* EditMenuShape@2x.png */,
+				C7C12EDB258063C000B1CC6D /* EditMenuShape@3x.png */,
+				C7C12EDC258063C100B1CC6D /* EditMenuShapeGraffiti@2x.png */,
+				C7C12EBF258063BD00B1CC6D /* EditMenuShapeGraffiti@3x.png */,
+				C7C12EB1258063BC00B1CC6D /* EditMenuShapeGraffitiSelected@2x.png */,
+				C7C12EE6258063C200B1CC6D /* EditMenuShapeGraffitiSelected@3x.png */,
 				C7683DF5257DD6E200DA3061 /* EditMenuText@2x.png */,
 				C7683DF2257DD6E100DA3061 /* EditMenuText@3x.png */,
 				C7683DEE257DD6E100DA3061 /* EditMenuTextBackgroundColor@2x.png */,
 				C7683DF8257DD6E200DA3061 /* EditMenuTextBackgroundColor@3x.png */,
 				C7683DF7257DD6E200DA3061 /* EditMenuTextColor@2x.png */,
 				C7683DEC257DD6E100DA3061 /* EditMenuTextColor@3x.png */,
-				C7683DEF257DD6E100DA3061 /* EditTraditionalMosaic@2x.png */,
+				C7683E37257DD8B300DA3061 /* EditMosaicBrush@2x.png */,
+				C7683E38257DD8B300DA3061 /* EditMosaicBrush@3x.png */,
+				C7C12EFA258063C400B1CC6D /* EditShapeArrow@2x.png */,
+				C7C12F01258063C400B1CC6D /* EditShapeArrow@3x.png */,
+				C7C12EDE258063C100B1CC6D /* EditShapeArrowSelected@2x.png */,
+				C7C12EC0258063BD00B1CC6D /* EditShapeArrowSelected@3x.png */,
+				C7C12EC6258063BE00B1CC6D /* EditShapeCircle@2x.png */,
+				C7C12ED7258063C000B1CC6D /* EditShapeCircle@3x.png */,
+				C7C12ED9258063C000B1CC6D /* EditShapeCircleSelected@2x.png */,
+				C7C12EF9258063C400B1CC6D /* EditShapeCircleSelected@3x.png */,
+				C7C12EAE258063BC00B1CC6D /* EditShapeRectangle@2x.png */,
+				C7C12EE8258063C200B1CC6D /* EditShapeRectangle@3x.png */,
+				C7C12F04258063C500B1CC6D /* EditShapeRectangleSelected@2x.png */,
+				C7C12EF5258063C300B1CC6D /* EditShapeRectangleSelected@3x.png */,
+				C7C12EC2258063BE00B1CC6D /* EditTextAlignCenter@2x.png */,
+				C7C12EF3258063C300B1CC6D /* EditTextAlignCenter@3x.png */,
+				C7C12EED258063C200B1CC6D /* EditTextAlignLeft@2x.png */,
+				C7C12EEF258063C300B1CC6D /* EditTextAlignLeft@3x.png */,
+				C7C12EC7258063BE00B1CC6D /* EditTextAlignRight@2x.png */,
+				C7C12ED4258063C000B1CC6D /* EditTextAlignRight@3x.png */,
+				C7C12F72258065D500B1CC6D /* EditTraditionalMosaic@2x.png */,
 				C7683DFA257DD6E300DA3061 /* EditTraditionalMosaic@3x.png */,
-				C7683DF9257DD6E300DA3061 /* EditTraditionalMosaicSelected@2x.png */,
-				C7683DEB257DD6E000DA3061 /* EditTraditionalMosaicSelected@3x.png */,
+				C7C12F75258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png */,
+				C7C12EC4258063BE00B1CC6D /* EditTraditionalMosaicSelected@3x.png */,
+				C7C12EDA258063C000B1CC6D /* EditTrash@2x.png */,
+				C7C12EBA258063BD00B1CC6D /* EditTrash@3x.png */,
+				C7C12F0A258063C500B1CC6D /* EditTrashOpen@2x.png */,
+				C7C12EC9258063BE00B1CC6D /* EditTrashOpen@3x.png */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -421,49 +696,139 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7683DFB257DD6E300DA3061 /* EditTraditionalMosaicSelected@3x.png in Resources */,
+				C7C12F34258063C600B1CC6D /* EditMenuBackDisable@3x.png in Resources */,
+				C7C12F19258063C600B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png in Resources */,
+				C7C12F5E258063C600B1CC6D /* EditShapeArrow@2x.png in Resources */,
+				C7C12F31258063C600B1CC6D /* EditMenuDone@3x.png in Resources */,
 				C7683E26257DD70300DA3061 /* EditMenuGraffitiBackDisable@2x.png in Resources */,
+				C7C12F46258063C600B1CC6D /* EditBrushSize5Selected@2x.png in Resources */,
+				C7C12F3E258063C600B1CC6D /* EditTrash@2x.png in Resources */,
+				C7C12F23258063C600B1CC6D /* EditMenuShapeGraffiti@3x.png in Resources */,
+				C7C12F11258063C600B1CC6D /* EditDragRotate@3x.png in Resources */,
+				C7C12F5F258063C600B1CC6D /* EditBrushSize1@2x.png in Resources */,
+				C7C12F7B258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png in Resources */,
 				C7683E21257DD70300DA3061 /* EditMenuGraffitiBack@3x.png in Resources */,
+				C7C12F69258063C600B1CC6D /* EditMenuClipScale_9:16@3x.png in Resources */,
+				C7C12F1A258063C600B1CC6D /* EditBrushSize1@3x.png in Resources */,
+				C7C12F54258063C600B1CC6D /* EditMenuClipScaleSelected_9:16@2x.png in Resources */,
+				C7C12F6A258063C600B1CC6D /* EditMenuClose@3x.png in Resources */,
 				C7683E32257DD70300DA3061 /* EditMenuRotate@3x.png in Resources */,
-				C7683DFD257DD6E300DA3061 /* EditBrushMosaic@2x.png in Resources */,
+				C7C12F4A258063C600B1CC6D /* EditMenuShapeGraffitiSelected@3x.png in Resources */,
 				C7683E22257DD70300DA3061 /* EditMenuGraffitiBackDisable@3x.png in Resources */,
+				C7C12F1B258063C600B1CC6D /* EditMenuClipScaleSelected_4:3@3x.png in Resources */,
+				C7C12F30258063C600B1CC6D /* EditBrushSize4@2x.png in Resources */,
 				C7683E30257DD70300DA3061 /* EditMenuGraffiti@3x.png in Resources */,
+				C7C12F27258063C600B1CC6D /* EditMenuBack@2x.png in Resources */,
+				C7C12F78258065D500B1CC6D /* EditTraditionalMosaic@2x.png in Resources */,
+				C7C12F48258063C600B1CC6D /* EditMenuNext@2x.png in Resources */,
+				C7C12F40258063C600B1CC6D /* EditMenuShapeGraffiti@2x.png in Resources */,
 				C7683E2E257DD70300DA3061 /* EditMenuMosaic@2x.png in Resources */,
+				C7C12F17258063C600B1CC6D /* EditMenuNextDisable@2x.png in Resources */,
 				C7683E2A257DD70300DA3061 /* EditMenuMosaicSelected@2x.png in Resources */,
 				C7683E00257DD6E300DA3061 /* EditedImageFlag@3x.png in Resources */,
 				C7683E02257DD6E300DA3061 /* EditMenuText@3x.png in Resources */,
+				C7C12F5A258063C600B1CC6D /* EditDragRotate@2x.png in Resources */,
+				C7C12F29258063C600B1CC6D /* EditMenuClipScaleRam@2x.png in Resources */,
 				C7683E33257DD70300DA3061 /* EditImageClipCancel@3x.png in Resources */,
+				C7C12F3F258063C600B1CC6D /* EditMenuShape@3x.png in Resources */,
 				C7683E07257DD6E300DA3061 /* EditMenuTextColor@2x.png in Resources */,
 				C7683D97257A288E00DA3061 /* LaunchScreen.storyboard in Resources */,
 				C7683D94257A288E00DA3061 /* Assets.xcassets in Resources */,
+				C7C12F3B258063C600B1CC6D /* EditShapeCircle@3x.png in Resources */,
+				C7C12F6D258063C600B1CC6D /* EditMenuClipScale_1:1@3x.png in Resources */,
+				C7C12F35258063C600B1CC6D /* EditMenuEraserSelected@3x.png in Resources */,
+				C7C12F38258063C600B1CC6D /* EditTextAlignRight@3x.png in Resources */,
+				C7C12F43258063C600B1CC6D /* EditMenuClipScale_16:9@2x.png in Resources */,
 				C7683E31257DD70300DA3061 /* EditMenuGraffitiSelected@3x.png in Resources */,
+				C7C12F24258063C600B1CC6D /* EditShapeArrowSelected@3x.png in Resources */,
+				C7C12F0D258063C600B1CC6D /* EditBrushSize1Selected@3x.png in Resources */,
+				C7C12F4C258063C600B1CC6D /* EditShapeRectangle@3x.png in Resources */,
+				C7C12F26258063C600B1CC6D /* EditTextAlignCenter@2x.png in Resources */,
+				C7C12F66258063C600B1CC6D /* EditMenuBackDisable@2x.png in Resources */,
+				C7C12F18258063C600B1CC6D /* EditBrushSize3Selected@2x.png in Resources */,
+				C7C12F63258063C600B1CC6D /* EditMenuClipScaleSelected_3:4@2x.png in Resources */,
 				C7683E2B257DD70300DA3061 /* EditMenuClipImage@2x.png in Resources */,
+				C7C12F16258063C600B1CC6D /* EditMenuArrowDown@2x.png in Resources */,
+				C7C12F1F258063C600B1CC6D /* EditMenuEraser@3x.png in Resources */,
+				C7C12F0F258063C600B1CC6D /* EditMenuEraserDisable@3x.png in Resources */,
 				C7683E27257DD70300DA3061 /* EditImageClipDone@2x.png in Resources */,
 				C7683E23257DD70300DA3061 /* EditImageClipDone@3x.png in Resources */,
+				C7C12F2E258063C600B1CC6D /* EditMenuEraserSelected@2x.png in Resources */,
+				C7C12F57258063C600B1CC6D /* EditTextAlignCenter@3x.png in Resources */,
+				C7C12F55258063C600B1CC6D /* EditBrushSize3@3x.png in Resources */,
+				C7C12F2C258063C600B1CC6D /* EditBrushSize5Selected@3x.png in Resources */,
 				C7683E06257DD6E300DA3061 /* EditBrushMosaicSelected@3x.png in Resources */,
+				C7C12F36258063C600B1CC6D /* EditMenuClipScale_16:9@3x.png in Resources */,
+				C7C12F50258063C600B1CC6D /* EditMenuClipScaleSelected_4:3@2x.png in Resources */,
+				C7C12F2B258063C600B1CC6D /* EditTextAlignRight@2x.png in Resources */,
 				C7683E05257DD6E300DA3061 /* EditMenuText@2x.png in Resources */,
+				C7C12F6E258063C600B1CC6D /* EditTrashOpen@2x.png in Resources */,
 				C7683E34257DD70300DA3061 /* EditMenuMosaicSelected@3x.png in Resources */,
+				C7C12F3A258063C600B1CC6D /* EditMenuClipScaleRam@3x.png in Resources */,
+				C7C12F56258063C600B1CC6D /* EditMenuClipScaleSelected_3:4@3x.png in Resources */,
+				C7C12F32258063C600B1CC6D /* EditMenuClose@2x.png in Resources */,
+				C7C12F22258063C600B1CC6D /* EditMenuNextDisable@3x.png in Resources */,
+				C7C12F68258063C600B1CC6D /* EditShapeRectangleSelected@2x.png in Resources */,
+				C7C12F65258063C600B1CC6D /* EditShapeArrow@3x.png in Resources */,
 				C7683E08257DD6E300DA3061 /* EditMenuTextBackgroundColor@3x.png in Resources */,
+				C7C12F21258063C600B1CC6D /* EditBrushSize4Selected@2x.png in Resources */,
 				C7683D92257A288C00DA3061 /* Main.storyboard in Resources */,
+				C7C12F28258063C600B1CC6D /* EditTraditionalMosaicSelected@3x.png in Resources */,
 				C7683E2C257DD70300DA3061 /* EditImageCancel@2x.png in Resources */,
 				C7683E25257DD70300DA3061 /* EditImageClipCancel@2x.png in Resources */,
-				C7683E24257DD70300DA3061 /* EditMenuRotate@2x.png in Resources */,
+				C7C12F53258063C600B1CC6D /* EditTextAlignLeft@3x.png in Resources */,
+				C7C12F4F258063C600B1CC6D /* EditMenuClipScaleRamSelected@3x.png in Resources */,
+				C7C12F6F258063C600B1CC6D /* EditMenuShape@2x.png in Resources */,
+				C7C12F41258063C600B1CC6D /* EditMenuDone@2x.png in Resources */,
+				C7C12F33258063C600B1CC6D /* EditBrushSize5@3x.png in Resources */,
+				C7C12F2D258063C600B1CC6D /* EditTrashOpen@3x.png in Resources */,
+				C7C12F4D258063C600B1CC6D /* EditMenuClipScaleSelected_16:9@2x.png in Resources */,
+				C7C12F10258063C600B1CC6D /* EditBrushSize4Selected@3x.png in Resources */,
 				C7683E35257DD70300DA3061 /* EditMenuGraffiti@2x.png in Resources */,
+				C7C12F14258063C600B1CC6D /* EditBrushSize3Selected@3x.png in Resources */,
 				C7683DFE257DD6E300DA3061 /* EditMenuTextBackgroundColor@2x.png in Resources */,
-				C7683DFF257DD6E300DA3061 /* EditTraditionalMosaic@2x.png in Resources */,
-				C7683E09257DD6E300DA3061 /* EditTraditionalMosaicSelected@2x.png in Resources */,
+				C7C12F67258063C600B1CC6D /* EditMenuClipScale_1:1@2x.png in Resources */,
+				C7C12F6C258063C600B1CC6D /* EditMenuClipScale_3:4@3x.png in Resources */,
+				C7C12F25258063C600B1CC6D /* EditMenuClipScaleSelected_16:9@3x.png in Resources */,
+				C7C12F4B258063C600B1CC6D /* EditMenuClipScale_9:16@2x.png in Resources */,
 				C7683E01257DD6E300DA3061 /* EditBrushMosaic@3x.png in Resources */,
 				C7683E0A257DD6E300DA3061 /* EditTraditionalMosaic@3x.png in Resources */,
-				C7683E03257DD6E300DA3061 /* EditBrushMosaicSelected@2x.png in Resources */,
 				C7683E28257DD70300DA3061 /* EditMenuGraffitiSelected@2x.png in Resources */,
+				C7C12F58258063C600B1CC6D /* EditMenuClipScale_3:4@2x.png in Resources */,
+				C7C12F62258063C600B1CC6D /* EditMenuClipScale_4:3@3x.png in Resources */,
 				C7683E2D257DD70300DA3061 /* EditMenuClipImage@3x.png in Resources */,
+				C7C12F44258063C600B1CC6D /* EditBrushSize4@3x.png in Resources */,
+				C7C12F0E258063C600B1CC6D /* EditMenuBack@3x.png in Resources */,
+				C7C12F1C258063C600B1CC6D /* EditMenuClipScale_4:3@2x.png in Resources */,
+				C7C12F7A258065D500B1CC6D /* EditBrushMosaicSelected@2x.png in Resources */,
+				C7C12F0C258063C600B1CC6D /* EditMenuArrowDown@3x.png in Resources */,
+				C7C12F77258065D500B1CC6D /* EditBrushMosaic@2x.png in Resources */,
+				C7C12F3C258063C600B1CC6D /* EditMenuEraserDisable@2x.png in Resources */,
+				C7C12F2A258063C600B1CC6D /* EditShapeCircle@2x.png in Resources */,
+				C7C12F2F258063C600B1CC6D /* EditMenuEraser@2x.png in Resources */,
+				C7C12F51258063C600B1CC6D /* EditTextAlignLeft@2x.png in Resources */,
+				C7C12F1D258063C600B1CC6D /* EditBrushSize5@2x.png in Resources */,
+				C7C12F20258063C600B1CC6D /* EditMenuClipScaleRamSelected@2x.png in Resources */,
+				C7C12F59258063C600B1CC6D /* EditShapeRectangleSelected@3x.png in Resources */,
 				C7683E04257DD6E300DA3061 /* EditedImageFlag@2x.png in Resources */,
 				C7683E36257DD70400DA3061 /* EditMenuGraffitiBack@2x.png in Resources */,
+				C7C12F42258063C600B1CC6D /* EditShapeArrowSelected@2x.png in Resources */,
+				C7C12F3D258063C600B1CC6D /* EditShapeCircleSelected@2x.png in Resources */,
+				C7C12F49258063C600B1CC6D /* EditMenuClipScaleSelected_1:1@2x.png in Resources */,
+				C7C12F79258065D500B1CC6D /* EditMenuRotate@2x.png in Resources */,
+				C7C12F12258063C600B1CC6D /* EditShapeRectangle@2x.png in Resources */,
+				C7C12F1E258063C600B1CC6D /* EditTrash@3x.png in Resources */,
 				C7683E2F257DD70300DA3061 /* EditImageCancel@3x.png in Resources */,
 				C7683E39257DD8B300DA3061 /* EditMosaicBrush@2x.png in Resources */,
+				C7C12F5D258063C600B1CC6D /* EditShapeCircleSelected@3x.png in Resources */,
+				C7C12F13258063C600B1CC6D /* EditMenuNext@3x.png in Resources */,
+				C7C12F61258063C600B1CC6D /* EditBrushSize3@2x.png in Resources */,
+				C7C12F60258063C600B1CC6D /* EditBrushSize1Selected@2x.png in Resources */,
 				C7683E29257DD70300DA3061 /* EditMenuMosaic@3x.png in Resources */,
 				C7683DFC257DD6E300DA3061 /* EditMenuTextColor@3x.png in Resources */,
+				C7C12F15258063C600B1CC6D /* EditMenuShapeGraffitiSelected@2x.png in Resources */,
 				C7683E3A257DD8B300DA3061 /* EditMosaicBrush@3x.png in Resources */,
+				C7C12F37258063C600B1CC6D /* EditMenuClipScaleSelected_9:16@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,6 +846,7 @@
 				C7683DD5257A2C8F00DA3061 /* SLImageDecoder.m in Sources */,
 				C7683DDD257A2C8F00DA3061 /* SLRoundCornerLabel.m in Sources */,
 				C7683D89257A288C00DA3061 /* AppDelegate.m in Sources */,
+				C7C12EA7257F6FE900B1CC6D /* SLSubmenuGraffitiView.m in Sources */,
 				C7683DDA257A2C8F00DA3061 /* SLEditTextView.m in Sources */,
 				C7683DDE257A2C8F00DA3061 /* SLShotFocusView.m in Sources */,
 				C7683D9A257A288E00DA3061 /* main.m in Sources */,

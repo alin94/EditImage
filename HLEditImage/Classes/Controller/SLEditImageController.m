@@ -25,6 +25,10 @@
 #import "SLUtilsMacro.h"
 #define SL_DISPATCH_ON_MAIN_THREAD(mainQueueBlock) dispatch_async(dispatch_get_main_queue(),mainQueueBlock);
 
+#define KBottomMenuHeight (144+kSafeAreaBottomHeight)  //底部菜单高度
+#define KImageTopMargin (16+kSafeAreaTopHeight)  //顶部间距
+#define KImageBottomMargin 10  //底部间距
+#define KImageLRMargin 16   //左右边距
 
 @interface SLEditImageController ()<UIGestureRecognizerDelegate, SLImageZoomViewDelegate>
 
@@ -67,13 +71,7 @@
     [self.view addSubview:self.zoomView];
     self.zoomView.pinchGestureRecognizer.enabled = YES;
     self.zoomView.image = self.image;
-    if (self.image.size.width > 0) {
-       self.zoomView.imageView.frame = CGRectMake(0, 0, self.zoomView.sl_width, self.zoomView.sl_width * self.image.size.height/self.image.size.width);
-    }
-    if (self.zoomView.imageView.sl_height <= self.zoomView.sl_height) {
-        self.zoomView.imageView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
-    }
-    
+    [self reConfigZoomImageViewRect];
     //添加裁剪完成监听
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(imageClippingComplete:) name:@"sl_ImageClippingComplete" object:nil];
     
@@ -125,11 +123,63 @@
     self.cancelEditBtn.hidden = self.topNavView.hidden = isHidden;
     self.editMenuView.hidden = isHidden;
 }
+//改变
+- (void)changeZoomViewRectWithIsEditing:(BOOL)isEditing {
+    if(isEditing){
+        CGRect maxRect = CGRectMake(KImageLRMargin, KImageTopMargin, self.view.sl_width - KImageLRMargin * 2, self.view.sl_height - KImageTopMargin - KImageBottomMargin- KBottomMenuHeight);
+        CGSize newSize = CGSizeMake(self.view.sl_width - 2 * KImageLRMargin, (self.view.sl_width - 2 * KImageLRMargin)*self.image.size.height/self.image.size.width);
+        if (newSize.height > maxRect.size.height) {
+            newSize = CGSizeMake(maxRect.size.height*self.image.size.width/self.image.size.height, maxRect.size.height);
+            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                self.zoomView.sl_size = newSize;
+                self.zoomView.sl_y = KImageTopMargin;
+                self.zoomView.sl_centerX = self.view.sl_width/2.0;
+                self.zoomView.imageView.frame = self.zoomView.bounds;
+                [self.zoomView layoutIfNeeded];
+                [self.view layoutIfNeeded];
+            } completion:^(BOOL finished) {
+                
+            }];
+            
+        }else {
+            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                self.zoomView.sl_size = newSize;
+                self.zoomView.center = CGPointMake(self.view.sl_width/2.0, (self.view.sl_height - KBottomMenuHeight)/2.0);
+                [self reConfigZoomImageViewRect];
+                [self.zoomView layoutIfNeeded];
+                [self.view layoutIfNeeded];
+            } completion:^(BOOL finished) {
+                
+            }];
+        }
+    }else {
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            self.zoomView.frame = self.view.bounds;
+            [self reConfigZoomImageViewRect];
+            [self.zoomView layoutIfNeeded];
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+}
+//重新设置图片视图frame
+- (void)reConfigZoomImageViewRect{
+    if (self.image.size.width > 0) {
+        self.zoomView.imageView.frame = CGRectMake(0, 0, self.zoomView.sl_width, self.zoomView.sl_width * self.image.size.height/self.image.size.width);
+    }
+    if (self.zoomView.imageView.sl_height <= self.zoomView.sl_height) {
+        self.zoomView.imageView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
+    }
+}
 - (void)enableEditMenusBackBtn:(BOOL)enable {
     [self.editMenuView enableBackBtn:enable];
 }
 #pragma mark - Setter
 - (void)setEditingMenuType:(SLEditMenuType)editingMenuType {
+    if(editingMenuType != _editingMenuType){
+        [self changeZoomViewRectWithIsEditing:editingMenuType == SLEditMenuTypeUnknown?NO:YES];
+    }
     _editingMenuType = editingMenuType;
     switch (_editingMenuType) {
         case SLEditMenuTypeUnknown:
@@ -165,7 +215,7 @@
 - (SLImageZoomView *)zoomView {
     if (_zoomView == nil) {
         _zoomView = [[SLImageZoomView alloc] initWithFrame:self.view.bounds];
-        _zoomView.backgroundColor = [UIColor blackColor];
+        _zoomView.backgroundColor = [UIColor redColor];
         _zoomView.userInteractionEnabled = YES;
         _zoomView.maximumZoomScale = 4;
         _zoomView.zoomViewDelegate = self;
