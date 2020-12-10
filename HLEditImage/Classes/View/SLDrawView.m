@@ -47,6 +47,10 @@
     }
     return self;
 }
+- (void)setImage:(UIImage *)image {
+    _image = image;
+    [self createPatternImage];
+}
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
     [self checkIfCanGoBack];
@@ -70,6 +74,7 @@
             path.color = [[UIColor alloc]initWithPatternImage:self.image];
             [path strokeWithBlendMode:kCGBlendModeClear alpha:1.0f];
             [path fillWithBlendMode:kCGBlendModeClear alpha:1.0];
+            
         }else {
             //设置颜色
             path.color = self.lineColor;//保存线条当前颜色
@@ -152,6 +157,20 @@
             self.canBackStatusChangedBlock(NO);
         }
     }
+}
+- (void)createPatternImage {
+    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
+    //获得当前Context
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    //CTM变换，调整坐标系，*重要*，否则橡皮擦使用的背景图片会发生翻转。
+    CGContextScaleCTM(context, 1, -1);
+    CGContextTranslateCTM(context, 0, -self.frame.size.height);
+    //图片适配到当前View的矩形区域，会有拉伸
+    [self.image drawInRect:self.bounds];
+    //获取拉伸并翻转后的图片
+    UIImage *stretchedImg = UIGraphicsGetImageFromCurrentImageContext();
+    _image = stretchedImg;
+    UIGraphicsEndImageContext();
 }
 
 #pragma mark - Getter

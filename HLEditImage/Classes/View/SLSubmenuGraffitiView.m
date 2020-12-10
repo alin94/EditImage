@@ -133,6 +133,7 @@
     [titleLabel sizeToFit];
     titleLabel.center = CGPointMake(self.footerView.frame.size.width/2, self.footerView.frame.size.height/2);
     [self.footerView addSubview:titleLabel];
+    self.titleLabel = titleLabel;
     //后退按钮
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     backBtn.frame = CGRectMake(self.footerView.frame.size.width/2 - 40 -12, 0, 40, self.footerView.frame.size.height);

@@ -127,9 +127,9 @@
 - (void)changeZoomViewRectWithIsEditing:(BOOL)isEditing {
     if(isEditing){
         CGRect maxRect = CGRectMake(KImageLRMargin, KImageTopMargin, self.view.sl_width - KImageLRMargin * 2, self.view.sl_height - KImageTopMargin - KImageBottomMargin- KBottomMenuHeight);
-        CGSize newSize = CGSizeMake(self.view.sl_width - 2 * KImageLRMargin, (self.view.sl_width - 2 * KImageLRMargin)*self.image.size.height/self.image.size.width);
+        CGSize newSize = CGSizeMake(self.view.sl_width - 2 * KImageLRMargin, (self.view.sl_width - 2 * KImageLRMargin)*self.zoomView.imageView.image.size.height/self.zoomView.imageView.image.size.width);
         if (newSize.height > maxRect.size.height) {
-            newSize = CGSizeMake(maxRect.size.height*self.image.size.width/self.image.size.height, maxRect.size.height);
+            newSize = CGSizeMake(maxRect.size.height*self.zoomView.imageView.image.size.width/self.zoomView.imageView.image.size.height, maxRect.size.height);
             [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                 self.zoomView.sl_size = newSize;
                 self.zoomView.sl_y = KImageTopMargin;
@@ -140,7 +140,6 @@
             } completion:^(BOOL finished) {
                 _drawView.frame = self.zoomView.imageView.bounds;
                 _mosaicView.frame = self.zoomView.imageView.bounds;
-
             }];
             
         }else {
@@ -153,7 +152,6 @@
             } completion:^(BOOL finished) {
                 _drawView.frame = self.zoomView.imageView.bounds;
                 _mosaicView.frame = self.zoomView.imageView.bounds;
-
             }];
         }
     }else {
@@ -172,7 +170,7 @@
 //重新设置图片视图frame
 - (void)reConfigZoomImageViewRect{
     if (self.image.size.width > 0) {
-        self.zoomView.imageView.frame = CGRectMake(0, 0, self.zoomView.sl_width, self.zoomView.sl_width * self.image.size.height/self.image.size.width);
+        self.zoomView.imageView.frame = CGRectMake(0, 0, self.zoomView.sl_width, self.zoomView.sl_width * self.zoomView.imageView.image.size.height/self.zoomView.imageView.image.size.width);
     }
     if (self.zoomView.imageView.sl_height <= self.zoomView.sl_height) {
         self.zoomView.imageView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
@@ -276,6 +274,7 @@
                 }
                 if(setting[@"erase"]) {
                     weakSelf.drawView.isErase = [setting[@"erase"] boolValue];
+                    weakSelf.drawView.image = weakSelf.zoomView.imageView.image;
                 }
                 if (setting[@"goBack"]) {
                     [weakSelf.drawView goBack];
@@ -384,7 +383,6 @@
 - (SLDrawView *)drawView {
     if (!_drawView) {
         _drawView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
-        _drawView.image = self.image;
         _drawView.backgroundColor = [UIColor clearColor];
         _drawView.lineWidth = 5.0;
         __weak typeof(self) weakSelf = self;
@@ -586,14 +584,7 @@
     UIImage *clipImage = notification.userInfo[@"image"];
     self.zoomView.zoomScale = 1;
     self.zoomView.image = clipImage;
-    self.zoomView.imageView.frame = CGRectMake(0, 0, self.zoomView.sl_width, self.zoomView.sl_width * clipImage.size.height/clipImage.size.width);
-    if (self.zoomView.imageView.sl_height <= self.zoomView.sl_height) {
-        self.zoomView.imageView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
-    }
-    self.zoomView.contentSize = CGSizeMake(self.zoomView.imageView.sl_width, self.zoomView.imageView.sl_height);
-    
-    _drawView.frame = self.zoomView.imageView.bounds;
-    _mosaicView.frame = self.zoomView.imageView.bounds;
+    [self changeZoomViewRectWithIsEditing:NO];
     [_drawView clear];
     [_mosaicView clear];
     for (UIView *view in self.watermarkArray) {

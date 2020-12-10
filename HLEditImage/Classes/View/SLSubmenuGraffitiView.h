@@ -13,9 +13,12 @@
 @property (nonatomic, strong) UIColor *currentColor; // 当前画笔颜色
 @property (nonatomic, copy) void(^selectedLineColor)(UIColor *lineColor); //选中颜色的回调
 @property (nonatomic, copy) void (^selectEraseBlock)(void);//选中橡皮檫
-
 @property (nonatomic, copy) void(^goBackBlock)(void); //返回上一步
 @property (nonatomic, copy) void (^goForwardBlock)(void);//上一步
+@property (nonatomic, copy) void (^cancelBlock)(void);//取消
+@property (nonatomic, copy) void (^doneBlock)(void);//完成
+@property (nonatomic, copy) void (^lineWidthChangedBlock)(CGFloat lineWidth);//画笔宽度改变
+@property (nonatomic, copy) void (^brushShapeChangedBlock)(int shapeType);//画笔类型改变
 
 @property (nonatomic, assign) BOOL backBtnEnable;
 - (void)showBackAndForwardBtn;
