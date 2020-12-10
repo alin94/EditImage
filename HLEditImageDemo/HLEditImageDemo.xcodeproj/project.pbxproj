@@ -165,6 +165,9 @@
 		C7C12F79258065D500B1CC6D /* EditMenuRotate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F73258065D500B1CC6D /* EditMenuRotate@2x.png */; };
 		C7C12F7A258065D500B1CC6D /* EditBrushMosaicSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F74258065D500B1CC6D /* EditBrushMosaicSelected@2x.png */; };
 		C7C12F7B258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F75258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png */; };
+		C7C12F8725806C7D00B1CC6D /* UIButton+SLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C12F8625806C7D00B1CC6D /* UIButton+SLButton.m */; };
+		C7C12F892580898B00B1CC6D /* HLEditImage.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F882580898B00B1CC6D /* HLEditImage.bundle */; };
+		C7C12F942580A54D00B1CC6D /* NSString+SLLocalizable.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C12F932580A54D00B1CC6D /* NSString+SLLocalizable.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -353,6 +356,11 @@
 		C7C12F73258065D500B1CC6D /* EditMenuRotate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuRotate@2x.png"; sourceTree = "<group>"; };
 		C7C12F74258065D500B1CC6D /* EditBrushMosaicSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushMosaicSelected@2x.png"; sourceTree = "<group>"; };
 		C7C12F75258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaicSelected@2x.png"; sourceTree = "<group>"; };
+		C7C12F8525806C7D00B1CC6D /* UIButton+SLButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+SLButton.h"; sourceTree = "<group>"; };
+		C7C12F8625806C7D00B1CC6D /* UIButton+SLButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+SLButton.m"; sourceTree = "<group>"; };
+		C7C12F882580898B00B1CC6D /* HLEditImage.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HLEditImage.bundle; path = Assets/HLEditImage.bundle; sourceTree = "<group>"; };
+		C7C12F922580A54D00B1CC6D /* NSString+SLLocalizable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+SLLocalizable.h"; sourceTree = "<group>"; };
+		C7C12F932580A54D00B1CC6D /* NSString+SLLocalizable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+SLLocalizable.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -404,6 +412,7 @@
 		C7683DA0257A2C8F00DA3061 /* HLEditImage */ = {
 			isa = PBXGroup;
 			children = (
+				C7C12F882580898B00B1CC6D /* HLEditImage.bundle */,
 				C7683DEA257DD5A000DA3061 /* Assets */,
 				C7683DE9257DD57500DA3061 /* Classes */,
 			);
@@ -420,6 +429,10 @@
 				C7683DA2257A2C8F00DA3061 /* UIView+SLFrame.m */,
 				C7683DA4257A2C8F00DA3061 /* UIView+SLImage.h */,
 				C7683DA6257A2C8F00DA3061 /* UIView+SLImage.m */,
+				C7C12F8525806C7D00B1CC6D /* UIButton+SLButton.h */,
+				C7C12F8625806C7D00B1CC6D /* UIButton+SLButton.m */,
+				C7C12F922580A54D00B1CC6D /* NSString+SLLocalizable.h */,
+				C7C12F932580A54D00B1CC6D /* NSString+SLLocalizable.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -680,6 +693,9 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
+				"zh-HK",
+				"zh-Hant",
 			);
 			mainGroup = C7683D7B257A288C00DA3061;
 			productRefGroup = C7683D85257A288C00DA3061 /* Products */;
@@ -799,6 +815,7 @@
 				C7683E2D257DD70300DA3061 /* EditMenuClipImage@3x.png in Resources */,
 				C7C12F44258063C600B1CC6D /* EditBrushSize4@3x.png in Resources */,
 				C7C12F0E258063C600B1CC6D /* EditMenuBack@3x.png in Resources */,
+				C7C12F892580898B00B1CC6D /* HLEditImage.bundle in Resources */,
 				C7C12F1C258063C600B1CC6D /* EditMenuClipScale_4:3@2x.png in Resources */,
 				C7C12F7A258065D500B1CC6D /* EditBrushMosaicSelected@2x.png in Resources */,
 				C7C12F0C258063C600B1CC6D /* EditMenuArrowDown@3x.png in Resources */,
@@ -848,6 +865,7 @@
 				C7683D89257A288C00DA3061 /* AppDelegate.m in Sources */,
 				C7C12EA7257F6FE900B1CC6D /* SLSubmenuGraffitiView.m in Sources */,
 				C7683DDA257A2C8F00DA3061 /* SLEditTextView.m in Sources */,
+				C7C12F942580A54D00B1CC6D /* NSString+SLLocalizable.m in Sources */,
 				C7683DDE257A2C8F00DA3061 /* SLShotFocusView.m in Sources */,
 				C7683D9A257A288E00DA3061 /* main.m in Sources */,
 				C7683DD0257A2C8F00DA3061 /* UIView+SLImage.m in Sources */,
@@ -857,6 +875,7 @@
 				C7683DD1257A2C8F00DA3061 /* UIImage+SLCommon.m in Sources */,
 				C7683DE0257A2C8F00DA3061 /* SLImageZoomView.m in Sources */,
 				C7683DE3257A2C8F00DA3061 /* SLEditSelectedBox.m in Sources */,
+				C7C12F8725806C7D00B1CC6D /* UIButton+SLButton.m in Sources */,
 				C7683DD4257A2C8F00DA3061 /* SLImage.m in Sources */,
 				C7683DD6257A2C8F00DA3061 /* SLDelayPerform.m in Sources */,
 				C7683DE1257A2C8F00DA3061 /* SLRoundCornerTextView.m in Sources */,
@@ -892,6 +911,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -950,6 +970,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

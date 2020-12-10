@@ -214,6 +214,9 @@
 - (void)enableBackBtn:(BOOL)enable {
     if(self.currentMenuType == SLEditMenuTypeGraffiti) {
         self.submenuGraffiti.backBtnEnable = enable;
+        if(enable){
+            [self.submenuGraffiti showBackAndForwardBtn];
+        }
         return;
     }
     if(self.currentMenuType == SLEditMenuTypePictureMosaic) {
@@ -293,13 +296,17 @@
 #pragma mark - Getter
 - (SLSubmenuGraffitiView *)submenuGraffiti {
     if (!_submenuGraffiti) {
-        _submenuGraffiti = [[SLSubmenuGraffitiView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60)];
+        _submenuGraffiti = [[SLSubmenuGraffitiView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
         _submenuGraffiti.hidden = YES;
+        _submenuGraffiti.backgroundColor = [UIColor whiteColor];
         __weak typeof(self) weakSelf = self;
         _submenuGraffiti.selectedLineColor = ^(UIColor *lineColor) {
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"lineColor":lineColor});
         };
-        _submenuGraffiti.goBack = ^{
+        _submenuGraffiti.selectEraseBlock = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"erase":@(YES)});
+        };
+        _submenuGraffiti.goBackBlock = ^{
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"goBack":@(YES)});
         };
     }
@@ -393,6 +400,14 @@
         view.hidden = NO;
         self.currentSubmenu = view;
         [self addSubview:view];
+        CGRect originalRect = view.frame;
+        view.frame = CGRectMake(0, self.frame.size.height, view.frame.size.width, view.frame.size.height);
+        [UIView animateWithDuration:0.25 animations:^{
+            view.frame = originalRect;
+            [self layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            
+        }];
     }
 }
 @end

@@ -12,11 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 涂鸦视图 画板   默认白底
 @interface SLDrawView : UIView
-
+@property (nonatomic, strong) UIImage *image;
 /// 线粗 默认5.0
 @property (nonatomic, assign) CGFloat lineWidth;
 /// 线颜色  默认 黑色
 @property (nonatomic, strong) UIColor *lineColor;
+///是否是橡皮檫
+@property (nonatomic, assign) BOOL isErase;
+
 /// 正在绘画 
 @property (nonatomic, readonly) BOOL isDrawing;
 /// 能否返回
@@ -32,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 数据  笔画数据
 @property (nonatomic, strong) NSDictionary *data;
+
 
 /// 前进一步
 - (void)goForward;

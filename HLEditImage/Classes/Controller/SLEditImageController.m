@@ -138,7 +138,9 @@
                 [self.zoomView layoutIfNeeded];
                 [self.view layoutIfNeeded];
             } completion:^(BOOL finished) {
-                
+                _drawView.frame = self.zoomView.imageView.bounds;
+                _mosaicView.frame = self.zoomView.imageView.bounds;
+
             }];
             
         }else {
@@ -149,7 +151,9 @@
                 [self.zoomView layoutIfNeeded];
                 [self.view layoutIfNeeded];
             } completion:^(BOOL finished) {
-                
+                _drawView.frame = self.zoomView.imageView.bounds;
+                _mosaicView.frame = self.zoomView.imageView.bounds;
+
             }];
         }
     }else {
@@ -159,7 +163,9 @@
             [self.zoomView layoutIfNeeded];
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            
+            _drawView.frame = self.zoomView.imageView.bounds;
+            _mosaicView.frame = self.zoomView.imageView.bounds;
+
         }];
     }
 }
@@ -251,7 +257,7 @@
 
 - (SLEditMenuView *)editMenuView {
     if (!_editMenuView) {
-        _editMenuView = [[SLEditMenuView alloc] initWithFrame:CGRectMake(0, self.view.sl_height - 130 - kSafeAreaBottomHeight, self.view.sl_width, 130 + kSafeAreaBottomHeight)];
+        _editMenuView = [[SLEditMenuView alloc] initWithFrame:CGRectMake(0, self.view.sl_height - 144 - kSafeAreaBottomHeight, self.view.sl_width, 144 + kSafeAreaBottomHeight)];
         _editMenuView.hidden = YES;
         __weak typeof(self) weakSelf = self;
         _editMenuView.editObject = SLEditObjectPicture;
@@ -265,7 +271,11 @@
                 if ([setting[@"hidden"] boolValue]) weakSelf.editingMenuType = SLEditMenuTypeUnknown;
                 [weakSelf.zoomView.imageView insertSubview:weakSelf.drawView atIndex:([weakSelf.zoomView.imageView.subviews containsObject:weakSelf.mosaicView] ? 1: 0)];
                 if (setting[@"lineColor"]) {
+                    weakSelf.drawView.isErase = NO;
                     weakSelf.drawView.lineColor = setting[@"lineColor"];
+                }
+                if(setting[@"erase"]) {
+                    weakSelf.drawView.isErase = [setting[@"erase"] boolValue];
                 }
                 if (setting[@"goBack"]) {
                     [weakSelf.drawView goBack];
@@ -374,6 +384,7 @@
 - (SLDrawView *)drawView {
     if (!_drawView) {
         _drawView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
+        _drawView.image = self.image;
         _drawView.backgroundColor = [UIColor clearColor];
         _drawView.lineWidth = 5.0;
         __weak typeof(self) weakSelf = self;

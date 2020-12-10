@@ -89,5 +89,17 @@
     CFRelease(sourceRef);
     return image;
 }
-
++ (UIImage *)sl_imageWithColor:(UIColor *)color size:(CGSize)size {
+    
+    CGRect r= CGRectMake(0.0f, 0.0f, size.width, size.height);
+    UIGraphicsBeginImageContext(r.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, r);
+    
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
 @end

@@ -66,8 +66,14 @@
         path.lineCapStyle = kCGLineCapRound; //线条拐角
         path.lineJoinStyle = kCGLineJoinRound; //终点处理
         [path moveToPoint:point];
-        //设置颜色
-        path.color = self.lineColor;//保存线条当前颜色
+        if(self.isErase){
+            path.color = [[UIColor alloc]initWithPatternImage:self.image];
+            [path strokeWithBlendMode:kCGBlendModeClear alpha:1.0f];
+            [path fillWithBlendMode:kCGBlendModeClear alpha:1.0];
+        }else {
+            //设置颜色
+            path.color = self.lineColor;//保存线条当前颜色
+        }
         [self.lineArray addObject:path];
         
         CAShapeLayer *slayer = [self createShapeLayer:path];

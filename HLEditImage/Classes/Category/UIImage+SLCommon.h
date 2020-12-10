@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 图片缩放，针对大图片处理
 + (UIImage *)sl_scaledImageWithData:(NSData *)data withSize:(CGSize)size scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
 
++ (UIImage *)sl_imageWithColor:(UIColor *)color size:(CGSize)size;
 @end
 
 NS_ASSUME_NONNULL_END

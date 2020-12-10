@@ -10,12 +10,14 @@
 
 /// 涂鸦子菜单 画笔颜色形状选择
 @interface SLSubmenuGraffitiView : UIView
-@property (nonatomic, assign) int currentColorIndex; // 当前画笔颜色索引
 @property (nonatomic, strong) UIColor *currentColor; // 当前画笔颜色
 @property (nonatomic, copy) void(^selectedLineColor)(UIColor *lineColor); //选中颜色的回调
-@property (nonatomic, copy) void(^goBack)(void); //返回上一步
-@property (nonatomic, strong) UIButton *backBtn; //返回按钮
-@property (nonatomic, assign) BOOL backBtnEnable;
+@property (nonatomic, copy) void (^selectEraseBlock)(void);//选中橡皮檫
 
+@property (nonatomic, copy) void(^goBackBlock)(void); //返回上一步
+@property (nonatomic, copy) void (^goForwardBlock)(void);//上一步
+
+@property (nonatomic, assign) BOOL backBtnEnable;
+- (void)showBackAndForwardBtn;
 @end
 
