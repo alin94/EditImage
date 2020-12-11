@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 截取视图转Image
 /// @param range 截图区域
 - (UIImage *)sl_imageByViewInRect:(CGRect)range;
+- (UIImage *)sl_imageByViewInRect:(CGRect)range shouldTranslateCTM:(BOOL)translateCTM;
 @end
 
 NS_ASSUME_NONNULL_END

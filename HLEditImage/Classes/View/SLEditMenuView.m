@@ -309,6 +309,21 @@
         _submenuGraffiti.goBackBlock = ^{
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"goBack":@(YES)});
         };
+        _submenuGraffiti.goForwardBlock  = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"goForward":@(YES)});
+        };
+        _submenuGraffiti.cancelBlock = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"clear":@(YES),@"hidden":@(YES)});
+            [weakSelf hiddenView:weakSelf.submenuGraffiti];
+        };
+        _submenuGraffiti.doneBlock = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"hidden":@(YES)});
+            [weakSelf hiddenView:weakSelf.submenuGraffiti];
+
+        };
+        _submenuGraffiti.lineWidthChangedBlock = ^(CGFloat lineWidth) {
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"lineWidth":@(lineWidth)});
+        };
     }
     return _submenuGraffiti;
 }
@@ -344,13 +359,6 @@
     }
 }
 - (void)menuBtnClicked:(UIButton *)menuBtn {
-    for (UIButton *subView in self.menuBtns) {
-        if (subView == menuBtn) {
-            subView.selected = !subView.selected;
-        } else {
-            subView.selected = NO;
-        }
-    }
     SLEditMenuType editMenuType = menuBtn.tag;
     self.currentMenuType = editMenuType;
     switch (editMenuType) {
@@ -396,6 +404,7 @@
     if (hidden) {
         view.hidden = YES;
         [view removeFromSuperview];
+        self.hideSubMenuBlock(self.currentMenuType);
     }else {
         view.hidden = NO;
         self.currentSubmenu = view;

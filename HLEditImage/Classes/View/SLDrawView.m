@@ -35,12 +35,13 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _lineWidth = 5.f;
+        _lineWidth = 4.f;
         _lineColor = [UIColor blackColor];
         _layerArray = [NSMutableArray array];
         _lineArray = [NSMutableArray array];
         _deleteLineArray = [NSMutableArray array];
         _deleteLayerArray = [NSMutableArray array];
+        _enableDraw = YES;
         self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds = YES;
         self.exclusiveTouch = YES;
@@ -50,6 +51,10 @@
 - (void)setImage:(UIImage *)image {
     _image = image;
     [self createPatternImage];
+}
+- (void)setEnableDraw:(BOOL)enableDraw {
+    _enableDraw = enableDraw;
+    self.userInteractionEnabled = enableDraw;
 }
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];

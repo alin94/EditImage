@@ -41,6 +41,8 @@ typedef NS_ENUM(NSUInteger, SLEditMenuType) {
 @property (nonatomic, assign) SLEditObject editObject;
 /// 选择编辑的子菜单回调
 @property (nonatomic, copy) void(^selectEditMenu)(SLEditMenuType editMenuType,  NSDictionary * _Nullable setting);
+//隐藏子菜单
+@property (nonatomic, copy) void(^hideSubMenuBlock)(SLEditMenuType menuType);
 @property (nonatomic, copy) void (^doneBtnClickBlock)(void);
 ///设置back按钮是否可点
 - (void)enableBackBtn:(BOOL)enable;

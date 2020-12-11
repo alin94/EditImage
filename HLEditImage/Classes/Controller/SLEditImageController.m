@@ -45,6 +45,9 @@
 
 @property (nonatomic, assign) SLEditMenuType editingMenuType; //当前正在编辑的菜单类型
 
+@property (nonatomic, strong) NSMutableDictionary *menuSetting;//全部的设置
+
+
 @end
 
 @implementation SLEditImageController
@@ -128,42 +131,32 @@
     if(isEditing){
         CGRect maxRect = CGRectMake(KImageLRMargin, KImageTopMargin, self.view.sl_width - KImageLRMargin * 2, self.view.sl_height - KImageTopMargin - KImageBottomMargin- KBottomMenuHeight);
         CGSize newSize = CGSizeMake(self.view.sl_width - 2 * KImageLRMargin, (self.view.sl_width - 2 * KImageLRMargin)*self.zoomView.imageView.image.size.height/self.zoomView.imageView.image.size.width);
+        CGPoint newCenter;
         if (newSize.height > maxRect.size.height) {
             newSize = CGSizeMake(maxRect.size.height*self.zoomView.imageView.image.size.width/self.zoomView.imageView.image.size.height, maxRect.size.height);
-            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                self.zoomView.sl_size = newSize;
-                self.zoomView.sl_y = KImageTopMargin;
-                self.zoomView.sl_centerX = self.view.sl_width/2.0;
-                self.zoomView.imageView.frame = self.zoomView.bounds;
-                [self.zoomView layoutIfNeeded];
-                [self.view layoutIfNeeded];
-            } completion:^(BOOL finished) {
-                _drawView.frame = self.zoomView.imageView.bounds;
-                _mosaicView.frame = self.zoomView.imageView.bounds;
-            }];
-            
+            newCenter = CGPointMake(self.view.sl_width/2.0, KImageTopMargin +newSize.height/2.0);
         }else {
-            [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                self.zoomView.sl_size = newSize;
-                self.zoomView.center = CGPointMake(self.view.sl_width/2.0, (self.view.sl_height - KBottomMenuHeight)/2.0);
-                [self reConfigZoomImageViewRect];
-                [self.zoomView layoutIfNeeded];
-                [self.view layoutIfNeeded];
-            } completion:^(BOOL finished) {
-                _drawView.frame = self.zoomView.imageView.bounds;
-                _mosaicView.frame = self.zoomView.imageView.bounds;
-            }];
+            newCenter =  CGPointMake(self.view.sl_width/2.0, (self.view.sl_height - KBottomMenuHeight)/2.0);
         }
+        CGFloat scaleX = newSize.width/self.zoomView.imageView.frame.size.width;
+        CGFloat scaleY = newSize.height/self.zoomView.imageView.frame.size.height;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.zoomView.center = newCenter;
+            self.zoomView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scaleX, scaleY);
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            
+        }];
+
     }else {
-        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.zoomView.frame = self.view.bounds;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.zoomView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+            self.zoomView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
             [self reConfigZoomImageViewRect];
             [self.zoomView layoutIfNeeded];
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            _drawView.frame = self.zoomView.imageView.bounds;
-            _mosaicView.frame = self.zoomView.imageView.bounds;
-
+            
         }];
     }
 }
@@ -175,15 +168,15 @@
     if (self.zoomView.imageView.sl_height <= self.zoomView.sl_height) {
         self.zoomView.imageView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
     }
+    _drawView.frame = self.zoomView.imageView.bounds;
+    _mosaicView.frame = self.zoomView.imageView.bounds;
+
 }
 - (void)enableEditMenusBackBtn:(BOOL)enable {
     [self.editMenuView enableBackBtn:enable];
 }
 #pragma mark - Setter
 - (void)setEditingMenuType:(SLEditMenuType)editingMenuType {
-    if(editingMenuType != _editingMenuType){
-        [self changeZoomViewRectWithIsEditing:editingMenuType == SLEditMenuTypeUnknown?NO:YES];
-    }
     _editingMenuType = editingMenuType;
     switch (_editingMenuType) {
         case SLEditMenuTypeUnknown:
@@ -262,10 +255,16 @@
         _editMenuView.doneBtnClickBlock = ^{
             [weakSelf doneEditBtnClicked:nil];
         };
+        _editMenuView.hideSubMenuBlock = ^(SLEditMenuType menuType) {
+            if(menuType == SLEditMenuTypeGraffiti){
+                [weakSelf changeZoomViewRectWithIsEditing:NO];
+            }
+        };
         _editMenuView.selectEditMenu = ^(SLEditMenuType editMenuType, NSDictionary * _Nullable setting) {
             weakSelf.editingMenuType = ![setting[@"hidden"] boolValue] ? editMenuType : SLEditMenuTypeUnknown;
             if (editMenuType == SLEditMenuTypeGraffiti) {
-                weakSelf.drawView.userInteractionEnabled = ![setting[@"hidden"] boolValue];
+                [weakSelf changeZoomViewRectWithIsEditing:YES];
+                weakSelf.drawView.enableDraw = ![setting[@"hidden"] boolValue];
                 if ([setting[@"hidden"] boolValue]) weakSelf.editingMenuType = SLEditMenuTypeUnknown;
                 [weakSelf.zoomView.imageView insertSubview:weakSelf.drawView atIndex:([weakSelf.zoomView.imageView.subviews containsObject:weakSelf.mosaicView] ? 1: 0)];
                 if (setting[@"lineColor"]) {
@@ -273,12 +272,23 @@
                     weakSelf.drawView.lineColor = setting[@"lineColor"];
                 }
                 if(setting[@"erase"]) {
-                    weakSelf.drawView.isErase = [setting[@"erase"] boolValue];
+                    weakSelf.drawView.isErase = YES;
                     weakSelf.drawView.image = weakSelf.zoomView.imageView.image;
                 }
                 if (setting[@"goBack"]) {
                     [weakSelf.drawView goBack];
                 }
+                if (setting[@"goForward"]) {
+                    [weakSelf.drawView goForward];
+                }
+                if(setting[@"clear"]) {
+                    [weakSelf.drawView clear];
+                }
+                if (setting[@"lineWidth"]) {
+                    weakSelf.drawView.lineWidth = [setting[@"lineWidth"] floatValue];
+                }
+                //更新设置
+                [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
             }else {
                 weakSelf.drawView.userInteractionEnabled = NO;
             }
@@ -354,6 +364,8 @@
                 if (setting[@"goBack"]) {
                     [weakSelf.mosaicView goBack];
                 }
+                //更新设置
+                [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
             }else {
                 weakSelf.mosaicView.userInteractionEnabled = NO;
             }
@@ -361,7 +373,7 @@
                 SLImageClipController *imageClipController = [[SLImageClipController alloc] init];
                 imageClipController.modalPresentationStyle = UIModalPresentationFullScreen;
                 [weakSelf.selectedBox removeFromSuperview];
-                UIImage *image = [weakSelf.zoomView.imageView sl_imageByViewInRect:weakSelf.zoomView.imageView.bounds];
+                UIImage *image = [weakSelf.zoomView.imageView sl_imageByViewInRect:weakSelf.zoomView.imageView.bounds shouldTranslateCTM:YES];
                 imageClipController.image = image;
                 [weakSelf presentViewController:imageClipController animated:NO completion:nil];
             }
@@ -384,13 +396,13 @@
     if (!_drawView) {
         _drawView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
         _drawView.backgroundColor = [UIColor clearColor];
-        _drawView.lineWidth = 5.0;
+        _drawView.lineWidth = 4.0;
         __weak typeof(self) weakSelf = self;
         _drawView.drawBegan = ^{
-            [weakSelf hiddenEditMenus:YES];
+//            [weakSelf hiddenEditMenus:YES];
         };
         _drawView.drawEnded = ^{
-            [weakSelf hiddenEditMenus:NO];
+//            [weakSelf hiddenEditMenus:NO];
         };
         _drawView.canBackStatusChangedBlock = ^(BOOL enable) {
             [weakSelf enableEditMenusBackBtn:enable];
@@ -403,6 +415,15 @@
         _watermarkArray = [NSMutableArray array];
     }
     return _watermarkArray;
+}
+- (NSMutableDictionary *)menuSetting {
+    if(!_menuSetting){
+        _menuSetting = [NSMutableDictionary dictionary];
+        //默认设置
+        _menuSetting[@"lineWidth"] = @(4);
+        _menuSetting[@"lineColor"] = kColorWithHex(0xF2F2F2);
+    }
+    return _menuSetting;
 }
 - (SLEditSelectedBox *)selectedBox {
     if (!_selectedBox) {
@@ -446,7 +467,7 @@
 //完成编辑 导出编辑后的对象
 - (void)doneEditBtnClicked:(id)sender {
     [self.selectedBox removeFromSuperview];
-    self.image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds];
+    self.image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
     if(self.editFinishedBlock){
         self.editFinishedBlock(self.image);
     }
@@ -601,7 +622,7 @@
 
 #pragma mark - SLZoomViewDelegate
 - (void)zoomViewDidEndMoveImage:(SLImageZoomView *)zoomView {
-    self.drawView.lineWidth = 5.0/self.zoomView.zoomScale;
+    self.drawView.lineWidth = [self.menuSetting[@"lineWidth"] floatValue]/self.zoomView.zoomScale;
     self.mosaicView.squareWidth = 15/self.zoomView.zoomScale;
     self.mosaicView.paintSize = CGSizeMake(40/self.zoomView.zoomScale, 40/self.zoomView.zoomScale);
 }

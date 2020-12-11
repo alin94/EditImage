@@ -70,7 +70,7 @@
 		C7C12EA1257F2D5200B1CC6D /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7C12EA0257F2D5200B1CC6D /* WebP.framework */; };
 		C7C12EA7257F6FE900B1CC6D /* SLSubmenuGraffitiView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C12EA6257F6FE900B1CC6D /* SLSubmenuGraffitiView.m */; };
 		C7C12F0C258063C600B1CC6D /* EditMenuArrowDown@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EA8258063BB00B1CC6D /* EditMenuArrowDown@3x.png */; };
-		C7C12F0D258063C600B1CC6D /* EditBrushSize1Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EA9258063BB00B1CC6D /* EditBrushSize1Selected@3x.png */; };
+		C7C12F0D258063C600B1CC6D /* EditBrushSize2Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EA9258063BB00B1CC6D /* EditBrushSize2Selected@3x.png */; };
 		C7C12F0E258063C600B1CC6D /* EditMenuBack@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAA258063BC00B1CC6D /* EditMenuBack@3x.png */; };
 		C7C12F0F258063C600B1CC6D /* EditMenuEraserDisable@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAB258063BC00B1CC6D /* EditMenuEraserDisable@3x.png */; };
 		C7C12F10258063C600B1CC6D /* EditBrushSize4Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EAC258063BC00B1CC6D /* EditBrushSize4Selected@3x.png */; };
@@ -83,7 +83,7 @@
 		C7C12F17258063C600B1CC6D /* EditMenuNextDisable@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB3258063BC00B1CC6D /* EditMenuNextDisable@2x.png */; };
 		C7C12F18258063C600B1CC6D /* EditBrushSize3Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB4258063BC00B1CC6D /* EditBrushSize3Selected@2x.png */; };
 		C7C12F19258063C600B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB5258063BC00B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png */; };
-		C7C12F1A258063C600B1CC6D /* EditBrushSize1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB6258063BD00B1CC6D /* EditBrushSize1@3x.png */; };
+		C7C12F1A258063C600B1CC6D /* EditBrushSize2@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB6258063BD00B1CC6D /* EditBrushSize2@3x.png */; };
 		C7C12F1B258063C600B1CC6D /* EditMenuClipScaleSelected_4:3@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB7258063BD00B1CC6D /* EditMenuClipScaleSelected_4:3@3x.png */; };
 		C7C12F1C258063C600B1CC6D /* EditMenuClipScale_4:3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB8258063BD00B1CC6D /* EditMenuClipScale_4:3@2x.png */; };
 		C7C12F1D258063C600B1CC6D /* EditBrushSize5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EB9258063BD00B1CC6D /* EditBrushSize5@2x.png */; };
@@ -145,8 +145,8 @@
 		C7C12F5A258063C600B1CC6D /* EditDragRotate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF6258063C300B1CC6D /* EditDragRotate@2x.png */; };
 		C7C12F5D258063C600B1CC6D /* EditShapeCircleSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EF9258063C400B1CC6D /* EditShapeCircleSelected@3x.png */; };
 		C7C12F5E258063C600B1CC6D /* EditShapeArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFA258063C400B1CC6D /* EditShapeArrow@2x.png */; };
-		C7C12F5F258063C600B1CC6D /* EditBrushSize1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFB258063C400B1CC6D /* EditBrushSize1@2x.png */; };
-		C7C12F60258063C600B1CC6D /* EditBrushSize1Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFC258063C400B1CC6D /* EditBrushSize1Selected@2x.png */; };
+		C7C12F5F258063C600B1CC6D /* EditBrushSize2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFB258063C400B1CC6D /* EditBrushSize2@2x.png */; };
+		C7C12F60258063C600B1CC6D /* EditBrushSize2Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFC258063C400B1CC6D /* EditBrushSize2Selected@2x.png */; };
 		C7C12F61258063C600B1CC6D /* EditBrushSize3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFD258063C400B1CC6D /* EditBrushSize3@2x.png */; };
 		C7C12F62258063C600B1CC6D /* EditMenuClipScale_4:3@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFE258063C400B1CC6D /* EditMenuClipScale_4:3@3x.png */; };
 		C7C12F63258063C600B1CC6D /* EditMenuClipScaleSelected_3:4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EFF258063C400B1CC6D /* EditMenuClipScaleSelected_3:4@2x.png */; };
@@ -168,6 +168,10 @@
 		C7C12F8725806C7D00B1CC6D /* UIButton+SLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C12F8625806C7D00B1CC6D /* UIButton+SLButton.m */; };
 		C7C12F892580898B00B1CC6D /* HLEditImage.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F882580898B00B1CC6D /* HLEditImage.bundle */; };
 		C7C12F942580A54D00B1CC6D /* NSString+SLLocalizable.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C12F932580A54D00B1CC6D /* NSString+SLLocalizable.m */; };
+		C7C12F992582085800B1CC6D /* EditBrushSize1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F952582085700B1CC6D /* EditBrushSize1@2x.png */; };
+		C7C12F9A2582085800B1CC6D /* EditBrushSize1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F962582085800B1CC6D /* EditBrushSize1@3x.png */; };
+		C7C12F9B2582085800B1CC6D /* EditBrushSize1Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F972582085800B1CC6D /* EditBrushSize1Selected@3x.png */; };
+		C7C12F9C2582085800B1CC6D /* EditBrushSize1Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F982582085800B1CC6D /* EditBrushSize1Selected@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -261,7 +265,7 @@
 		C7C12EA5257F6FE900B1CC6D /* SLSubmenuGraffitiView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLSubmenuGraffitiView.h; sourceTree = "<group>"; };
 		C7C12EA6257F6FE900B1CC6D /* SLSubmenuGraffitiView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLSubmenuGraffitiView.m; sourceTree = "<group>"; };
 		C7C12EA8258063BB00B1CC6D /* EditMenuArrowDown@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuArrowDown@3x.png"; sourceTree = "<group>"; };
-		C7C12EA9258063BB00B1CC6D /* EditBrushSize1Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1Selected@3x.png"; sourceTree = "<group>"; };
+		C7C12EA9258063BB00B1CC6D /* EditBrushSize2Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize2Selected@3x.png"; sourceTree = "<group>"; };
 		C7C12EAA258063BC00B1CC6D /* EditMenuBack@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuBack@3x.png"; sourceTree = "<group>"; };
 		C7C12EAB258063BC00B1CC6D /* EditMenuEraserDisable@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuEraserDisable@3x.png"; sourceTree = "<group>"; };
 		C7C12EAC258063BC00B1CC6D /* EditBrushSize4Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize4Selected@3x.png"; sourceTree = "<group>"; };
@@ -274,7 +278,7 @@
 		C7C12EB3258063BC00B1CC6D /* EditMenuNextDisable@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuNextDisable@2x.png"; sourceTree = "<group>"; };
 		C7C12EB4258063BC00B1CC6D /* EditBrushSize3Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize3Selected@2x.png"; sourceTree = "<group>"; };
 		C7C12EB5258063BC00B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_1:1@3x.png"; sourceTree = "<group>"; };
-		C7C12EB6258063BD00B1CC6D /* EditBrushSize1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1@3x.png"; sourceTree = "<group>"; };
+		C7C12EB6258063BD00B1CC6D /* EditBrushSize2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize2@3x.png"; sourceTree = "<group>"; };
 		C7C12EB7258063BD00B1CC6D /* EditMenuClipScaleSelected_4:3@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_4:3@3x.png"; sourceTree = "<group>"; };
 		C7C12EB8258063BD00B1CC6D /* EditMenuClipScale_4:3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_4:3@2x.png"; sourceTree = "<group>"; };
 		C7C12EB9258063BD00B1CC6D /* EditBrushSize5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize5@2x.png"; sourceTree = "<group>"; };
@@ -336,8 +340,8 @@
 		C7C12EF6258063C300B1CC6D /* EditDragRotate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditDragRotate@2x.png"; sourceTree = "<group>"; };
 		C7C12EF9258063C400B1CC6D /* EditShapeCircleSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeCircleSelected@3x.png"; sourceTree = "<group>"; };
 		C7C12EFA258063C400B1CC6D /* EditShapeArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeArrow@2x.png"; sourceTree = "<group>"; };
-		C7C12EFB258063C400B1CC6D /* EditBrushSize1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1@2x.png"; sourceTree = "<group>"; };
-		C7C12EFC258063C400B1CC6D /* EditBrushSize1Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1Selected@2x.png"; sourceTree = "<group>"; };
+		C7C12EFB258063C400B1CC6D /* EditBrushSize2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize2@2x.png"; sourceTree = "<group>"; };
+		C7C12EFC258063C400B1CC6D /* EditBrushSize2Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize2Selected@2x.png"; sourceTree = "<group>"; };
 		C7C12EFD258063C400B1CC6D /* EditBrushSize3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize3@2x.png"; sourceTree = "<group>"; };
 		C7C12EFE258063C400B1CC6D /* EditMenuClipScale_4:3@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScale_4:3@3x.png"; sourceTree = "<group>"; };
 		C7C12EFF258063C400B1CC6D /* EditMenuClipScaleSelected_3:4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_3:4@2x.png"; sourceTree = "<group>"; };
@@ -361,6 +365,10 @@
 		C7C12F882580898B00B1CC6D /* HLEditImage.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HLEditImage.bundle; path = Assets/HLEditImage.bundle; sourceTree = "<group>"; };
 		C7C12F922580A54D00B1CC6D /* NSString+SLLocalizable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+SLLocalizable.h"; sourceTree = "<group>"; };
 		C7C12F932580A54D00B1CC6D /* NSString+SLLocalizable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+SLLocalizable.m"; sourceTree = "<group>"; };
+		C7C12F952582085700B1CC6D /* EditBrushSize1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1@2x.png"; sourceTree = "<group>"; };
+		C7C12F962582085800B1CC6D /* EditBrushSize1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1@3x.png"; sourceTree = "<group>"; };
+		C7C12F972582085800B1CC6D /* EditBrushSize1Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1Selected@3x.png"; sourceTree = "<group>"; };
+		C7C12F982582085800B1CC6D /* EditBrushSize1Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1Selected@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -522,10 +530,14 @@
 				C7683DF1257DD6E100DA3061 /* EditBrushMosaic@3x.png */,
 				C7C12F74258065D500B1CC6D /* EditBrushMosaicSelected@2x.png */,
 				C7683DF6257DD6E200DA3061 /* EditBrushMosaicSelected@3x.png */,
-				C7C12EFB258063C400B1CC6D /* EditBrushSize1@2x.png */,
-				C7C12EB6258063BD00B1CC6D /* EditBrushSize1@3x.png */,
-				C7C12EFC258063C400B1CC6D /* EditBrushSize1Selected@2x.png */,
-				C7C12EA9258063BB00B1CC6D /* EditBrushSize1Selected@3x.png */,
+				C7C12F952582085700B1CC6D /* EditBrushSize1@2x.png */,
+				C7C12F962582085800B1CC6D /* EditBrushSize1@3x.png */,
+				C7C12F982582085800B1CC6D /* EditBrushSize1Selected@2x.png */,
+				C7C12F972582085800B1CC6D /* EditBrushSize1Selected@3x.png */,
+				C7C12EFB258063C400B1CC6D /* EditBrushSize2@2x.png */,
+				C7C12EB6258063BD00B1CC6D /* EditBrushSize2@3x.png */,
+				C7C12EFC258063C400B1CC6D /* EditBrushSize2Selected@2x.png */,
+				C7C12EA9258063BB00B1CC6D /* EditBrushSize2Selected@3x.png */,
 				C7C12EFD258063C400B1CC6D /* EditBrushSize3@2x.png */,
 				C7C12EF1258063C300B1CC6D /* EditBrushSize3@3x.png */,
 				C7C12EB4258063BC00B1CC6D /* EditBrushSize3Selected@2x.png */,
@@ -714,18 +726,20 @@
 			files = (
 				C7C12F34258063C600B1CC6D /* EditMenuBackDisable@3x.png in Resources */,
 				C7C12F19258063C600B1CC6D /* EditMenuClipScaleSelected_1:1@3x.png in Resources */,
+				C7C12F9B2582085800B1CC6D /* EditBrushSize1Selected@3x.png in Resources */,
 				C7C12F5E258063C600B1CC6D /* EditShapeArrow@2x.png in Resources */,
 				C7C12F31258063C600B1CC6D /* EditMenuDone@3x.png in Resources */,
+				C7C12F9C2582085800B1CC6D /* EditBrushSize1Selected@2x.png in Resources */,
 				C7683E26257DD70300DA3061 /* EditMenuGraffitiBackDisable@2x.png in Resources */,
 				C7C12F46258063C600B1CC6D /* EditBrushSize5Selected@2x.png in Resources */,
 				C7C12F3E258063C600B1CC6D /* EditTrash@2x.png in Resources */,
 				C7C12F23258063C600B1CC6D /* EditMenuShapeGraffiti@3x.png in Resources */,
 				C7C12F11258063C600B1CC6D /* EditDragRotate@3x.png in Resources */,
-				C7C12F5F258063C600B1CC6D /* EditBrushSize1@2x.png in Resources */,
+				C7C12F5F258063C600B1CC6D /* EditBrushSize2@2x.png in Resources */,
 				C7C12F7B258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png in Resources */,
 				C7683E21257DD70300DA3061 /* EditMenuGraffitiBack@3x.png in Resources */,
 				C7C12F69258063C600B1CC6D /* EditMenuClipScale_9:16@3x.png in Resources */,
-				C7C12F1A258063C600B1CC6D /* EditBrushSize1@3x.png in Resources */,
+				C7C12F1A258063C600B1CC6D /* EditBrushSize2@3x.png in Resources */,
 				C7C12F54258063C600B1CC6D /* EditMenuClipScaleSelected_9:16@2x.png in Resources */,
 				C7C12F6A258063C600B1CC6D /* EditMenuClose@3x.png in Resources */,
 				C7683E32257DD70300DA3061 /* EditMenuRotate@3x.png in Resources */,
@@ -757,7 +771,7 @@
 				C7C12F43258063C600B1CC6D /* EditMenuClipScale_16:9@2x.png in Resources */,
 				C7683E31257DD70300DA3061 /* EditMenuGraffitiSelected@3x.png in Resources */,
 				C7C12F24258063C600B1CC6D /* EditShapeArrowSelected@3x.png in Resources */,
-				C7C12F0D258063C600B1CC6D /* EditBrushSize1Selected@3x.png in Resources */,
+				C7C12F0D258063C600B1CC6D /* EditBrushSize2Selected@3x.png in Resources */,
 				C7C12F4C258063C600B1CC6D /* EditShapeRectangle@3x.png in Resources */,
 				C7C12F26258063C600B1CC6D /* EditTextAlignCenter@2x.png in Resources */,
 				C7C12F66258063C600B1CC6D /* EditMenuBackDisable@2x.png in Resources */,
@@ -784,6 +798,7 @@
 				C7C12F56258063C600B1CC6D /* EditMenuClipScaleSelected_3:4@3x.png in Resources */,
 				C7C12F32258063C600B1CC6D /* EditMenuClose@2x.png in Resources */,
 				C7C12F22258063C600B1CC6D /* EditMenuNextDisable@3x.png in Resources */,
+				C7C12F992582085800B1CC6D /* EditBrushSize1@2x.png in Resources */,
 				C7C12F68258063C600B1CC6D /* EditShapeRectangleSelected@2x.png in Resources */,
 				C7C12F65258063C600B1CC6D /* EditShapeArrow@3x.png in Resources */,
 				C7683E08257DD6E300DA3061 /* EditMenuTextBackgroundColor@3x.png in Resources */,
@@ -840,7 +855,8 @@
 				C7C12F5D258063C600B1CC6D /* EditShapeCircleSelected@3x.png in Resources */,
 				C7C12F13258063C600B1CC6D /* EditMenuNext@3x.png in Resources */,
 				C7C12F61258063C600B1CC6D /* EditBrushSize3@2x.png in Resources */,
-				C7C12F60258063C600B1CC6D /* EditBrushSize1Selected@2x.png in Resources */,
+				C7C12F9A2582085800B1CC6D /* EditBrushSize1@3x.png in Resources */,
+				C7C12F60258063C600B1CC6D /* EditBrushSize2Selected@2x.png in Resources */,
 				C7683E29257DD70300DA3061 /* EditMenuMosaic@3x.png in Resources */,
 				C7683DFC257DD6E300DA3061 /* EditMenuTextColor@3x.png in Resources */,
 				C7C12F15258063C600B1CC6D /* EditMenuShapeGraffitiSelected@2x.png in Resources */,

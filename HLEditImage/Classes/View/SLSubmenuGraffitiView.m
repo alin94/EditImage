@@ -12,27 +12,197 @@
 #import "NSString+SLLocalizable.h"
 #import "UIImage+SLCommon.h"
 
+@interface SLSubmenuGraffitiLineWidthView : UIView
+@property (nonatomic, copy) void (^selectItemBlock)(CGFloat selectlineWidth,UIImage *selectIconImage);
+@property (nonatomic, copy) void (^closeBlock)(void);
+@property (nonatomic, assign) NSInteger currentSelectIndex;
+@property (nonatomic, strong) NSArray *imageNames;
+
+
+
+@end
+@implementation SLSubmenuGraffitiLineWidthView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if(self){
+        _currentSelectIndex = 1;
+        self.backgroundColor = [UIColor whiteColor];
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI{
+    [self createSubmenu];
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake((self.frame.size.width - 50)/2, self.frame.size.height - 50, 50, 50);
+    [closeBtn setImage:[UIImage imageNamed:@"EditMenuArrowDown"] forState:UIControlStateNormal];
+    [closeBtn addTarget:self action:@selector(closeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:closeBtn];
+}
+- (void)createSubmenu {
+    NSArray *imageNames = @[@"EditBrushSize1",@"EditBrushSize2",@"EditBrushSize3",@"EditBrushSize4",@"EditBrushSize5"];
+    self.imageNames = imageNames;
+    NSArray *imageNamesSelected = @[@"EditBrushSize1Selected",@"EditBrushSize2Selected",@"EditBrushSize3Selected",@"EditBrushSize4Selected",@"EditBrushSize5Selected"];
+    NSArray *titles = @[kNSLocalizedString(@"超小"),kNSLocalizedString(@"小"),kNSLocalizedString(@"标准"),kNSLocalizedString(@"大"),kNSLocalizedString(@"超大")];
+    int count = (int)imageNames.count;
+    CGSize itemSize = CGSizeMake(48, 52);
+    CGFloat space = (self.frame.size.width - itemSize.width*count)/(count+1);
+    for (int i = 0; i < count; i++) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self addSubview:btn];
+        btn.tag = 10 + i;
+        btn.frame = CGRectMake(space+i*(itemSize.width+space), 30, itemSize.width, itemSize.height);
+        [btn setImage:[UIImage imageNamed:imageNames[i]] forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:imageNamesSelected[i]] forState:UIControlStateSelected];
+        [btn setTitle:titles[i] forState:UIControlStateNormal];
+        [btn.titleLabel setFont:[UIFont systemFontOfSize:10]];
+        [btn setTitleColor:kColorWithHex(0x666666) forState:UIControlStateNormal];
+        [btn setTitleColor:kColorWithHex(0xFE7B1A) forState:UIControlStateSelected];
+        [btn addTarget:self action:@selector(shapeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [btn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
+        if(self.currentSelectIndex == i){
+            btn.selected = YES;
+        }
+    }
+    
+}
+- (void)shapeBtnClicked:(UIButton *)btn {
+    if(btn.isSelected){
+        return;
+    }
+    //取消前一个选中的按钮
+    UIButton *preSelectedBtn = [self viewWithTag:self.currentSelectIndex+10];
+    preSelectedBtn.selected = NO;
+    
+    btn.selected = YES;
+    self.currentSelectIndex = btn.tag - 10;
+    
+    NSArray *lineWidths = @[@(1),@(4),@(8),@(12),@(18)];
+    if(self.selectItemBlock){
+        self.selectItemBlock([lineWidths[self.currentSelectIndex] floatValue],[UIImage imageNamed:self.imageNames[self.currentSelectIndex]]);
+    }
+}
+- (void)closeBtnClicked:(UIButton *)btn {
+    if(self.closeBlock){
+        self.closeBlock();
+    }
+}
+
+
+@end
+
+//笔刷形状菜单视图
+@interface SLSubmenuGraffitiShapeView : UIView
+@property (nonatomic, copy) void (^selectItemBlock)(SLGraffitiShapeType type,UIImage *selectIconImage);
+@property (nonatomic, copy) void (^closeBlock)(void);
+@property (nonatomic, assign) SLGraffitiShapeType currentShapeType;
+@property (nonatomic, strong) NSArray *imageNames;
+
+@end
+
+@implementation SLSubmenuGraffitiShapeView
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if(self){
+        self.backgroundColor = [UIColor whiteColor];
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI{
+    [self createSubmenu];
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake((self.frame.size.width - 50)/2, self.frame.size.height - 50, 50, 50);
+    [closeBtn setImage:[UIImage imageNamed:@"EditMenuArrowDown"] forState:UIControlStateNormal];
+    [closeBtn addTarget:self action:@selector(closeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:closeBtn];
+}
+- (void)createSubmenu {
+    NSArray *imageNames = @[@"EditMenuShapeGraffiti",@"EditShapeCircle",@"EditShapeRectangle",@"EditShapeArrow"];
+    self.imageNames = imageNames;
+    NSArray *imageNamesSelected = @[@"EditMenuShapeGraffitiSelected",@"EditShapeCircleSelected",@"EditShapeRectangleSelected",@"EditShapeArrowSelected"];
+    NSArray *titles = @[kNSLocalizedString(@"涂鸦"),kNSLocalizedString(@"圆形"),kNSLocalizedString(@"矩形"),kNSLocalizedString(@"箭头")];
+    int count = (int)imageNames.count;
+    CGSize itemSize = CGSizeMake(48, 52);
+    CGFloat space = (self.frame.size.width - itemSize.width*count)/(count+1);
+    for (int i = 0; i < count; i++) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self addSubview:btn];
+        btn.tag = 10 + i;
+        btn.frame = CGRectMake(space+i*(itemSize.width+space), 30, itemSize.width, itemSize.height);
+        [btn setImage:[UIImage imageNamed:imageNames[i]] forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:imageNamesSelected[i]] forState:UIControlStateSelected];
+        [btn setTitle:titles[i] forState:UIControlStateNormal];
+        [btn.titleLabel setFont:[UIFont systemFontOfSize:10]];
+        [btn setTitleColor:kColorWithHex(0x666666) forState:UIControlStateNormal];
+        [btn setTitleColor:kColorWithHex(0xFE7B1A) forState:UIControlStateSelected];
+        [btn addTarget:self action:@selector(shapeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [btn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
+        if(self.currentShapeType == i){
+            btn.selected = YES;
+        }
+    }
+
+}
+- (void)shapeBtnClicked:(UIButton *)btn {
+    if(btn.isSelected){
+        return;
+    }
+    //取消前一个选中的按钮
+    UIButton *preSelectedBtn = [self viewWithTag:self.currentShapeType+10];
+    preSelectedBtn.selected = NO;
+    
+    btn.selected = YES;
+    SLGraffitiShapeType type = btn.tag - 10;
+    self.currentShapeType = type;
+    if(self.selectItemBlock){
+        self.selectItemBlock(self.currentShapeType,[UIImage imageNamed:self.imageNames[self.currentShapeType]]);
+    }
+
+}
+- (void)closeBtnClicked:(UIButton *)btn {
+    if(self.closeBlock){
+        self.closeBlock();
+    }
+}
+@end
+
+
 @interface SLSubmenuGraffitiView ()
 @property (nonatomic, strong) UIView *menuContainerView;
-
 @property (nonatomic, strong) UIScrollView *colorsContainerView;//颜色按钮滚动容器
 @property (nonatomic, strong) UIView *footerView;//底部操作栏
 @property (nonatomic, strong) UIView *selectedColorCircleView;//选中颜色的圈圈
 @property (nonatomic, strong) UILabel *titleLabel;//下标题
 @property (nonatomic, strong) UIButton *backBtn;//撤销按钮
+@property (nonatomic, strong) UIButton *shapeBtn;//形状按钮
 @property (nonatomic, strong) UIButton *forwardBtn;//前进按钮
 @property (nonatomic, strong) UIButton *eraserBtn;//橡皮檫按钮
+@property (nonatomic, strong) UIButton *lineWidthBtn;//大小按钮
+
+@property (nonatomic, strong) SLSubmenuGraffitiShapeView *shapeView;//形状菜单
+@property (nonatomic, strong) SLSubmenuGraffitiLineWidthView *lineWidthView;//线条宽度菜单
 
 
 @property (nonatomic, strong) NSArray *colors;
 @property (nonatomic, assign) int currentColorIndex; // 当前画笔颜色索引
+@property (nonatomic, assign) SLGraffitiShapeType currentShapeType;//当前画笔形状
+@property (nonatomic, assign) CGFloat currentLineWidth;
+
+
 
 @end
 @implementation  SLSubmenuGraffitiView
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = [UIColor whiteColor];
         _currentColorIndex = 0;
+        _currentLineWidth = 8;
+        _currentShapeType = SLGraffitiShapeRandom;
         _currentColor = [UIColor whiteColor];
         _backBtnEnable = YES;
         [self setupUI];
@@ -45,8 +215,8 @@
     [self addSubview:self.footerView];
 }
 - (void)createSubmenu {
-    NSArray *imageNames = @[@"EditMenuEraser",@"EditMenuShape",@"EditBrushSize1"];
-    NSArray *imageNamesSelected = @[@"EditMenuEraserSelected",@"EditMenuShapeSelected",@"EditBrushSize1Selected"];
+    NSArray *imageNames = @[@"EditMenuEraser",@"EditMenuShape",@"EditBrushSize2"];
+    NSArray *imageNamesSelected = @[@"EditMenuEraserSelected",@"EditMenuShapeSelected",@"EditBrushSize2Selected"];
     NSArray *imageNamesDisable = @[@"EditMenuEraserDisable",@"",@""];
     NSArray *titles = @[kNSLocalizedString(@"擦除"),kNSLocalizedString(@"形状"),kNSLocalizedString(@"大小")];
     int count = (int)imageNames.count;
@@ -65,10 +235,16 @@
         [btn setTitle:titles[i] forState:UIControlStateNormal];
         [btn.titleLabel setFont:[UIFont systemFontOfSize:10]];
         [btn setTitleColor:kColorWithHex(0x666666) forState:UIControlStateNormal];
+        [btn setTitleColor:kColorWithHex(0xFE7B1A) forState:UIControlStateSelected];
         [btn addTarget:self action:@selector(menuBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [btn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
         if(i == 0) {
             self.eraserBtn = btn;
+            self.eraserBtn.enabled = NO;
+        }else if (i == 1){
+            self.shapeBtn = btn;
+        }else if (i == 2){
+            self.lineWidthBtn = btn;
         }
     }
     //分割线
@@ -157,17 +333,52 @@
 
 #pragma mark - Help Method
 - (void)showBackAndForwardBtn {
+    self.eraserBtn.enabled = YES;
     self.backBtn.hidden = NO;
     self.forwardBtn.hidden = NO;
     self.titleLabel.hidden = YES;
 }
+- (void)hiddenView:(UIView *)view {
+    [self hiddenView:view hidden:!view.hidden];
+}
+- (void)hiddenView:(UIView *)view hidden:(BOOL)hidden{
+    if(view == nil || view.hidden == hidden) return;
+    if (hidden) {
+        CGRect originalRect = view.frame;
+        [UIView animateWithDuration:0.25 animations:^{
+            view.frame = CGRectMake(0, self.frame.size.height, view.frame.size.width, view.frame.size.height);
+            [self layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            view.hidden = YES;
+            view.frame = originalRect;
+            [view removeFromSuperview];
+        }];
+
+    }else {
+        view.hidden = NO;
+        [self addSubview:view];
+        CGRect originalRect = view.frame;
+        view.frame = CGRectMake(0, self.frame.size.height, view.frame.size.width, view.frame.size.height);
+        [UIView animateWithDuration:0.25 animations:^{
+            view.frame = originalRect;
+            [self layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
+}
+
 
 #pragma mark - Events Handle
 - (void)closeBtnClicked:(UIButton *)btn {
-    
+    if(self.cancelBlock){
+        self.cancelBlock();
+    }
 }
 - (void)doneBtnClicked:(UIButton *)btn {
-    
+    if(self.doneBlock){
+        self.doneBlock();
+    }
 }
 - (void)menuBtnClicked:(UIButton *)btn {
     NSInteger index = btn.tag - 100;
@@ -189,7 +400,10 @@
         }
     }else if (index == 1){
         //形状
-        
+        [self hiddenView:self.shapeView];
+    }else if (index == 2){
+        //大小
+        [self hiddenView:self.lineWidthView];
     }
     
 }
@@ -239,7 +453,6 @@
     self.backBtn.enabled = backBtnEnable;
 }
 
-
 #pragma mark- getter
 - (UIView *)menuContainerView {
     if(!_menuContainerView) {
@@ -266,5 +479,46 @@
         _selectedColorCircleView.clipsToBounds = YES;
     }
     return _selectedColorCircleView;
+}
+- (SLSubmenuGraffitiShapeView *)shapeView {
+    if(!_shapeView){
+        _shapeView = [[SLSubmenuGraffitiShapeView alloc] initWithFrame:self.bounds];
+        _shapeView.hidden = YES;
+        WS(weakSelf);
+        _shapeView.selectItemBlock = ^(SLGraffitiShapeType type, UIImage *selectIconImage) {
+            if(weakSelf.currentShapeType != type){
+                weakSelf.currentShapeType = type;
+                if(weakSelf.brushShapeChangedBlock){
+                    weakSelf.brushShapeChangedBlock(type);
+                }
+                [weakSelf.shapeBtn setImage:selectIconImage forState:UIControlStateNormal];
+            }
+
+        };
+        _shapeView.closeBlock = ^{
+            [weakSelf hiddenView:weakSelf.shapeView];
+        };
+    }
+    return _shapeView;
+}
+- (SLSubmenuGraffitiLineWidthView *)lineWidthView {
+    if(!_lineWidthView) {
+        _lineWidthView = [[SLSubmenuGraffitiLineWidthView alloc] initWithFrame:self.bounds];
+        _lineWidthView.hidden = YES;
+        WS(weakSelf);
+        _lineWidthView.selectItemBlock = ^(CGFloat selectlineWidth, UIImage *selectIconImage) {
+            if(weakSelf.currentLineWidth != selectlineWidth){
+                weakSelf.currentLineWidth = selectlineWidth;
+                if(weakSelf.lineWidthChangedBlock){
+                    weakSelf.lineWidthChangedBlock(selectlineWidth);
+                }
+                [weakSelf.lineWidthBtn setImage:selectIconImage forState:UIControlStateNormal];
+            }
+        };
+        _lineWidthView.closeBlock = ^{
+            [weakSelf hiddenView:weakSelf.lineWidthView];
+        };
+    }
+    return _lineWidthView;
 }
 @end

@@ -8,7 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
+typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
+    SLDrawShapeRandom = 0,//自由
+    SLDrawShapeEllipse = 1,//椭圆
+    SLDrawShapeRect = 2,//矩形
+    SLDrawShapeArrow = 3//箭头
+};
+
 
 /// 涂鸦视图 画板   默认白底
 @interface SLDrawView : UIView
@@ -19,7 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *lineColor;
 ///是否是橡皮檫
 @property (nonatomic, assign) BOOL isErase;
-
+///画笔形状 默认 自由模式
+@property (nonatomic, assign) SLDrawShapeType shapeType;
+///是否可以画画
+@property (nonatomic, assign) BOOL enableDraw;
 /// 正在绘画 
 @property (nonatomic, readonly) BOOL isDrawing;
 /// 能否返回
@@ -46,4 +55,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NS_ASSUME_NONNULL_END
+

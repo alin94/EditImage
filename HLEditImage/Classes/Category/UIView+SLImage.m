@@ -9,9 +9,12 @@
 #import "UIView+SLImage.h"
 
 @implementation UIView (SLImage)
+- (UIImage *)sl_imageByViewInRect:(CGRect)range; {
+    return [self sl_imageByViewInRect:range shouldTranslateCTM:NO];
+}
 
 // View 转 Image
-- (UIImage *)sl_imageByViewInRect:(CGRect)range{
+- (UIImage *)sl_imageByViewInRect:(CGRect)range shouldTranslateCTM:(BOOL)translateCTM{
     CGRect rect = self.bounds;
     /** 参数取整，否则可能会出现1像素偏差 */
     /** 有小数部分才调整差值 */
@@ -25,10 +28,23 @@
     //1.开启上下文
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
+    if(translateCTM){
+        //转换坐标系（因为背景图片橡皮檫）
+        CGContextScaleCTM(context, 1, -1);
+        CGContextTranslateCTM(context, 0, -self.frame.size.height);
+    }
     //2.绘制图层
     [self.layer renderInContext:context];
+
     //3.从上下文中获取新图片
     UIImage *fullScreenImage = UIGraphicsGetImageFromCurrentImageContext();
+    if(translateCTM){
+        //转换回来重新绘制
+        CGContextScaleCTM(context, 1, 1);
+        CGContextTranslateCTM(context, 0, 0);
+        [fullScreenImage drawInRect:self.bounds];
+        fullScreenImage = UIGraphicsGetImageFromCurrentImageContext();
+    }
     //4.关闭图形上下文
     UIGraphicsEndImageContext();
     if (CGRectEqualToRect(rect, range)) {
