@@ -211,16 +211,18 @@
 }
 #pragma mark - UI
 ///设置back按钮是否可点
-- (void)enableBackBtn:(BOOL)enable {
+///设置前进后退按钮是否可点
+- (void)enableBackBtn:(BOOL)enableBack forwardBtn:(BOOL)enableForward;
+ {
     if(self.currentMenuType == SLEditMenuTypeGraffiti) {
-        self.submenuGraffiti.backBtnEnable = enable;
-        if(enable){
+        if(enableBack || enableForward){
             [self.submenuGraffiti showBackAndForwardBtn];
         }
-        return;
+        self.submenuGraffiti.backBtnEnable = enableBack;
+        self.submenuGraffiti.forwardBtnEnable = enableForward;
     }
     if(self.currentMenuType == SLEditMenuTypePictureMosaic) {
-        self.submenuMosaic.backBtnEnable = enable;
+//        self.submenuMosaic.backBtnEnable = enable;
         return;
     }
 }
@@ -313,12 +315,16 @@
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"goForward":@(YES)});
         };
         _submenuGraffiti.cancelBlock = ^{
-            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"clear":@(YES),@"hidden":@(YES)});
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"goBackToLast":@(YES),@"hidden":@(YES)});
             [weakSelf hiddenView:weakSelf.submenuGraffiti];
         };
         _submenuGraffiti.doneBlock = ^{
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"hidden":@(YES)});
             [weakSelf hiddenView:weakSelf.submenuGraffiti];
+
+        };
+        _submenuGraffiti.brushShapeChangedBlock = ^(SLGraffitiShapeType shapeType) {
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"shape":[NSNumber numberWithInteger:shapeType]});
 
         };
         _submenuGraffiti.lineWidthChangedBlock = ^(CGFloat lineWidth) {

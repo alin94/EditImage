@@ -44,8 +44,8 @@ typedef NS_ENUM(NSUInteger, SLEditMenuType) {
 //隐藏子菜单
 @property (nonatomic, copy) void(^hideSubMenuBlock)(SLEditMenuType menuType);
 @property (nonatomic, copy) void (^doneBtnClickBlock)(void);
-///设置back按钮是否可点
-- (void)enableBackBtn:(BOOL)enable;
+///设置前进后退按钮是否可点
+- (void)enableBackBtn:(BOOL)enableBack forwardBtn:(BOOL)enableForward;
 @end
 
 NS_ASSUME_NONNULL_END

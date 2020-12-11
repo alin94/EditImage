@@ -40,8 +40,7 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 /// 结束绘画
 @property (nonatomic, copy) void(^drawEnded)(void);
 /// 可撤销状态改变
-@property (nonatomic, copy) void (^canBackStatusChangedBlock)(BOOL enable);
-
+@property (nonatomic, copy) void (^lineCountChangedBlock)(BOOL canBack,BOOL canForward);
 /// 数据  笔画数据
 @property (nonatomic, strong) NSDictionary *data;
 
@@ -52,7 +51,8 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 - (void)goBack;
 /// 清空画板 不可恢复
 - (void)clear;
-
+///返回上一次画画的状态
+- (void)goBackToLastDrawState;
 @end
 
 

@@ -172,9 +172,6 @@
     _mosaicView.frame = self.zoomView.imageView.bounds;
 
 }
-- (void)enableEditMenusBackBtn:(BOOL)enable {
-    [self.editMenuView enableBackBtn:enable];
-}
 #pragma mark - Setter
 - (void)setEditingMenuType:(SLEditMenuType)editingMenuType {
     _editingMenuType = editingMenuType;
@@ -264,8 +261,9 @@
             weakSelf.editingMenuType = ![setting[@"hidden"] boolValue] ? editMenuType : SLEditMenuTypeUnknown;
             if (editMenuType == SLEditMenuTypeGraffiti) {
                 [weakSelf changeZoomViewRectWithIsEditing:YES];
-                weakSelf.drawView.enableDraw = ![setting[@"hidden"] boolValue];
-                if ([setting[@"hidden"] boolValue]) weakSelf.editingMenuType = SLEditMenuTypeUnknown;
+                if(setting[@"hidden"]){
+                    weakSelf.drawView.enableDraw = ![setting[@"hidden"] boolValue];
+                }
                 [weakSelf.zoomView.imageView insertSubview:weakSelf.drawView atIndex:([weakSelf.zoomView.imageView.subviews containsObject:weakSelf.mosaicView] ? 1: 0)];
                 if (setting[@"lineColor"]) {
                     weakSelf.drawView.isErase = NO;
@@ -281,11 +279,14 @@
                 if (setting[@"goForward"]) {
                     [weakSelf.drawView goForward];
                 }
-                if(setting[@"clear"]) {
-                    [weakSelf.drawView clear];
+                if(setting[@"goBackToLast"]) {
+                    [weakSelf.drawView goBackToLastDrawState];
                 }
                 if (setting[@"lineWidth"]) {
                     weakSelf.drawView.lineWidth = [setting[@"lineWidth"] floatValue];
+                }
+                if(setting[@"shape"]){
+                    weakSelf.drawView.shapeType = [setting[@"shape"] integerValue];
                 }
                 //更新设置
                 [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
@@ -404,8 +405,8 @@
         _drawView.drawEnded = ^{
 //            [weakSelf hiddenEditMenus:NO];
         };
-        _drawView.canBackStatusChangedBlock = ^(BOOL enable) {
-            [weakSelf enableEditMenusBackBtn:enable];
+        _drawView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
+            [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
         };
     }
     return _drawView;
@@ -451,7 +452,7 @@
             [weakSelf hiddenEditMenus:NO];
         };
         _mosaicView.canBackStatusChangedBlock = ^(BOOL enable) {
-            [weakSelf enableEditMenusBackBtn:enable];
+//            [weakSelf enableEditMenusBackBtn:enable];
         };
         _mosaicView.userInteractionEnabled = YES;
     }

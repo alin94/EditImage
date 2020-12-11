@@ -319,6 +319,7 @@
     [self.footerView addSubview:backBtn];
     self.backBtn = backBtn;
     self.backBtn.hidden = YES;
+    self.backBtn.enabled = NO;
 
     //前进按钮
     UIButton *forwardBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -329,11 +330,11 @@
     [self.footerView addSubview:forwardBtn];
     self.forwardBtn = forwardBtn;
     self.forwardBtn.hidden = YES;
+    self.forwardBtn.enabled = NO;
 }
 
 #pragma mark - Help Method
 - (void)showBackAndForwardBtn {
-    self.eraserBtn.enabled = YES;
     self.backBtn.hidden = NO;
     self.forwardBtn.hidden = NO;
     self.titleLabel.hidden = YES;
@@ -451,8 +452,12 @@
 - (void)setBackBtnEnable:(BOOL)backBtnEnable {
     _backBtnEnable = backBtnEnable;
     self.backBtn.enabled = backBtnEnable;
+    self.eraserBtn.enabled = backBtnEnable;
 }
-
+- (void)setForwardBtnEnable:(BOOL)forwardBtnEnable {
+    _forwardBtnEnable = forwardBtnEnable;
+    self.forwardBtn.enabled = forwardBtnEnable;
+}
 #pragma mark- getter
 - (UIView *)menuContainerView {
     if(!_menuContainerView) {

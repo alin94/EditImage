@@ -27,6 +27,9 @@
 @property (nonatomic, strong) NSMutableArray <SLDrawBezierPath *>*deleteLineArray;
 /// 删除的图层
 @property (nonatomic, strong) NSMutableArray <CAShapeLayer *>*deleteLayerArray;
+@property (nonatomic, assign) CGPoint beginPoint;
+@property (nonatomic, assign) NSInteger lastLinePathCount;//之前的路径总数
+
 @end
 
 @implementation SLDrawView
@@ -42,6 +45,7 @@
         _deleteLineArray = [NSMutableArray array];
         _deleteLayerArray = [NSMutableArray array];
         _enableDraw = YES;
+        _shapeType = SLDrawShapeRandom;
         self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds = YES;
         self.exclusiveTouch = YES;
@@ -53,12 +57,17 @@
     [self createPatternImage];
 }
 - (void)setEnableDraw:(BOOL)enableDraw {
-    _enableDraw = enableDraw;
-    self.userInteractionEnabled = enableDraw;
+    if(_enableDraw != enableDraw){
+        _enableDraw = enableDraw;
+        if(enableDraw){
+            self.lastLinePathCount = self.lineArray.count;
+        }
+        self.userInteractionEnabled = enableDraw;
+    }
 }
 - (void)didMoveToSuperview {
     [super didMoveToSuperview];
-    [self checkIfCanGoBack];
+    [self checkLineCount];
 }
 //开始绘画
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -67,22 +76,23 @@
         _isBegan = YES;
         //1、每次触摸的时候都应该去创建一条贝塞尔曲线
         SLDrawBezierPath *path = [SLDrawBezierPath new];
-        //2、移动画笔
-        UITouch *touch = [touches anyObject];
-        CGPoint point = [touch locationInView:self];
         //设置线宽
-        path.lineWidth = self.lineWidth;
-        path.lineCapStyle = kCGLineCapRound; //线条拐角
-        path.lineJoinStyle = kCGLineJoinRound; //终点处理
-        [path moveToPoint:point];
         if(self.isErase){
             path.color = [[UIColor alloc]initWithPatternImage:self.image];
             [path strokeWithBlendMode:kCGBlendModeClear alpha:1.0f];
             [path fillWithBlendMode:kCGBlendModeClear alpha:1.0];
-            
         }else {
             //设置颜色
             path.color = self.lineColor;//保存线条当前颜色
+        }
+        path.lineWidth = self.lineWidth;
+        //2、移动画笔
+        UITouch *touch = [touches anyObject];
+        CGPoint point = [touch locationInView:self];
+        self.beginPoint = point;
+        if(self.shapeType == SLDrawShapeRandom || self.isErase){
+            //椭圆
+            [path moveToPoint:point];
         }
         [self.lineArray addObject:path];
         
@@ -102,7 +112,25 @@
             if (_isBegan && self.drawBegan) self.drawBegan();
             _isBegan = NO;
             _isWork = YES;
-            [path addLineToPoint:point];
+            if(self.shapeType == SLDrawShapeRandom || self.isErase){
+                [path addLineToPoint:point];
+            }else if (self.shapeType == SLDrawShapeEllipse){
+                path = [SLDrawBezierPath bezierPathWithOvalInRect:[self getRectWithStartPoint:self.beginPoint endPoint:point]];
+            }
+            else if (self.shapeType == SLDrawShapeRect){
+                path = [SLDrawBezierPath bezierPathWithRect:[self getRectWithStartPoint:self.beginPoint endPoint:point]];
+            }else if (self.shapeType == SLDrawShapeArrow){
+                path = [[SLDrawBezierPath alloc] init];
+                [path moveToPoint:self.beginPoint];;
+                [path addLineToPoint:point];
+                [path appendPath:[self createArrowWithStartPoint:self.beginPoint endPoint:point]];
+            }
+            //重新设置属性
+            if(self.shapeType != SLDrawShapeRandom){
+                path.color = self.lineColor;//保存线条当前颜色
+                path.lineWidth = self.lineWidth;
+                [self.lineArray replaceObjectAtIndex:self.lineArray.count - 1 withObject:path];
+            }
             CAShapeLayer *slayer = self.layerArray.lastObject;
             slayer.path = path.CGPath;
         }
@@ -120,7 +148,7 @@
     }
     _isBegan = NO;
     _isWork = NO;
-    [self checkIfCanGoBack];
+    [self checkLineCount];
     [super touchesEnded:touches withEvent:event];
 }
 //取消绘画
@@ -148,19 +176,17 @@
     slayer.path = path.CGPath;
     slayer.backgroundColor = [UIColor clearColor].CGColor;
     slayer.fillColor = [UIColor clearColor].CGColor;
-    slayer.lineCap = kCALineCapRound;
-    slayer.lineJoin = kCALineJoinRound;
+    if(self.shapeType != SLDrawShapeArrow){
+        slayer.lineCap = kCALineCapRound;
+        slayer.lineJoin = kCALineJoinRound;
+    }
     slayer.strokeColor = path.color.CGColor;
     slayer.lineWidth = path.lineWidth;
     return slayer;
 }
-- (void)checkIfCanGoBack {
-    if(self.canBackStatusChangedBlock){
-        if(self.canBack){
-            self.canBackStatusChangedBlock(YES);
-        }else{
-            self.canBackStatusChangedBlock(NO);
-        }
+- (void)checkLineCount {
+    if(self.lineCountChangedBlock){
+        self.lineCountChangedBlock(self.canBack, self.canForward);
     }
 }
 - (void)createPatternImage {
@@ -177,6 +203,72 @@
     _image = stretchedImg;
     UIGraphicsEndImageContext();
 }
+
+- (CGRect)getRectWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
+{
+    CGPoint orignal = startPoint;
+    if (startPoint.x > endPoint.x) {
+        orignal = endPoint;
+    }
+    CGFloat width = fabs(startPoint.x - endPoint.x);
+    CGFloat height = fabs(startPoint.y - endPoint.y);
+    return CGRectMake(orignal.x , orignal.y , width, height);
+}
+- (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
+{
+    CGFloat xDist = (endPoint.x - startPoint.x);
+    CGFloat yDist = (endPoint.y - startPoint.y);
+    return sqrt((xDist * xDist) + (yDist * yDist));
+}
+- (UIBezierPath *)createArrowWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint {
+    CGPoint controllPoint = CGPointZero;
+    CGPoint pointUp = CGPointZero;
+    CGPoint pointDown = CGPointZero;
+    CGFloat distance = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
+    CGFloat distanceX = self.lineWidth*2 * (ABS(endPoint.x - startPoint.x) / distance);
+    CGFloat distanceY = self.lineWidth*2 * (ABS(endPoint.y - startPoint.y) / distance);
+    CGFloat distX = self.lineWidth * (ABS(endPoint.y - startPoint.y) / distance);
+    CGFloat distY = self.lineWidth * (ABS(endPoint.x - startPoint.x) / distance);
+    if (endPoint.x >= startPoint.x)
+    {
+        if (endPoint.y >= startPoint.y)
+        {
+            controllPoint = CGPointMake(endPoint.x - distanceX, endPoint.y - distanceY);
+            pointUp = CGPointMake(controllPoint.x + distX, controllPoint.y - distY);
+            pointDown = CGPointMake(controllPoint.x - distX, controllPoint.y + distY);
+        }
+        else
+        {
+            controllPoint = CGPointMake(endPoint.x - distanceX, endPoint.y + distanceY);
+            pointUp = CGPointMake(controllPoint.x - distX, controllPoint.y - distY);
+            pointDown = CGPointMake(controllPoint.x + distX, controllPoint.y + distY);
+        }
+    }
+    else
+    {
+        if (endPoint.y >= startPoint.y)
+        {
+            controllPoint = CGPointMake(endPoint.x + distanceX, endPoint.y - distanceY);
+            pointUp = CGPointMake(controllPoint.x - distX, controllPoint.y - distY);
+            pointDown = CGPointMake(controllPoint.x + distX, controllPoint.y + distY);
+        }
+        else
+        {
+            controllPoint = CGPointMake(endPoint.x + distanceX, endPoint.y + distanceY);
+            pointUp = CGPointMake(controllPoint.x + distX, controllPoint.y - distY);
+            pointDown = CGPointMake(controllPoint.x - distX, controllPoint.y + distY);
+        }
+    }
+    NSLog(@"control %@",NSStringFromCGPoint(controllPoint));
+    UIBezierPath *arrowPath = [UIBezierPath bezierPath];
+    [arrowPath moveToPoint:endPoint];
+    [arrowPath addLineToPoint:pointDown];
+    [arrowPath addLineToPoint:pointUp];
+    [arrowPath addLineToPoint:endPoint];
+    return arrowPath;
+}
+
+
 
 #pragma mark - Getter
 - (BOOL)isDrawing {
@@ -199,6 +291,7 @@
         //从删除池中除去
         [self.deleteLayerArray removeLastObject];
         [self.deleteLineArray removeLastObject];
+        [self checkLineCount];
     }
 }
 //返回
@@ -211,7 +304,7 @@
         [self.layerArray.lastObject removeFromSuperlayer];
         [self.layerArray removeLastObject];
         [self.lineArray removeLastObject];
-        [self checkIfCanGoBack];
+        [self checkLineCount];
     }
 }
 - (void)clear {
@@ -220,8 +313,25 @@
     [self.deleteLayerArray removeAllObjects];
     [self.deleteLineArray removeAllObjects];
     [self.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
-    [self checkIfCanGoBack];
+    [self checkLineCount];
 }
+///返回上一次画画的状态
+- (void)goBackToLastDrawState {
+    if(self.lineArray.count == self.lastLinePathCount){
+        return;
+    }
+    NSMutableArray * tempArr = [NSMutableArray arrayWithArray:self.lineArray];
+    [tempArr enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(SLDrawBezierPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.layerArray.lastObject removeFromSuperlayer];
+        [self.layerArray removeLastObject];
+        [self.lineArray removeLastObject];
+        if(self.lineArray.count == self.lastLinePathCount){
+            *stop = YES;
+        }
+    }];
+    [self checkLineCount];
+}
+
 #pragma mark  - 数据
 - (NSDictionary *)data {
     if (self.lineArray.count) {
