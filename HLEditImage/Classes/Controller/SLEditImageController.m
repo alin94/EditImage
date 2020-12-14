@@ -18,10 +18,13 @@
 #import "SLEditTextView.h"
 #import "SLMosaicView.h"
 #import "UIImage+SLCommon.h"
+#import "NSString+SLLocalizable.h"
 #import "SLImageZoomView.h"
 #import "SLImageClipController.h"
 #import "SLDelayPerform.h"
 #import "SLUtilsMacro.h"
+#import "UIButton+SLButton.h"
+
 #define SL_DISPATCH_ON_MAIN_THREAD(mainQueueBlock) dispatch_async(dispatch_get_main_queue(),mainQueueBlock);
 
 #define KBottomMenuHeight (144+kSafeAreaBottomHeight)  //底部菜单高度
@@ -384,11 +387,16 @@
 }
 - (UIButton *)trashTips {
     if (!_trashTips) {
-        _trashTips = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
-        _trashTips.center = CGPointMake(kScreenWidth/2.0, kScreenHeight - 60);
-        [_trashTips setTitle:@"拖动到此处删除" forState:UIControlStateNormal];
+        _trashTips = [[UIButton alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 160)/2, self.view.frame.size.height - 80 - 10 - kSafeAreaBottomHeight, 160, 80)];
+        _trashTips.layer.cornerRadius = 10;
+        _trashTips.clipsToBounds = YES;
         [_trashTips setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        _trashTips.titleLabel.font = [UIFont systemFontOfSize:14];
+        _trashTips.titleLabel.font = [UIFont systemFontOfSize:12];
+        [_trashTips setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_trashTips setTitle:kNSLocalizedString(@"拖动到此处删除") forState:UIControlStateNormal];
+        [_trashTips setImage:[UIImage imageNamed:@"EditTrash"] forState:UIControlStateNormal];;
+        [_trashTips setBackgroundColor:kColorWithHex(0x151515)];
+        [_trashTips sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(22, 22) space:9];
     }
     return _trashTips;
 }
@@ -528,12 +536,15 @@
         CGRect rect = [pan.view convertRect: pan.view.bounds toView:self.view];
         //是否删除 删除视图Y < 视图中心点Y坐标
         if (self.trashTips.center.y < rect.origin.y+rect.size.height/2.0) {
-            [self.trashTips setTitle:@"松手即可删除" forState:UIControlStateNormal];
-            [self.trashTips setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+            [self.trashTips setTitle:kNSLocalizedString(@"松手即可删除") forState:UIControlStateNormal];
+            [self.trashTips setImage:[UIImage imageNamed:@"EditTrashOpen"] forState:UIControlStateNormal];;
+            [self.trashTips setBackgroundColor:kColorWithHex(0xDC4747)];
         }else {
-            [self.trashTips setTitle:@"拖动到此处删除" forState:UIControlStateNormal];
-            [self.trashTips setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self.trashTips setTitle:kNSLocalizedString(@"拖动到此处删除") forState:UIControlStateNormal];
+            [self.trashTips setImage:[UIImage imageNamed:@"EditTrash"] forState:UIControlStateNormal];;
+            [self.trashTips setBackgroundColor:kColorWithHex(0x151515)];
         }
+
     } else if (pan.state == UIGestureRecognizerStateFailed || pan.state == UIGestureRecognizerStateEnded) {
         [self hiddenEditMenus:NO];
         self.zoomView.imageView.clipsToBounds = YES;
