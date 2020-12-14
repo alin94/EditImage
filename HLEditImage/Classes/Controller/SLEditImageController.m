@@ -21,7 +21,6 @@
 #import "SLImageZoomView.h"
 #import "SLImageClipController.h"
 #import "SLDelayPerform.h"
-#import "SLRoundCornerLabel.h"
 #import "SLUtilsMacro.h"
 #define SL_DISPATCH_ON_MAIN_THREAD(mainQueueBlock) dispatch_async(dispatch_get_main_queue(),mainQueueBlock);
 
@@ -326,9 +325,9 @@
                 SLEditTextView *editTextView = [[SLEditTextView alloc] initWithFrame:CGRectMake(0, kSafeAreaTopHeight, kScreenWidth, kScreenHeight - kSafeAreaTopHeight - kSafeAreaBottomHeight)];
                 [weakSelf.view addSubview:editTextView];
                 if ([setting[@"hidden"] boolValue]) weakSelf.editingMenuType = SLEditMenuTypeUnknown;
-                editTextView.editTextCompleted = ^(SLRoundCornerLabel * _Nullable label) {
+                editTextView.editTextCompleted = ^(UILabel * _Nullable label) {
                     weakSelf.topNavView.hidden = NO;
-                    if (label.attributedString.string.length == 0 || label == nil) {
+                    if (label.text.length == 0 || label == nil) {
                         return;
                     }
                     CGRect imageRect = [weakSelf.zoomView convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.view];
@@ -490,18 +489,10 @@
 - (void)doubleTapAction:(UITapGestureRecognizer *)doubleTap {
     [self topSelectedView:doubleTap.view];
     doubleTap.view.hidden = YES;
-    SLRoundCornerLabel *tapLabel = (SLRoundCornerLabel *)doubleTap.view;
+    UILabel *tapLabel = (UILabel *)doubleTap.view;
     SLEditTextView *editTextView = [[SLEditTextView alloc] initWithFrame:CGRectMake(0, kSafeAreaTopHeight, kScreenWidth, kScreenHeight - kSafeAreaTopHeight - kSafeAreaBottomHeight)];
-    NSAttributedString *att = tapLabel.attributedString;
-    __block NSDictionary *attrDict = nil;
-    [att enumerateAttributesInRange:NSMakeRange(0, att.length) options:1 usingBlock:^(NSDictionary<NSAttributedStringKey,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
-        if(attrs){
-            attrDict = attrs;
-            *stop = YES;
-        }
-    }];
     
-    editTextView.configureEditParameters(@{@"textColor":[attrDict valueForKey:NSForegroundColorAttributeName], @"backgroundColor":tapLabel.fillColor, @"text":att.string});
+    editTextView.configureEditParameters(@{@"textColor":tapLabel.textColor, @"backgroundColor":tapLabel.backgroundColor, @"text":tapLabel.text, @"textAlignment":@(tapLabel.textAlignment)});
     editTextView.editTextCompleted = ^(UILabel * _Nullable label) {
         doubleTap.view.hidden = NO;
         if (label == nil) {

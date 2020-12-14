@@ -172,6 +172,7 @@
 		C7C12F9A2582085800B1CC6D /* EditBrushSize1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F962582085800B1CC6D /* EditBrushSize1@3x.png */; };
 		C7C12F9B2582085800B1CC6D /* EditBrushSize1Selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F972582085800B1CC6D /* EditBrushSize1Selected@3x.png */; };
 		C7C12F9C2582085800B1CC6D /* EditBrushSize1Selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12F982582085800B1CC6D /* EditBrushSize1Selected@2x.png */; };
+		C7C12F9F2587083E00B1CC6D /* SLPaddingLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C12F9E2587083B00B1CC6D /* SLPaddingLabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -369,6 +370,8 @@
 		C7C12F962582085800B1CC6D /* EditBrushSize1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1@3x.png"; sourceTree = "<group>"; };
 		C7C12F972582085800B1CC6D /* EditBrushSize1Selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1Selected@3x.png"; sourceTree = "<group>"; };
 		C7C12F982582085800B1CC6D /* EditBrushSize1Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditBrushSize1Selected@2x.png"; sourceTree = "<group>"; };
+		C7C12F9D2587083B00B1CC6D /* SLPaddingLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaddingLabel.h; sourceTree = "<group>"; };
+		C7C12F9E2587083B00B1CC6D /* SLPaddingLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaddingLabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -482,6 +485,8 @@
 		C7683DB8257A2C8F00DA3061 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				C7C12F9D2587083B00B1CC6D /* SLPaddingLabel.h */,
+				C7C12F9E2587083B00B1CC6D /* SLPaddingLabel.m */,
 				C7683DC4257A2C8F00DA3061 /* SLDrawView.h */,
 				C7683DBB257A2C8F00DA3061 /* SLDrawView.m */,
 				C7683DC9257A2C8F00DA3061 /* SLEditMenuView.h */,
@@ -887,6 +892,7 @@
 				C7683DD0257A2C8F00DA3061 /* UIView+SLImage.m in Sources */,
 				C7683DD8257A2C8F00DA3061 /* SLEditImageController.m in Sources */,
 				C7683DE2257A2C8F00DA3061 /* SLEditVideoClipping.m in Sources */,
+				C7C12F9F2587083E00B1CC6D /* SLPaddingLabel.m in Sources */,
 				C7683DD7257A2C8F00DA3061 /* SLImageClipController.m in Sources */,
 				C7683DD1257A2C8F00DA3061 /* UIImage+SLCommon.m in Sources */,
 				C7683DE0257A2C8F00DA3061 /* SLImageZoomView.m in Sources */,
