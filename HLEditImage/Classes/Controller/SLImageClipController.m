@@ -126,12 +126,11 @@
         };
         _menuView.selectScaleBlock = ^(NSInteger selectIndex) {
             if(selectIndex != 1){
-                weakSelf.zoomView.minimumZoomScale = 1;
-                weakSelf.zoomView.zoomScale = 1;
-                weakSelf.zoomView.contentOffset = CGPointZero;
+                //更改zoomView的frame 和缩放比例 使图片可以全部展示在屏幕中间
                 weakSelf.zoomView.frame = weakSelf.rotatedOriginalRect;
                 weakSelf.gridView.originalGridRect = weakSelf.zoomView.frame;
-                weakSelf.zoomView.imageView.frame = weakSelf.zoomView.bounds;
+                [weakSelf resetMinimumZoomScale];
+                [weakSelf.zoomView setZoomScale:weakSelf.zoomView.minimumZoomScale];
             }
             if(selectIndex == 0){
                 weakSelf.gridView.fixedScale = weakSelf.image.size.width/weakSelf.image.size.height;
@@ -214,6 +213,7 @@
             if (CGRectGetMaxY(gridRect) > CGRectGetMaxY(imageRect)) contentOffset.y = 0;
             if (CGRectGetMaxX(gridRect) > CGRectGetMaxX(imageRect)) contentOffset.x = 0;
         }
+        NSLog(@"新的偏移量====%@",NSStringFromCGPoint(contentOffset));
         self.zoomView.contentOffset = contentOffset;
         
         /** 取最大值缩放 */
@@ -231,6 +231,8 @@
 //重置最小缩放系数  只要改变了zoomView大小就重置
 - (void)resetMinimumZoomScale {
     CGRect rotateoriginalRect = CGRectApplyAffineTransform(self.originalRect, self.zoomView.transform);
+    
+//    CGRect rotateoriginalRect = self.rotatedOriginalRect;
 
     if (CGSizeEqualToSize(rotateoriginalRect.size, CGSizeZero)) {
         /** size为0时候不能继续，否则minimumZoomScale=+Inf，会无法缩放 */
@@ -238,7 +240,6 @@
     }
     //设置最小缩放系数
     CGFloat zoomScale = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect));
-//     CGFloat zoomScale = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(self.gridView.originalGridRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(self.gridView.originalGridRect));
     NSLog(@"最小比例是===%f",zoomScale);
     self.zoomView.minimumZoomScale = zoomScale;
 }
@@ -298,28 +299,29 @@
         self.rotatedOriginalRect = self.originalRect;
     }
     //重新设置裁剪比例
+    self.gridView.originalGridRect = self.zoomView.frame;
     if(!self.gridView.fixedScale){
         self.gridView.gridRect = self.zoomView.frame;
-    }
-    self.gridView.originalGridRect = self.zoomView.frame;
-    if(self.menuView.currentSelectIndex == 0){
-        self.gridView.fixedScale = 1/self.gridView.fixedScale;
-    }else if (self.menuView.currentSelectIndex == 2){
-        [self.menuView selectIndex:2];
-        self.gridView.fixedScale = 1.f;
-    }
-    else if(self.menuView.currentSelectIndex == 3){
-        [self.menuView selectIndex:4];
-        self.gridView.fixedScale = 4/3.f;
-    }else if (self.menuView.currentSelectIndex == 4){
-        [self.menuView selectIndex:3];
-        self.gridView.fixedScale = 3/4.f;
-    }else if (self.menuView.currentSelectIndex == 5){
-        [self.menuView selectIndex:6];
-        self.gridView.fixedScale = 16/9.f;
-    }else if (self.menuView.currentSelectIndex == 6){
-        self.menuView.currentSelectIndex = 5;
-        self.gridView.fixedScale = 9/16.f;
+    }else {
+        if(self.menuView.currentSelectIndex == 0){
+            self.gridView.fixedScale = 1/self.gridView.fixedScale;
+        }else if (self.menuView.currentSelectIndex == 2){
+            [self.menuView selectIndex:2];
+            self.gridView.fixedScale = 1.f;
+        }
+        else if(self.menuView.currentSelectIndex == 3){
+            [self.menuView selectIndex:4];
+            self.gridView.fixedScale = 4/3.f;
+        }else if (self.menuView.currentSelectIndex == 4){
+            [self.menuView selectIndex:3];
+            self.gridView.fixedScale = 3/4.f;
+        }else if (self.menuView.currentSelectIndex == 5){
+            [self.menuView selectIndex:6];
+            self.gridView.fixedScale = 16/9.f;
+        }else if (self.menuView.currentSelectIndex == 6){
+            self.menuView.currentSelectIndex = 5;
+            self.gridView.fixedScale = 9/16.f;
+        }
     }
     //重置最小缩放系数
     [self resetMinimumZoomScale];
@@ -381,7 +383,6 @@
 - (void)gridViewDidEndResizing:(SLGridView *)gridView {
     CGRect gridRectOfImage = [self rectOfGridOnImageByGridRect:gridView.gridRect];
     CGRect preZoomViewRect = self.zoomView.frame;
-    CGRect preGridRect = gridView.gridRect;
     //居中
     [UIView animateWithDuration:0.25
                           delay:0.0
@@ -402,17 +403,10 @@
         [self.zoomView setZoomScale:self.zoomView.zoomScale];
         // 调整contentOffset
 //        CGFloat zoomScale = self.zoomView.sl_width/gridView.gridRect.size.width;
-        CGFloat zoomScale = preZoomViewRect.size.width/gridView.gridRect.size.width;
-
+        CGFloat zoomScale = MIN(preZoomViewRect.size.width/gridView.gridRect.size.width, preZoomViewRect.size.height/gridView.gridRect.size.height);
         gridView.gridRect = self.zoomView.frame;
+         NSLog(@"现在的缩放比例是===%f",zoomScale);
         [self.zoomView setZoomScale:self.zoomView.zoomScale * zoomScale];
-//                         if(self.rotateAngle%180 != 0){
-//                             self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (preGridRect.origin.y - preZoomViewRect.origin.y)*zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale - (preGridRect.origin.x - preZoomViewRect.origin.x)*zoomScale);
-//
-//                         }else {
-//                             self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (preGridRect.origin.x - preZoomViewRect.origin.x)*zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale - (preGridRect.origin.y - preZoomViewRect.origin.y)*zoomScale);
-//                         }
-
         self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale);
     } completion:^(BOOL finished) {
         [self checkRecoverBtnIfEnable];
