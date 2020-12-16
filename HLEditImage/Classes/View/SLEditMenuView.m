@@ -11,6 +11,7 @@
 #import "SLImage.h"
 #import "SLUtilsMacro.h"
 #import "SLSubmenuGraffitiView.h"
+#import "SLSubmenuMosaicView.h"
 
 //贴画CollectionViewCell
 @interface SLSubmenuStickingCell : UICollectionViewCell
@@ -110,82 +111,6 @@
 }
 @end
 
-/// 图片马赛克 子菜单  马赛克类型选择
-@interface SLSubmenuMosaicView : UIView
-@property (nonatomic, assign) NSInteger currentTypeIndex; //当前马赛克类型索引 默认0
-@property (nonatomic, copy) void(^goBack)(void); //返回上一步
-@property (nonatomic, copy) void(^selectedMosaicType)(NSInteger currentTypeIndex); // 选择马赛克类型 0：小方块 1：毛笔涂抹
-@property (nonatomic, strong) UIButton *backBtn; //返回按钮
-@property (nonatomic, assign) BOOL backBtnEnable;
-
-@end
-@implementation SLSubmenuMosaicView
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.backBtnEnable = YES;
-    }
-    return self;
-}
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.backBtnEnable = YES;
-    }
-    return self;
-}
-- (void)setBackBtnEnable:(BOOL)backBtnEnable {
-    _backBtnEnable = backBtnEnable;
-    _backBtn.enabled = backBtnEnable;
-}
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    [self createSubmenu];
-}
-- (void)createSubmenu {
-    for (UIView *subView in self.subviews) {
-        [subView removeFromSuperview];
-    }
-    NSArray *imageNames = @[@"EditTraditionalMosaic", @"EditBrushMosaic", @"EditMenuGraffitiBack"];
-    NSArray *imageNamesSelected = @[@"EditTraditionalMosaicSelected", @"EditBrushMosaicSelected", @"EditMenuGraffitiBack"];
-    int count = (int)imageNames.count;
-    CGSize itemSize = CGSizeMake(18, 18);
-    CGFloat x = 40;
-    CGFloat space = (self.frame.size.width  - x- count * itemSize.width)/(count + 1);
-    for (int i = 0; i < count; i++) {
-        UIButton * colorBtn = [[UIButton alloc] initWithFrame:CGRectMake(x+space + (itemSize.width + space)*i, (self.frame.size.height - itemSize.height)/2.0, itemSize.width, itemSize.height)];
-        colorBtn.tag = 10 + i;
-        [self addSubview:colorBtn];
-        if (i == count - 1) {
-            colorBtn.frame = CGRectMake(self.frame.size.width - 54, 18, 26, 20);
-            [colorBtn addTarget:self action:@selector(backToPreviousStep:) forControlEvents:UIControlEventTouchUpInside];
-            [colorBtn setImage:[UIImage imageNamed:@"EditMenuGraffitiBack"] forState:UIControlStateNormal];
-            [colorBtn setImage:[UIImage imageNamed:@"EditMenuGraffitiBackDisable"] forState:UIControlStateDisabled];
-            self.backBtn = colorBtn;
-            self.backBtn.enabled = self.backBtnEnable;
-        }else {
-            [colorBtn addTarget:self action:@selector(mosaicTypeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        }
-        if(i == _currentTypeIndex) {
-            colorBtn.selected = YES;
-        }
-        [colorBtn setImage:[UIImage imageNamed:imageNames[i]] forState:UIControlStateNormal];
-        [colorBtn setImage:[UIImage imageNamed:imageNamesSelected[i]] forState:UIControlStateSelected];
-    }
-}
-- (void)backToPreviousStep:(id)sender {
-    self.goBack();
-}
-//马赛克类型
-- (void)mosaicTypeBtnClicked:(UIButton *)btn {
-    btn.selected = !btn.selected;
-    UIButton *currentView = [self viewWithTag:(_currentTypeIndex + 10)];
-    currentView.selected = !currentView.selected;
-    _currentTypeIndex = btn.tag - 10;
-    self.selectedMosaicType(_currentTypeIndex);
-}
-@end
-
 /// 编辑主菜单
 @interface SLEditMenuView ()
 @property (nonatomic, strong) NSArray *menuTypes; //编辑类型集合
@@ -222,7 +147,11 @@
         self.submenuGraffiti.forwardBtnEnable = enableForward;
     }
     if(self.currentMenuType == SLEditMenuTypePictureMosaic) {
-//        self.submenuMosaic.backBtnEnable = enable;
+        if(enableBack || enableForward){
+            [self.submenuMosaic showBackAndForwardBtn];
+        }
+        self.submenuMosaic.backBtnEnable = enableBack;
+        self.submenuMosaic.forwardBtnEnable = enableForward;
         return;
     }
 }
@@ -303,7 +232,7 @@
         _submenuGraffiti.backgroundColor = [UIColor whiteColor];
         __weak typeof(self) weakSelf = self;
         _submenuGraffiti.selectedLineColor = ^(UIColor *lineColor) {
-            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"lineColor":lineColor});
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"lineColor":lineColor,@"erase":@(NO)});
         };
         _submenuGraffiti.selectEraseBlock = ^{
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"erase":@(YES)});
@@ -333,6 +262,49 @@
     }
     return _submenuGraffiti;
 }
+- (SLSubmenuMosaicView *)submenuMosaic {
+    if (!_submenuMosaic) {
+        _submenuMosaic = [[SLSubmenuMosaicView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        _submenuMosaic.hidden = YES;
+        __weak typeof(self) weakSelf = self;
+        _submenuMosaic.selectEraseBlock = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"erase":@(YES)});
+        };
+        _submenuMosaic.lineWidthChangedBlock = ^(CGFloat lineWidth) {
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"lineWidth":@(lineWidth)});
+        };
+        _submenuMosaic.squareWidthChangedBlock = ^(CGFloat squareWidth) {
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"squareWidth":@(squareWidth),@"erase":@(NO)});
+        };
+        _submenuMosaic.selectEraseBlock = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"erase":@(YES)});
+        };
+        _submenuMosaic.goBackBlock = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goBack":@(YES)});
+        };
+        _submenuMosaic.goForwardBlock  = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goForward":@(YES)});
+        };
+        _submenuMosaic.cancelBlock = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goBackToLast":@(YES),@"hidden":@(YES)});
+            [weakSelf hiddenView:weakSelf.submenuMosaic];
+        };
+        _submenuMosaic.doneBlock = ^{
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"hidden":@(YES)});
+            [weakSelf hiddenView:weakSelf.submenuMosaic];
+            
+        };
+
+        //        _submenuMosaic.selectedMosaicType = ^(NSInteger currentTypeIndex) {
+        //            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"mosaicType":@(currentTypeIndex)});
+        //        };
+        //        _submenuMosaic.goBack = ^{
+        //            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goBack":@(YES)});
+        //        };
+    }
+    return _submenuMosaic;
+}
+
 - (SLSubmenuStickingView *)submenuSticking {
     if (!_submenuSticking) {
         _submenuSticking = [[SLSubmenuStickingView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60)];
@@ -343,20 +315,6 @@
         };
     }
     return _submenuSticking;
-}
-- (SLSubmenuMosaicView *)submenuMosaic {
-    if (!_submenuMosaic) {
-        _submenuMosaic = [[SLSubmenuMosaicView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 60)];
-        _submenuMosaic.hidden = YES;
-        __weak typeof(self) weakSelf = self;
-        _submenuMosaic.selectedMosaicType = ^(NSInteger currentTypeIndex) {
-            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"mosaicType":@(currentTypeIndex)});
-        };
-        _submenuMosaic.goBack = ^{
-            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goBack":@(YES)});
-        };
-    }
-    return _submenuMosaic;
 }
 #pragma mark - Evenst Handle
 - (void)doneBtnClick:(UIButton *)btn {
@@ -370,7 +328,11 @@
     switch (editMenuType) {
         case SLEditMenuTypeGraffiti:
             [self hiddenView:self.submenuGraffiti];
-            self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuGraffiti.hidden), @"lineColor": self.submenuGraffiti.currentColor});
+            if(!self.submenuGraffiti.hidden){
+                self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuGraffiti.hidden),@"lineWidth":@(self.submenuGraffiti.currentLineWidth),@"shape":@(self.submenuGraffiti.currentShapeType),@"lineColor":self.submenuGraffiti.currentColor,@"erase":@(self.submenuGraffiti.isErase)});
+            }else {
+                self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuGraffiti.hidden)});
+            }
             break;
         case SLEditMenuTypeSticking:
             [self hiddenView:self.submenuSticking];
@@ -386,7 +348,11 @@
             break;
         case SLEditMenuTypePictureMosaic:
             [self hiddenView:self.submenuMosaic];
-            self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuMosaic.hidden), @"mosaicType":@(self.submenuMosaic.currentTypeIndex)});
+            if(!self.submenuMosaic.hidden){
+                self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuMosaic.hidden),@"lineWidth":@(self.submenuMosaic.currentLineWidth),@"squareWidth":@(self.submenuMosaic.squareWidth),@"erase":@(self.submenuMosaic.isErase),@"shape":[NSNumber numberWithInteger:4]});
+            }else {
+                self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuMosaic.hidden)});
+            }
             break;
         case SLEditMenuTypePictureClipping:
             [self hiddenView:self.currentSubmenu hidden:YES];

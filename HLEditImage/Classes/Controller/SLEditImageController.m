@@ -40,15 +40,16 @@
 @property (nonatomic, strong) SLEditMenuView *editMenuView; //编辑菜单栏
 @property (nonatomic, strong) UIButton *trashTips; //垃圾桶提示 拖拽删除 贴图或文字
 
-@property (nonatomic, strong) SLDrawView *drawView; // 涂鸦视图
+@property (nonatomic, strong) SLDrawView *drawGraffitiView; // 涂鸦视图
+@property (nonatomic, strong) SLDrawView *drawMosicView; // 马赛克画板
 @property (nonatomic, strong) NSMutableArray *watermarkArray; // 水印层 所有的贴图和文本
 @property (nonatomic, strong) SLEditSelectedBox *selectedBox; //水印选中框
-@property (nonatomic, strong) SLMosaicView *mosaicView; //马赛克画板
 
 @property (nonatomic, assign) SLEditMenuType editingMenuType; //当前正在编辑的菜单类型
 
 @property (nonatomic, strong) NSMutableDictionary *menuSetting;//全部的设置
 
+@property (nonatomic, assign) BOOL isEditing;
 
 @end
 
@@ -130,6 +131,11 @@
 }
 //改变
 - (void)changeZoomViewRectWithIsEditing:(BOOL)isEditing {
+    if(self.isEditing == isEditing){
+        return;
+    }
+    self.zoomView.zoomScale = 1;
+    self.isEditing = isEditing;
     if(isEditing){
         CGRect maxRect = CGRectMake(KImageLRMargin, KImageTopMargin, self.view.sl_width - KImageLRMargin * 2, self.view.sl_height - KImageTopMargin - KImageBottomMargin- KBottomMenuHeight);
         CGSize newSize = CGSizeMake(self.view.sl_width - 2 * KImageLRMargin, (self.view.sl_width - 2 * KImageLRMargin)*self.zoomView.imageView.image.size.height/self.zoomView.imageView.image.size.width);
@@ -170,9 +176,8 @@
     if (self.zoomView.imageView.sl_height <= self.zoomView.sl_height) {
         self.zoomView.imageView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
     }
-    _drawView.frame = self.zoomView.imageView.bounds;
-    _mosaicView.frame = self.zoomView.imageView.bounds;
-
+    _drawGraffitiView.frame = self.zoomView.imageView.bounds;
+    _drawMosicView.frame = self.zoomView.imageView.bounds;
 }
 #pragma mark - Setter
 - (void)setEditingMenuType:(SLEditMenuType)editingMenuType {
@@ -255,23 +260,27 @@
             [weakSelf doneEditBtnClicked:nil];
         };
         _editMenuView.hideSubMenuBlock = ^(SLEditMenuType menuType) {
-            if(menuType == SLEditMenuTypeGraffiti){
+            if(menuType == SLEditMenuTypeGraffiti || menuType == SLEditMenuTypePictureMosaic){
                 [weakSelf changeZoomViewRectWithIsEditing:NO];
             }
         };
         _editMenuView.selectEditMenu = ^(SLEditMenuType editMenuType, NSDictionary * _Nullable setting) {
-            weakSelf.editingMenuType = ![setting[@"hidden"] boolValue] ? editMenuType : SLEditMenuTypeUnknown;
-            if (editMenuType == SLEditMenuTypeGraffiti) {
+            weakSelf.editingMenuType = editMenuType;
+            if (editMenuType == SLEditMenuTypeGraffiti || editMenuType == SLEditMenuTypePictureMosaic) {
+                if(editMenuType == SLEditMenuTypePictureMosaic){
+                    [weakSelf.zoomView.imageView insertSubview:weakSelf.drawMosicView atIndex:0];
+                }else {
+                    [weakSelf.zoomView.imageView insertSubview:weakSelf.drawView atIndex:([weakSelf.zoomView.imageView.subviews containsObject:weakSelf.drawMosicView] ? 1: 0)];
+                }
                 [weakSelf changeZoomViewRectWithIsEditing:YES];
                 if(setting[@"hidden"]){
                     weakSelf.drawView.enableDraw = ![setting[@"hidden"] boolValue];
                 }
-                [weakSelf.zoomView.imageView insertSubview:weakSelf.drawView atIndex:([weakSelf.zoomView.imageView.subviews containsObject:weakSelf.mosaicView] ? 1: 0)];
                 if (setting[@"lineColor"]) {
                     weakSelf.drawView.isErase = NO;
                     weakSelf.drawView.lineColor = setting[@"lineColor"];
                 }
-                if(setting[@"erase"]) {
+                if([setting[@"erase"] boolValue]) {
                     weakSelf.drawView.isErase = YES;
                     weakSelf.drawView.image = weakSelf.zoomView.imageView.image;
                 }
@@ -286,6 +295,11 @@
                 }
                 if (setting[@"lineWidth"]) {
                     weakSelf.drawView.lineWidth = [setting[@"lineWidth"] floatValue];
+                }
+                if(setting[@"squareWidth"]){
+                    weakSelf.drawView.isErase = NO;
+                    weakSelf.drawView.image = weakSelf.zoomView.imageView.image;
+                    weakSelf.drawView.squareWidth = [setting[@"squareWidth"] floatValue];
                 }
                 if(setting[@"shape"]){
                     weakSelf.drawView.shapeType = [setting[@"shape"] integerValue];
@@ -357,22 +371,23 @@
             }else{
                 weakSelf.topNavView.hidden = NO;
             }
-            if(editMenuType == SLEditMenuTypePictureMosaic) {
-                if (setting[@"mosaicType"]) {
-                    weakSelf.mosaicView.userInteractionEnabled = ![setting[@"hidden"] boolValue];
-                    if ([setting[@"hidden"] boolValue]) weakSelf.editingMenuType = SLEditMenuTypeUnknown;
-                    weakSelf.mosaicView.mosaicType = [setting[@"mosaicType"] integerValue];
-                    [weakSelf.zoomView.imageView insertSubview:weakSelf.mosaicView atIndex:0];
-                }
-                if (setting[@"goBack"]) {
-                    [weakSelf.mosaicView goBack];
-                }
-                //更新设置
-                [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
-            }else {
-                weakSelf.mosaicView.userInteractionEnabled = NO;
-            }
+//            if(editMenuType == SLEditMenuTypePictureMosaic) {
+//                if (setting[@"mosaicType"]) {
+//                    weakSelf.mosaicView.userInteractionEnabled = ![setting[@"hidden"] boolValue];
+//                    if ([setting[@"hidden"] boolValue]) weakSelf.editingMenuType = SLEditMenuTypeUnknown;
+//                    weakSelf.mosaicView.mosaicType = [setting[@"mosaicType"] integerValue];
+//                    [weakSelf.zoomView.imageView insertSubview:weakSelf.mosaicView atIndex:0];
+//                }
+//                if (setting[@"goBack"]) {
+//                    [weakSelf.mosaicView goBack];
+//                }
+//                //更新设置
+//                [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
+//            }else {
+//                weakSelf.mosaicView.userInteractionEnabled = NO;
+//            }
             if (editMenuType == SLEditMenuTypePictureClipping) {
+                weakSelf.isEditing = YES;
                 SLImageClipController *imageClipController = [[SLImageClipController alloc] init];
                 imageClipController.modalPresentationStyle = UIModalPresentationFullScreen;
                 [weakSelf.selectedBox removeFromSuperview];
@@ -380,6 +395,8 @@
                 imageClipController.image = image;
                 [weakSelf presentViewController:imageClipController animated:NO completion:nil];
             }
+            weakSelf.editingMenuType = ![setting[@"hidden"] boolValue] ? editMenuType : SLEditMenuTypeUnknown;
+
         };
         [self.view addSubview:_editMenuView];
     }
@@ -400,23 +417,39 @@
     }
     return _trashTips;
 }
-- (SLDrawView *)drawView {
-    if (!_drawView) {
-        _drawView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
-        _drawView.backgroundColor = [UIColor clearColor];
-        _drawView.lineWidth = 4.0;
-        __weak typeof(self) weakSelf = self;
-        _drawView.drawBegan = ^{
-//            [weakSelf hiddenEditMenus:YES];
+- (SLDrawView *)drawMosicView {
+    if(!_drawMosicView){
+        _drawMosicView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
+        _drawMosicView.backgroundColor = [UIColor clearColor];
+        WS(weakSelf);
+        _drawMosicView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
+            [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
         };
-        _drawView.drawEnded = ^{
-//            [weakSelf hiddenEditMenus:NO];
-        };
-        _drawView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
+
+    }
+    return _drawMosicView;
+}
+- (SLDrawView *)drawGraffitiView {
+    if(!_drawGraffitiView){
+        _drawGraffitiView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
+        _drawGraffitiView.backgroundColor = [UIColor clearColor];
+        WS(weakSelf);
+        _drawGraffitiView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
             [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
         };
     }
-    return _drawView;
+    return _drawGraffitiView;
+
+}
+
+- (SLDrawView *)drawView {
+    if(self.editingMenuType == SLEditMenuTypeGraffiti){
+        return self.drawGraffitiView;
+    }
+    if(self.editingMenuType  == SLEditMenuTypePictureMosaic){
+        return self.drawMosicView;
+    }
+    return nil;
 }
 - (NSMutableArray *)watermarkArray {
     if (!_watermarkArray) {
@@ -439,32 +472,7 @@
     }
     return _selectedBox;
 }
-- (SLMosaicView *)mosaicView {
-    if (!_mosaicView) {
-        _mosaicView = [[SLMosaicView alloc] initWithFrame:self.zoomView.imageView.bounds];
-        __weak typeof(self) weakSelf = self;
-        _mosaicView.squareWidth = 15;
-        _mosaicView.paintSize = CGSizeMake(40, 40);
-        _mosaicView.brushColor = ^UIColor *(CGPoint point) {
-            point.x = point.x/weakSelf.view.frame.size.width*weakSelf.zoomView.image.size.width;
-            point.y = point.y/weakSelf.view.frame.size.height*weakSelf.zoomView.image.size.height;
-            point.x = point.x/self.zoomView.zoomScale;
-            point.y = point.y/self.zoomView.zoomScale;
-            return [weakSelf.zoomView.image sl_colorAtPixel:point];
-        };
-        _mosaicView.brushBegan = ^{
-            [weakSelf hiddenEditMenus:YES];
-        };
-        _mosaicView.brushEnded = ^{
-            [weakSelf hiddenEditMenus:NO];
-        };
-        _mosaicView.canBackStatusChangedBlock = ^(BOOL enable) {
-//            [weakSelf enableEditMenusBackBtn:enable];
-        };
-        _mosaicView.userInteractionEnabled = YES;
-    }
-    return _mosaicView;
-}
+
 #pragma mark - Events Handle
 //取消编辑
 - (void)cancelEditBtnClicked:(id)sender {
@@ -609,8 +617,8 @@
     self.zoomView.zoomScale = 1;
     self.zoomView.image = clipImage;
     [self changeZoomViewRectWithIsEditing:NO];
-    [_drawView clear];
-    [_mosaicView clear];
+    [_drawGraffitiView clear];
+    [_drawMosicView clear];
     for (UIView *view in self.watermarkArray) {
         [view removeFromSuperview];
     }
@@ -625,9 +633,9 @@
 
 #pragma mark - SLZoomViewDelegate
 - (void)zoomViewDidEndMoveImage:(SLImageZoomView *)zoomView {
-    self.drawView.lineWidth = [self.menuSetting[@"lineWidth"] floatValue]/self.zoomView.zoomScale;
-    self.mosaicView.squareWidth = 15/self.zoomView.zoomScale;
-    self.mosaicView.paintSize = CGSizeMake(40/self.zoomView.zoomScale, 40/self.zoomView.zoomScale);
+//    self.drawView.lineWidth = [self.menuSetting[@"lineWidth"] floatValue]/self.zoomView.zoomScale;
+//    self.mosaicView.squareWidth = 15/self.zoomView.zoomScale;
+//    self.mosaicView.paintSize = CGSizeMake(40/self.zoomView.zoomScale, 40/self.zoomView.zoomScale);
 }
 
 @end

@@ -12,10 +12,11 @@
 #import "UIView+SLImage.h"
 #import "UIView+SLFrame.h"
 #import "SLUtilsMacro.h"
+#import "SLSubMenuClipImageView.h"
 
-#define KBottomMenuHeight (100+kSafeAreaBottomHeight)  //底部菜单高度
-#define KGridTopMargin (20+kSafeAreaTopHeight)  //顶部间距
-#define KGridBottomMargin 30  //底部间距
+#define KBottomMenuHeight (144+kSafeAreaBottomHeight)  //底部菜单高度
+#define KGridTopMargin (16+kSafeAreaTopHeight)  //顶部间距
+#define KGridBottomMargin 10  //底部间距
 #define KGridLRMargin 16   //左右边距
 
 @interface SLImageClipController ()<UIScrollViewDelegate, SLGridViewDelegate, SLImageZoomViewDelegate>
@@ -24,6 +25,9 @@
 @property (nonatomic, strong) SLImageZoomView *zoomView;
 //网格视图 裁剪框
 @property (nonatomic, strong) SLGridView *gridView;
+//底部操作栏
+@property (nonatomic, strong) SLSubMenuClipImageView *menuView;
+
 
 /// 原始位置区域
 @property (nonatomic, assign) CGRect originalRect;
@@ -37,11 +41,9 @@
 @property (nonatomic, assign) NSInteger rotateAngle;
 /// 图像方向
 @property (nonatomic, assign) UIImageOrientation imageOrientation;
+@property (nonatomic, assign) CGPoint originalOffset;
+@property (nonatomic, assign) CGRect rotatedOriginalRect;
 
-@property (nonatomic, strong) UIButton *rotateBtn;  //旋转操作
-@property (nonatomic, strong) UIButton *cancleClipBtn; //取消操作
-@property (nonatomic, strong) UIButton *recoveryBtn; //还原
-@property (nonatomic, strong) UIButton *doneClipBtn;  //保存操作
 @end
 
 @implementation SLImageClipController
@@ -77,16 +79,18 @@
     [self.view addSubview:self.zoomView];
     self.zoomView.imageView.frame = self.zoomView.bounds;
     self.originalRect = self.zoomView.frame;
+    self.rotatedOriginalRect = self.originalRect;
+    self.gridView.originalGridRect = self.originalRect;
     self.gridView.gridRect = self.zoomView.frame;
     self.gridView.maxGridRect = self.maxGridRect;
     [self.view addSubview:self.gridView];
     
-    [self.view addSubview:self.rotateBtn];
-    [self.view addSubview:self.cancleClipBtn];
-    [self.view addSubview:self.recoveryBtn];
-    [self.view addSubview:self.doneClipBtn];
+    //添加菜单
+    UIView * bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.sl_height - KBottomMenuHeight, self.view.sl_width, KBottomMenuHeight)];
+    bottomBar.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:bottomBar];
+    [self.view addSubview:self.menuView];
     
-    self.recoveryBtn.enabled = NO;
 }
 
 #pragma mark - Getter
@@ -95,6 +99,7 @@
         _zoomView = [[SLImageZoomView alloc] initWithFrame:CGRectMake(KGridLRMargin, KGridTopMargin, self.view.sl_width - KGridLRMargin *2,( self.view.sl_width - KGridLRMargin *2)*self.image.size.height/self.image.size.width)];
         _zoomView.sl_centerY = (self.view.sl_height - KBottomMenuHeight)/2.0;
         _zoomView.backgroundColor = [UIColor blackColor];
+        _zoomView.backgroundColor = [UIColor redColor];
         _zoomView.zoomViewDelegate = self;
     }
     return _zoomView;
@@ -106,43 +111,50 @@
     }
     return _gridView;
 }
-- (UIButton *)rotateBtn {
-    if (_rotateBtn == nil) {
-        _rotateBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.sl_height - KBottomMenuHeight, 54, 21)];
-        [_rotateBtn setImage:[UIImage imageNamed:@"EditMenuRotate"] forState:UIControlStateNormal];
-        [_rotateBtn addTarget:self action:@selector(rotateBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+- (SLSubMenuClipImageView *)menuView {
+    if(!_menuView){
+        _menuView = [[SLSubMenuClipImageView alloc] initWithFrame:CGRectMake(0, self.view.sl_height - KBottomMenuHeight, self.view.sl_width, KBottomMenuHeight - kSafeAreaBottomHeight)];
+        WS(weakSelf);
+        _menuView.rotateBlock = ^{
+            [weakSelf rotateBtnClicked:nil];
+        };
+        _menuView.cancelBlock = ^{
+            [weakSelf cancleClipClicked:nil];
+        };
+        _menuView.doneBlock = ^{
+            [weakSelf doneClipClicked:nil];
+        };
+        _menuView.selectScaleBlock = ^(NSInteger selectIndex) {
+            if(selectIndex != 1){
+                weakSelf.zoomView.minimumZoomScale = 1;
+                weakSelf.zoomView.zoomScale = 1;
+                weakSelf.zoomView.contentOffset = CGPointZero;
+                weakSelf.zoomView.frame = weakSelf.rotatedOriginalRect;
+                weakSelf.gridView.originalGridRect = weakSelf.zoomView.frame;
+                weakSelf.zoomView.imageView.frame = weakSelf.zoomView.bounds;
+            }
+            if(selectIndex == 0){
+                weakSelf.gridView.fixedScale = weakSelf.image.size.width/weakSelf.image.size.height;
+            }else if (selectIndex == 1){
+                weakSelf.gridView.fixedScale = 0;
+            }else if (selectIndex == 2){
+                weakSelf.gridView.fixedScale = 1;
+            }else if (selectIndex == 3){
+                weakSelf.gridView.fixedScale = 3/4.f;
+            }else if (selectIndex == 4){
+                weakSelf.gridView.fixedScale = 4/3.f;
+            }else if (selectIndex == 5){
+                weakSelf.gridView.fixedScale = 9/16.f;
+            }else if (selectIndex == 6){
+                weakSelf.gridView.fixedScale = 16/9.f;
+            }
+//            weakSelf.zoomView.frame =
+        };
+        _menuView.recoverBlock = ^{
+            [weakSelf recoveryClicked:nil];
+        };
     }
-    return _rotateBtn;
-}
-- (UIButton *)cancleClipBtn {
-    if (_cancleClipBtn == nil) {
-        _cancleClipBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.sl_height - 30 - 20 - kSafeAreaBottomHeight, 54, 30)];
-        [_cancleClipBtn setImage:[UIImage imageNamed:@"EditImageClipCancel"] forState:UIControlStateNormal];
-        _cancleClipBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_cancleClipBtn addTarget:self action:@selector(cancleClipClicked:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _cancleClipBtn;
-}
-- (UIButton *)recoveryBtn {
-    if (_recoveryBtn == nil) {
-        _recoveryBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
-        _recoveryBtn.sl_centerX = self.view.sl_width/2.0;
-        _recoveryBtn.sl_centerY = self.cancleClipBtn.center.y;
-        [_recoveryBtn setTitle:NSLocalizedString(@"还原", @"") forState:UIControlStateNormal];
-        [_recoveryBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_recoveryBtn setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:0.3] forState:UIControlStateDisabled];
-        _recoveryBtn.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-        [_recoveryBtn addTarget:self action:@selector(recoveryClicked:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _recoveryBtn;
-}
-- (UIButton *)doneClipBtn {
-    if (_doneClipBtn == nil) {
-        _doneClipBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.view.sl_width - 54, self.view.sl_height - 30 - 20 - kSafeAreaBottomHeight, 54, 30)];
-        [_doneClipBtn setImage:[UIImage imageNamed:@"EditImageClipDone"] forState:UIControlStateNormal];
-        [_doneClipBtn addTarget:self action:@selector(doneClipClicked:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _doneClipBtn;
+    return _menuView;
 }
 /// 返回图像方向
 - (UIImageOrientation)imageOrientation {
@@ -170,9 +182,9 @@
 //检查还原按钮是否可点
 - (void)checkRecoverBtnIfEnable {
     if(CGRectEqualToRect(self.zoomView.frame ,self.originalRect) && _rotateAngle == 0 && self.zoomView.zoomScale == 1){
-        self.recoveryBtn.enabled = NO;
+        [self.menuView enableRecoverBtn:NO];
     }else {
-        self.recoveryBtn.enabled = YES;
+        [self.menuView enableRecoverBtn:YES];
     }
 }
 // 放大zoomView区域到指定网格gridRect区域
@@ -219,12 +231,15 @@
 //重置最小缩放系数  只要改变了zoomView大小就重置
 - (void)resetMinimumZoomScale {
     CGRect rotateoriginalRect = CGRectApplyAffineTransform(self.originalRect, self.zoomView.transform);
+
     if (CGSizeEqualToSize(rotateoriginalRect.size, CGSizeZero)) {
         /** size为0时候不能继续，否则minimumZoomScale=+Inf，会无法缩放 */
         return;
     }
     //设置最小缩放系数
     CGFloat zoomScale = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect));
+//     CGFloat zoomScale = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(self.gridView.originalGridRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(self.gridView.originalGridRect));
+    NSLog(@"最小比例是===%f",zoomScale);
     self.zoomView.minimumZoomScale = zoomScale;
 }
 //获取网格区域在图片上的相对位置
@@ -273,14 +288,53 @@
         self.zoomView.sl_size = newSize;
         self.zoomView.center = CGPointMake(self.view.sl_width/2.0, (self.view.sl_height - KBottomMenuHeight)/2.0);
     }
-    self.gridView.gridRect = self.zoomView.frame;
-    
+    //重新设置图片初始rect
+    if(_rotateAngle%180 != 0){
+        CGSize rotateSize = CGSizeMake(self.originalRect.size.height, self.originalRect.size.width);
+        CGSize newSize = CGSizeMake(self.view.sl_width - 2 * KGridLRMargin, (self.view.sl_width - 2 * KGridLRMargin)*rotateSize.height/rotateSize.width);
+
+       self.rotatedOriginalRect =  CGRectMake((self.view.sl_width - newSize.width)/2, (self.view.sl_height - KBottomMenuHeight - newSize.height)/2, newSize.width, newSize.height);
+    }else {
+        self.rotatedOriginalRect = self.originalRect;
+    }
+    //重新设置裁剪比例
+    if(!self.gridView.fixedScale){
+        self.gridView.gridRect = self.zoomView.frame;
+    }
+    self.gridView.originalGridRect = self.zoomView.frame;
+    if(self.menuView.currentSelectIndex == 0){
+        self.gridView.fixedScale = 1/self.gridView.fixedScale;
+    }else if (self.menuView.currentSelectIndex == 2){
+        [self.menuView selectIndex:2];
+        self.gridView.fixedScale = 1.f;
+    }
+    else if(self.menuView.currentSelectIndex == 3){
+        [self.menuView selectIndex:4];
+        self.gridView.fixedScale = 4/3.f;
+    }else if (self.menuView.currentSelectIndex == 4){
+        [self.menuView selectIndex:3];
+        self.gridView.fixedScale = 3/4.f;
+    }else if (self.menuView.currentSelectIndex == 5){
+        [self.menuView selectIndex:6];
+        self.gridView.fixedScale = 16/9.f;
+    }else if (self.menuView.currentSelectIndex == 6){
+        self.menuView.currentSelectIndex = 5;
+        self.gridView.fixedScale = 9/16.f;
+    }
     //重置最小缩放系数
     [self resetMinimumZoomScale];
     CGFloat scale = MIN(CGRectGetWidth(self.zoomView.frame) / width, CGRectGetHeight(self.zoomView.frame) / height);
     [self.zoomView setZoomScale:self.zoomView.zoomScale * scale];
     // 调整contentOffset
-    self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale);
+    if(_rotateAngle%180 != 0){
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (self.gridView.gridRect.origin.y - self.zoomView.sl_y), gridRectOfImage.origin.y*self.zoomView.zoomScale - (self.gridView.gridRect.origin.x - self.zoomView.sl_x));
+
+    }else {
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (self.gridView.gridRect.origin.x - self.zoomView.sl_x), gridRectOfImage.origin.y*self.zoomView.zoomScale - (self.gridView.gridRect.origin.y - self.zoomView.sl_y));
+
+    }
+    
+    self.originalOffset = self.zoomView.contentOffset;
     //检查还原按钮
     [self checkRecoverBtnIfEnable];
 }
@@ -293,7 +347,12 @@
     self.zoomView.zoomScale = 1;
     self.zoomView.transform = CGAffineTransformIdentity;
     self.zoomView.frame = self.originalRect;
+    self.zoomView.imageView.frame = self.zoomView.bounds;
     self.gridView.gridRect = self.zoomView.frame;
+    self.gridView.originalGridRect = self.zoomView.frame;
+    self.rotatedOriginalRect = self.originalRect;
+    self.gridView.fixedScale = 0;
+    [self.menuView selectIndex:1];
     _rotateAngle = 0;
     [self checkRecoverBtnIfEnable];
 }
@@ -321,6 +380,8 @@
 // 结束调整
 - (void)gridViewDidEndResizing:(SLGridView *)gridView {
     CGRect gridRectOfImage = [self rectOfGridOnImageByGridRect:gridView.gridRect];
+    CGRect preZoomViewRect = self.zoomView.frame;
+    CGRect preGridRect = gridView.gridRect;
     //居中
     [UIView animateWithDuration:0.25
                           delay:0.0
@@ -340,9 +401,18 @@
         [self resetMinimumZoomScale];
         [self.zoomView setZoomScale:self.zoomView.zoomScale];
         // 调整contentOffset
-        CGFloat zoomScale = self.zoomView.sl_width/gridView.gridRect.size.width;
+//        CGFloat zoomScale = self.zoomView.sl_width/gridView.gridRect.size.width;
+        CGFloat zoomScale = preZoomViewRect.size.width/gridView.gridRect.size.width;
+
         gridView.gridRect = self.zoomView.frame;
         [self.zoomView setZoomScale:self.zoomView.zoomScale * zoomScale];
+//                         if(self.rotateAngle%180 != 0){
+//                             self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (preGridRect.origin.y - preZoomViewRect.origin.y)*zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale - (preGridRect.origin.x - preZoomViewRect.origin.x)*zoomScale);
+//
+//                         }else {
+//                             self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (preGridRect.origin.x - preZoomViewRect.origin.x)*zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale - (preGridRect.origin.y - preZoomViewRect.origin.y)*zoomScale);
+//                         }
+
         self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale);
     } completion:^(BOOL finished) {
         [self checkRecoverBtnIfEnable];

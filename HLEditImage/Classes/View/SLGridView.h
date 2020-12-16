@@ -30,6 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGRect maxGridRect;
 /// 原来尺寸 默认CGRectInset(self.bounds, 20, 20).size
 @property (nonatomic, assign) CGSize originalGridSize;
+///原来的位置
+@property (nonatomic, assign) CGRect originalGridRect;
+///固定的比例 宽高比
+@property (nonatomic, assign) CGFloat fixedScale;
 /// 网格代理
 @property (nonatomic, weak) id<SLGridViewDelegate> delegate;
 /// 显示遮罩层  半透明黑色  默认 YES

@@ -12,7 +12,8 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
     SLDrawShapeRandom = 0,//自由
     SLDrawShapeEllipse = 1,//椭圆
     SLDrawShapeRect = 2,//矩形
-    SLDrawShapeArrow = 3//箭头
+    SLDrawShapeArrow = 3,//箭头
+    SLDrawShapeMosic = 4//马赛克
 };
 
 
@@ -25,10 +26,14 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 @property (nonatomic, strong) UIColor *lineColor;
 ///是否是橡皮檫
 @property (nonatomic, assign) BOOL isErase;
+///马赛克方块大小
+@property (nonatomic, assign) CGFloat squareWidth;
+
 ///画笔形状 默认 自由模式
 @property (nonatomic, assign) SLDrawShapeType shapeType;
 ///是否可以画画
 @property (nonatomic, assign) BOOL enableDraw;
+
 /// 正在绘画 
 @property (nonatomic, readonly) BOOL isDrawing;
 /// 能否返回

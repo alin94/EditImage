@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)sl_scaledImageWithData:(NSData *)data withSize:(CGSize)size scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
 
 + (UIImage *)sl_imageWithColor:(UIColor *)color size:(CGSize)size;
+- (UIImage *)sl_transToMosaicImageWithBlockLevel:(NSUInteger)level;
+
 @end
 
 NS_ASSUME_NONNULL_END

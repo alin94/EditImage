@@ -17,7 +17,10 @@ typedef NS_ENUM(NSUInteger, SLGraffitiShapeType) {
 
 /// 涂鸦子菜单 画笔颜色形状选择
 @interface SLSubmenuGraffitiView : UIView
+@property (nonatomic, assign) SLGraffitiShapeType currentShapeType;//当前画笔形状
+@property (nonatomic, assign) CGFloat currentLineWidth;
 @property (nonatomic, strong) UIColor *currentColor; // 当前画笔颜色
+@property (nonatomic, assign, readonly) BOOL isErase;//是否是橡皮檫
 @property (nonatomic, copy) void(^selectedLineColor)(UIColor *lineColor); //选中颜色的回调
 @property (nonatomic, copy) void (^selectEraseBlock)(void);//选中橡皮檫
 @property (nonatomic, copy) void(^goBackBlock)(void); //返回上一步

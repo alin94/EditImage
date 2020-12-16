@@ -7,6 +7,7 @@
 //
 
 #import "SLDrawView.h"
+#import "UIImage+SLCommon.h"
 
 @interface SLDrawBezierPath : UIBezierPath
 @property (nonatomic, strong) UIColor *color; //曲线颜色
@@ -29,6 +30,7 @@
 @property (nonatomic, strong) NSMutableArray <CAShapeLayer *>*deleteLayerArray;
 @property (nonatomic, assign) CGPoint beginPoint;
 @property (nonatomic, assign) NSInteger lastLinePathCount;//之前的路径总数
+@property (nonatomic, strong) UIImage *mosicImage;//马赛克图片
 
 @end
 
@@ -38,7 +40,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _lineWidth = 4.f;
+        _lineWidth = 8.f;
         _lineColor = [UIColor blackColor];
         _layerArray = [NSMutableArray array];
         _lineArray = [NSMutableArray array];
@@ -55,6 +57,15 @@
 - (void)setImage:(UIImage *)image {
     _image = image;
     [self createPatternImage];
+}
+- (void)setSquareWidth:(CGFloat)squareWidth {
+    if(_squareWidth != squareWidth){
+        _squareWidth = squareWidth;
+        if (_image){
+            _mosicImage = [_image sl_transToMosaicImageWithBlockLevel:squareWidth*4];
+        }
+    }
+    
 }
 - (void)setEnableDraw:(BOOL)enableDraw {
     if(_enableDraw != enableDraw){
@@ -76,26 +87,29 @@
         _isBegan = YES;
         //1、每次触摸的时候都应该去创建一条贝塞尔曲线
         SLDrawBezierPath *path = [SLDrawBezierPath new];
-        //设置线宽
+        //设置颜色
         if(self.isErase){
-            path.color = [[UIColor alloc]initWithPatternImage:self.image];
+            path.color = [UIColor clearColor];
+//            [[UIColor alloc]initWithPatternImage:self.image];
             [path strokeWithBlendMode:kCGBlendModeClear alpha:1.0f];
             [path fillWithBlendMode:kCGBlendModeClear alpha:1.0];
         }else {
-            //设置颜色
             path.color = self.lineColor;//保存线条当前颜色
+            if(self.shapeType == SLDrawShapeMosic){
+                path.color = [[UIColor alloc]initWithPatternImage:self.mosicImage];
+                [path strokeWithBlendMode:kCGBlendModeClear alpha:1.0f];
+                [path fillWithBlendMode:kCGBlendModeClear alpha:1.0];
+            }
         }
         path.lineWidth = self.lineWidth;
         //2、移动画笔
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:self];
         self.beginPoint = point;
-        if(self.shapeType == SLDrawShapeRandom || self.isErase){
-            //椭圆
+        if(self.shapeType == SLDrawShapeRandom || self.shapeType == SLDrawShapeMosic || self.isErase){
             [path moveToPoint:point];
         }
         [self.lineArray addObject:path];
-        
         CAShapeLayer *slayer = [self createShapeLayer:path];
         [self.layer addSublayer:slayer];
         [self.layerArray addObject:slayer];
@@ -112,7 +126,7 @@
             if (_isBegan && self.drawBegan) self.drawBegan();
             _isBegan = NO;
             _isWork = YES;
-            if(self.shapeType == SLDrawShapeRandom || self.isErase){
+            if(self.shapeType == SLDrawShapeRandom || self.shapeType == SLDrawShapeMosic|| self.isErase ){
                 [path addLineToPoint:point];
             }else if (self.shapeType == SLDrawShapeEllipse){
                 path = [SLDrawBezierPath bezierPathWithOvalInRect:[self getRectWithStartPoint:self.beginPoint endPoint:point]];

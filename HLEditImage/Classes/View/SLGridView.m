@@ -264,7 +264,6 @@ const CGFloat kSLControlWidth = 30.f;
     
     self.topLeftCornerView = [self createResizeControl];
     self.topRightCornerView = [self createResizeControl];
-    self.bottomLeftCornerView = [self createResizeControl];
     self.bottomRightCornerView = [self createResizeControl];
     
     self.topEdgeView = [self createResizeControl];
@@ -301,6 +300,24 @@ const CGFloat kSLControlWidth = 30.f;
     return _gridLayer;
 }
 #pragma mark - Setter
+- (void)setFixedScale:(CGFloat)fixedScale {
+    _fixedScale = fixedScale;
+    if(!fixedScale){
+        return;
+    }
+    CGRect originalRect = self.originalGridRect;
+    CGSize newSize = CGSizeZero;
+    if(originalRect.size.width/fixedScale > originalRect.size.height){
+        newSize = CGSizeMake(originalRect.size.height*fixedScale, originalRect.size.height);
+    }else{
+        newSize = CGSizeMake(originalRect.size.width, originalRect.size.width/fixedScale);
+    }
+    CGRect newRect = CGRectMake(originalRect.origin.x + (originalRect.size.width - newSize.width)/2, originalRect.origin.y + (originalRect.size.height - newSize.height)/2 , newSize.width, newSize.height);
+    [self setGridRect:newRect maskLayer:YES animated:NO];
+//    if ([self.delegate respondsToSelector:@selector(gridViewDidEndResizing:)]) {
+//        [self.delegate gridViewDidEndResizing:self];
+//    }
+}
 - (void)setGridRect:(CGRect)gridRect {
     [self setGridRect:gridRect maskLayer:YES];
 }
@@ -323,9 +340,6 @@ const CGFloat kSLControlWidth = 30.f;
 - (void)setGridRect:(CGRect)gridRect maskLayer:(BOOL)isMaskLayer {
     [self setGridRect:gridRect maskLayer:isMaskLayer animated:NO];
 }
-//- (void)setGridRect:(CGRect)gridRect animated:(BOOL)animated {
-//    [self setGridRect:gridRect maskLayer:NO animated:animated];
-//}
 // 更新网格区域和遮罩状态
 - (void)setGridRect:(CGRect)gridRect maskLayer:(BOOL)isMaskLayer  animated:(BOOL)animated {
     if (!CGRectEqualToRect(_gridRect, gridRect)) {
@@ -400,6 +414,20 @@ const CGFloat kSLControlWidth = 30.f;
         
     }
     
+    if(self.fixedScale){
+        if (resizeControlView == self.topEdgeView || resizeControlView == self.bottomEdgeView) {
+            rect.size.width = rect.size.height*self.fixedScale;
+        } else if (resizeControlView == self.leftEdgeView || resizeControlView == self.rightEdgeView) {
+            rect.size.height = rect.size.width/self.fixedScale;
+        }
+    }
+    if(self.fixedScale){
+        if(rect.size.width*self.fixedScale > rect.size.height*self.fixedScale){
+            rect.size.width = rect.size.height*self.fixedScale;
+        }else {
+            rect.size.height = rect.size.width/self.fixedScale;
+        }
+    }
     /** 限制x/y 超出左上角 最大限度 */
     if (ceil(rect.origin.x) < ceil(CGRectGetMinX(_maxGridRect))) {
         rect.origin.x = _maxGridRect.origin.x;
@@ -412,9 +440,15 @@ const CGFloat kSLControlWidth = 30.f;
     /** 限制宽度／高度 超出 最大限度 */
     if (ceil(rect.origin.x+rect.size.width) > ceil(CGRectGetMaxX(_maxGridRect))) {
         rect.size.width = CGRectGetMaxX(_maxGridRect) - CGRectGetMinX(rect);
+        if(self.fixedScale){
+            rect.size.height = rect.size.width/self.fixedScale;
+        }
     }
     if (ceil(rect.origin.y+rect.size.height) > ceil(CGRectGetMaxY(_maxGridRect))) {
         rect.size.height = CGRectGetMaxY(_maxGridRect) - CGRectGetMinY(rect);
+        if(self.fixedScale){
+            rect.size.width = rect.size.height*self.fixedScale;
+        }
     }
     /** 限制宽度／高度 小于 最小限度 */
     if (ceil(rect.size.width) <= ceil(_minGridSize.width)) {
@@ -430,6 +464,13 @@ const CGFloat kSLControlWidth = 30.f;
             rect.origin.y = CGRectGetMaxY(self.initialRect) - _minGridSize.height;
         }
         rect.size.height = _minGridSize.height;
+    }
+    if(self.fixedScale){
+        if(rect.size.width*self.fixedScale > rect.size.height*self.fixedScale){
+            rect.size.width = rect.size.height*self.fixedScale;
+        }else {
+            rect.size.height = rect.size.width/self.fixedScale;
+        }
     }
     return rect;
 }
