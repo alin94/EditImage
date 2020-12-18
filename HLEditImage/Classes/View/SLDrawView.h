@@ -16,9 +16,8 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
     SLDrawShapeMosic = 4//马赛克
 };
 
-
-/// 涂鸦视图 画板   默认白底
-@interface SLDrawView : UIView
+//管理画笔数据的
+@interface SLDrawBrushTool : NSObject
 @property (nonatomic, strong) UIImage *image;
 /// 线粗 默认5.0
 @property (nonatomic, assign) CGFloat lineWidth;
@@ -31,9 +30,16 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 
 ///画笔形状 默认 自由模式
 @property (nonatomic, assign) SLDrawShapeType shapeType;
+
+- (instancetype)initWithDrawBounds:(CGRect)bounds;
+
+@end
+
+/// 涂鸦视图 画板   默认白底
+@interface SLDrawView : UIView
+@property (nonatomic, strong) SLDrawBrushTool *brushTool;
 ///是否可以画画
 @property (nonatomic, assign) BOOL enableDraw;
-
 /// 正在绘画 
 @property (nonatomic, readonly) BOOL isDrawing;
 /// 能否返回

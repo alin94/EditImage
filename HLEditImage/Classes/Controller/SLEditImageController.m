@@ -40,8 +40,10 @@
 @property (nonatomic, strong) SLEditMenuView *editMenuView; //编辑菜单栏
 @property (nonatomic, strong) UIButton *trashTips; //垃圾桶提示 拖拽删除 贴图或文字
 
-@property (nonatomic, strong) SLDrawView *drawGraffitiView; // 涂鸦视图
-@property (nonatomic, strong) SLDrawView *drawMosicView; // 马赛克画板
+@property (nonatomic, strong) SLDrawBrushTool *drawGraffitiBrushTool;// 涂鸦工具
+@property (nonatomic, strong) SLDrawBrushTool *drawMosicBrushTool;//马赛克工具
+@property (nonatomic, strong) SLDrawView *drawView;//画板
+
 @property (nonatomic, strong) NSMutableArray *watermarkArray; // 水印层 所有的贴图和文本
 @property (nonatomic, strong) SLEditSelectedBox *selectedBox; //水印选中框
 
@@ -176,8 +178,7 @@
     if (self.zoomView.imageView.sl_height <= self.zoomView.sl_height) {
         self.zoomView.imageView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
     }
-    _drawGraffitiView.frame = self.zoomView.imageView.bounds;
-    _drawMosicView.frame = self.zoomView.imageView.bounds;
+    _drawView.frame = self.zoomView.imageView.bounds;
 }
 #pragma mark - Setter
 - (void)setEditingMenuType:(SLEditMenuType)editingMenuType {
@@ -267,22 +268,31 @@
         _editMenuView.selectEditMenu = ^(SLEditMenuType editMenuType, NSDictionary * _Nullable setting) {
             weakSelf.editingMenuType = editMenuType;
             if (editMenuType == SLEditMenuTypeGraffiti || editMenuType == SLEditMenuTypePictureMosaic) {
-                if(editMenuType == SLEditMenuTypePictureMosaic){
-                    [weakSelf.zoomView.imageView insertSubview:weakSelf.drawMosicView atIndex:0];
+                //添加画板视图
+                if(!weakSelf.drawView.superview){
+                    [weakSelf.zoomView.imageView insertSubview:weakSelf.drawView atIndex:0];
+                }
+                if(editMenuType == SLEditMenuTypeGraffiti){
+                    weakSelf.drawView.brushTool = weakSelf.drawGraffitiBrushTool;
                 }else {
-                    [weakSelf.zoomView.imageView insertSubview:weakSelf.drawView atIndex:([weakSelf.zoomView.imageView.subviews containsObject:weakSelf.drawMosicView] ? 1: 0)];
+                    weakSelf.drawView.brushTool = weakSelf.drawMosicBrushTool;
                 }
                 [weakSelf changeZoomViewRectWithIsEditing:YES];
                 if(setting[@"hidden"]){
                     weakSelf.drawView.enableDraw = ![setting[@"hidden"] boolValue];
                 }
                 if (setting[@"lineColor"]) {
-                    weakSelf.drawView.isErase = NO;
-                    weakSelf.drawView.lineColor = setting[@"lineColor"];
+                    weakSelf.drawView.brushTool.isErase = NO;
+                    weakSelf.drawView.brushTool.lineColor = setting[@"lineColor"];
+                }
+                if(setting[@"squareWidth"]){
+                    weakSelf.drawView.brushTool.isErase = NO;
+                    weakSelf.drawView.brushTool.image = weakSelf.zoomView.imageView.image;
+                    weakSelf.drawView.brushTool.squareWidth = [setting[@"squareWidth"] floatValue];
                 }
                 if([setting[@"erase"] boolValue]) {
-                    weakSelf.drawView.isErase = YES;
-                    weakSelf.drawView.image = weakSelf.zoomView.imageView.image;
+                    weakSelf.drawView.brushTool.isErase = YES;
+                    weakSelf.drawView.brushTool.image = weakSelf.zoomView.imageView.image;
                 }
                 if (setting[@"goBack"]) {
                     [weakSelf.drawView goBack];
@@ -294,15 +304,10 @@
                     [weakSelf.drawView goBackToLastDrawState];
                 }
                 if (setting[@"lineWidth"]) {
-                    weakSelf.drawView.lineWidth = [setting[@"lineWidth"] floatValue];
-                }
-                if(setting[@"squareWidth"]){
-                    weakSelf.drawView.isErase = NO;
-                    weakSelf.drawView.image = weakSelf.zoomView.imageView.image;
-                    weakSelf.drawView.squareWidth = [setting[@"squareWidth"] floatValue];
+                    weakSelf.drawView.brushTool.lineWidth = [setting[@"lineWidth"] floatValue];
                 }
                 if(setting[@"shape"]){
-                    weakSelf.drawView.shapeType = [setting[@"shape"] integerValue];
+                    weakSelf.drawView.brushTool.shapeType = [setting[@"shape"] integerValue];
                 }
                 //更新设置
                 [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
@@ -359,6 +364,7 @@
                     label.transform = CGAffineTransformMakeScale(1/weakSelf.zoomView.zoomScale, 1/weakSelf.zoomView.zoomScale);
                     center = CGPointMake(center.x/weakSelf.zoomView.zoomScale, center.y/weakSelf.zoomView.zoomScale);
                     label.center = center;
+//                    [weakSelf.zoomView.imageView.layer addSublayer:label.layer];
                     [weakSelf.zoomView.imageView addSubview:label];
                     [weakSelf.watermarkArray addObject:label];
                     [weakSelf addRotateAndPinchGestureRecognizer:label];
@@ -417,40 +423,40 @@
     }
     return _trashTips;
 }
-- (SLDrawView *)drawMosicView {
-    if(!_drawMosicView){
-        _drawMosicView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
-        _drawMosicView.backgroundColor = [UIColor clearColor];
-        WS(weakSelf);
-        _drawMosicView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
-            [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
-        };
-
+- (SLDrawBrushTool *)drawMosicBrushTool {
+    if(!_drawMosicBrushTool){
+        _drawMosicBrushTool = [[SLDrawBrushTool alloc] initWithDrawBounds:self.zoomView.imageView.bounds];
     }
-    return _drawMosicView;
+    return _drawMosicBrushTool;
 }
-- (SLDrawView *)drawGraffitiView {
-    if(!_drawGraffitiView){
-        _drawGraffitiView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
-        _drawGraffitiView.backgroundColor = [UIColor clearColor];
-        WS(weakSelf);
-        _drawGraffitiView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
-            [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
-        };
+-(SLDrawBrushTool *)drawGraffitiBrushTool {
+    if(!_drawGraffitiBrushTool){
+        _drawGraffitiBrushTool = [[SLDrawBrushTool alloc] initWithDrawBounds:self.zoomView.imageView.bounds];
     }
-    return _drawGraffitiView;
-
+    return _drawGraffitiBrushTool;
 }
 
 - (SLDrawView *)drawView {
-    if(self.editingMenuType == SLEditMenuTypeGraffiti){
-        return self.drawGraffitiView;
+    if(!_drawView){
+        _drawView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
+        _drawView.backgroundColor = [UIColor clearColor];
+        WS(weakSelf);
+        _drawView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
+            [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
+        };
     }
-    if(self.editingMenuType  == SLEditMenuTypePictureMosaic){
-        return self.drawMosicView;
-    }
-    return nil;
+    return _drawView;
 }
+//- (SLDrawBrushTool *)currentDrawBrushTool{
+//    if(self.editingMenuType == SLEditMenuTypeGraffiti){
+//        return self.drawGraffitiBrushTool;
+//    }
+//    if(self.editingMenuType  == SLEditMenuTypePictureMosaic){
+//        return self.drawMosicBrushTool;
+//    }
+//    return nil;
+//
+//}
 - (NSMutableArray *)watermarkArray {
     if (!_watermarkArray) {
         _watermarkArray = [NSMutableArray array];
@@ -617,8 +623,7 @@
     self.zoomView.zoomScale = 1;
     self.zoomView.image = clipImage;
     [self changeZoomViewRectWithIsEditing:NO];
-    [_drawGraffitiView clear];
-    [_drawMosicView clear];
+    [_drawView clear];
     for (UIView *view in self.watermarkArray) {
         [view removeFromSuperview];
     }
