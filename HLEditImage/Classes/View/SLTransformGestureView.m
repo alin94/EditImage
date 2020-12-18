@@ -6,19 +6,19 @@
 /*****实现文件*********/
 
 #import "SLTransformGestureView.h"
+#import "SLDelayPerform.h"
+#import "SLUtilsMacro.h"
 
-
+#define kMaxScale 2
+#define kMinScale 0.2
 
 @interface SLTransformGestureView ()<UIGestureRecognizerDelegate>
 {
-    
     UIImageView *_imageView;
-    
+    UITapGestureRecognizer *_tapGes;
 }
-// 编辑水平图片的数组
-@property (nonatomic, strong) NSMutableArray *imageViews;
-// 当前正在编辑的水印图片
-@property (nonatomic, weak) UIView *currentEditintImageView;
+// 当前正在编辑的水印视图
+@property (nonatomic, weak) UIView *currentEditingView;
 // 删除按钮
 @property (nonatomic, weak) UIButton *deleteBtn;
 // 旋转缩放按钮
@@ -40,7 +40,7 @@
     if(!_dotBoarderLayer){
         CAShapeLayer *layer = [[CAShapeLayer alloc] init];
         layer.lineWidth = 1;
-        layer.strokeColor = [UIColor greenColor].CGColor;
+        layer.strokeColor = [UIColor whiteColor].CGColor;
         layer.fillColor = [UIColor clearColor].CGColor;
         layer.lineCap = kCALineCapRound;
         layer.lineJoin = kCALineJoinRound;
@@ -86,12 +86,12 @@
     }
     return _editBtn;
 }
-- (NSMutableArray *)imageViews
+- (NSMutableArray *)watermarkArray
 {
-    if (!_imageViews) {
-        _imageViews = [NSMutableArray array];
+    if (!_watermarkArray) {
+        _watermarkArray = [NSMutableArray array];
     }
-    return _imageViews;
+    return _watermarkArray;
     
 }
 
@@ -117,7 +117,14 @@
     // 添加手势
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     [self addGestureRecognizer:tap];
+    _tapGes = tap;
     
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
+    doubleTap.numberOfTapsRequired = 2;
+    doubleTap.numberOfTouchesRequired = 1;
+    [tap requireGestureRecognizerToFail:doubleTap];
+    [self addGestureRecognizer:doubleTap];
+
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
     [self addGestureRecognizer:pan];
     
@@ -135,94 +142,144 @@
 // 双指旋转
 - (void)rotate:(UIRotationGestureRecognizer *)rotate
 {
-    if (!self.currentEditintImageView) {
+    if (!self.currentEditingView) {
         // 判断触摸点是否在水平图片上
-        self.currentEditintImageView = [self imageViewInLocation:[rotate locationInView:self]];
-        if (!self.currentEditintImageView) return; // 不在就直接return
+        self.currentEditingView = [self imageViewInLocation:[rotate locationInView:self]];
+        if (!self.currentEditingView) return; // 不在就直接return
+    }
+    if(self.gestureActionBlock){
+        self.gestureActionBlock(rotate, self.currentEditingView);
     }
     //触摸点在水印图片上
     if (rotate.state == UIGestureRecognizerStateBegan) {
-        // 正在编辑，先隐藏两个编辑按钮
-        [self hideEditingBtn:YES];
-        
-    }else if (rotate.state == UIGestureRecognizerStateEnded) {
-        if (!self.currentEditintImageView) return;
-        // 结束编辑，显示两个编辑按钮
+        // 正在编辑
         [self hideEditingBtn:NO];
         
+    }else if (rotate.state == UIGestureRecognizerStateEnded) {
+        if (!self.currentEditingView) return;
+        // 结束编辑
+        WS(weakSelf);
+        [SLDelayPerform sl_startDelayPerform:^{
+            [weakSelf endEditing];
+        } afterDelay:1.0];
     }else {
-        // 做旋转处理
-        self.currentEditintImageView.transform = CGAffineTransformRotate(self.currentEditintImageView.transform, rotate.rotation);
+        if(self.currentEditingView){
+            [self hideEditingBtn:NO];
+            // 做旋转处理
+            self.currentEditingView.transform = CGAffineTransformRotate(self.currentEditingView.transform, rotate.rotation);
+        }
         [rotate setRotation:0];
     }
-    
     //    [self resetBorder];
     
 }
 - (void)pinch:(UIPinchGestureRecognizer *)pinch
-
 {
+    if(self.currentEditingView){
+        if(self.gestureActionBlock){
+            self.gestureActionBlock(pinch, self.currentEditingView);
+        }
+    }
     if (pinch.state == UIGestureRecognizerStateBegan) {
         UIImageView *imgView = [self imageViewInLocation:[pinch locationInView:self]];
-        if (!self.currentEditintImageView && !imgView) return;
+        if (!self.currentEditingView && !imgView) return;
         if (imgView) {
-            self.currentEditintImageView = imgView;
+            self.currentEditingView = imgView;
         }
-        [self hideEditingBtn:YES];
-    }else if (pinch.state == UIGestureRecognizerStateEnded) {
-        if (!self.currentEditintImageView) return;
         [self hideEditingBtn:NO];
+        if(self.gestureActionBlock){
+            self.gestureActionBlock(pinch, self.currentEditingView);
+        }
+    }else if (pinch.state == UIGestureRecognizerStateEnded) {
+        if (!self.currentEditingView) return;
+        // 结束编辑
+        WS(weakSelf);
+        [SLDelayPerform sl_startDelayPerform:^{
+            [weakSelf endEditing];
+        } afterDelay:1.0];
     }else {
-        self.currentEditintImageView.transform = CGAffineTransformScale(self.currentEditintImageView.transform, pinch.scale, pinch.scale);
+        if(self.currentEditingView){
+            [self hideEditingBtn:NO];
+            CGFloat scale = pinch.scale;
+            CGAffineTransform t = self.currentEditingView.transform;;
+
+            if(scale*t.a < kMinScale){
+                scale = kMinScale/t.a;
+            }else if (scale*t.a > kMaxScale){
+                scale = kMaxScale/t.a;
+                NSLog(@"超出去啦%@",self.currentEditingView);
+            }
+            self.currentEditingView.transform = CGAffineTransformScale(self.currentEditingView.transform, scale, scale);
+        }
         [pinch setScale:1];
     }
+
     //    [self resetBorder];
 }
 
 
 - (void)tap:(UITapGestureRecognizer *)tap
-
 {
     UIImageView *imgView = [self imageViewInLocation:[tap locationInView:self]];
-    self.currentEditintImageView = imgView;
+    self.currentEditingView = imgView;
     [self hideEditingBtn:!imgView];
+    if(self.gestureActionBlock){
+        self.gestureActionBlock(tap, self.currentEditingView);
+    }
+
+    
     //    [self resetBorder];
 }
-
+- (void)doubleTap:(UITapGestureRecognizer *)tap {
+    NSLog(@"双击");
+    if(self.gestureActionBlock){
+        UIView *view = [self imageViewInLocation:[tap locationInView:self]];
+        self.gestureActionBlock(tap, view);
+    }
+}
 
 
 // 重点来了，此处涉及一些反三角函数计算，感觉又回到高中时代了。。。
 
 - (void)pan:(UIPanGestureRecognizer *)pan
 {
-    //此处注意了，若要使用单指做旋转缩放，就必须要添加平移的手势了，通过平移手势偏移量计算对应的缩放比例以及旋转角度。。。。
+    if(self.gestureActionBlock){
+        self.gestureActionBlock(pan, self.currentEditingView);
+    }
+ //此处注意了，若要使用单指做旋转缩放，就必须要添加平移的手势了，通过平移手势偏移量计算对应的缩放比例以及旋转角度。。。。
     // 开始和结束处理跟上面手势一样。。
     if (pan.state == UIGestureRecognizerStateBegan) {
         UIImageView *imgView = [self imageViewInLocation:[pan locationInView:self]];
-        if (!self.currentEditintImageView && !imgView) return;
+        if (!self.currentEditingView && !imgView) return;
         if (imgView) {
-            self.currentEditintImageView = imgView;
+            self.currentEditingView = imgView;
         }
         CGPoint loc = [pan locationInView:self];
         self.editGusture = CGRectContainsPoint(self.editBtn.frame, loc);
-        [self hideEditingBtn:YES];
+        [self hideEditingBtn:NO];
         self.previousPoint = loc;
     }else if (pan.state == UIGestureRecognizerStateEnded) {
-        if (!self.currentEditintImageView) return;
-        [self hideEditingBtn:NO];
+        if (!self.currentEditingView) return;
+        // 结束编辑
+        WS(weakSelf);
+        [SLDelayPerform sl_startDelayPerform:^{
+            [weakSelf endEditing];
+        } afterDelay:1.0];
         self.previousPoint = [pan locationInView:self];
     }else {
+        if (!self.currentEditingView) return;
+        [self hideEditingBtn:NO];
         /***********此处是处理平移手势过程*********/
         if (self.isEditGusture) { // 由开始的触摸点判断是否触发旋转缩放按钮。。
             // 拖拽编辑按钮处理
             // 获得当前点
             CGPoint currentTouchPoint = [pan locationInView:self];
             // 当前编辑水印图片的中心点
-            CGPoint center = self.currentEditintImageView.center;
+            CGPoint center = self.currentEditingView.center;
             // 这句由当前点到中心点连成的线段跟上一个点到中心店连成的线段反算出偏移角度
             CGFloat angleInRadians = atan2f(currentTouchPoint.y - center.y, currentTouchPoint.x - center.x) - atan2f(self.previousPoint.y - center.y, self.previousPoint.x - center.x);
             // 计算出偏移角度之后就可以做对应的旋转角度啦
-            CGAffineTransform t = CGAffineTransformRotate(self.currentEditintImageView.transform, angleInRadians);
+            CGAffineTransform t = CGAffineTransformRotate(self.currentEditingView.transform, angleInRadians);
             // 下面是计算缩放比例
             //1. 先计算两线段的长度。
             CGFloat previousDistance = [self distanceWithPoint:center otherPoint:self.previousPoint];
@@ -230,26 +287,28 @@
             //2.然后两长度的比值就是缩放比例啦，
             CGFloat scale = currentDistance / previousDistance;
             // 然后设置两者结合后的transform赋值给当前水平图片即可
+            if(scale*t.a < kMinScale){
+                scale = kMinScale/t.a;
+            }else if (scale*t.a > kMaxScale){
+                scale = kMaxScale/t.a;
+                NSLog(@"超出去啦%@",self.currentEditingView);
+            }
             t = CGAffineTransformScale(t, scale, scale);
-            self.currentEditintImageView.transform = t;
+            self.currentEditingView.transform = t;
+            
         }else {
             // 此处触发的是平移手势。。。
-            if (!self.currentEditintImageView) return;
-            CGPoint t = [pan translationInView:self.currentEditintImageView];
-            self.currentEditintImageView.transform = CGAffineTransformTranslate(self.currentEditintImageView.transform, t.x, t.y);
-            [pan setTranslation:CGPointZero inView:self.currentEditintImageView];
+            CGPoint t = [pan translationInView:self.currentEditingView];
+            self.currentEditingView.transform = CGAffineTransformTranslate(self.currentEditingView.transform, t.x, t.y);
+            [pan setTranslation:CGPointZero inView:self.currentEditingView];
         }
         self.previousPoint = [pan locationInView:self];
-        
-        
-        
     }
-    
     //    [self resetBorder];
     
     
     
-    //    CGRect rect = CGRectApplyAffineTransform(self.currentEditintImageView.frame, self.currentEditintImageView.transform);
+    //    CGRect rect = CGRectApplyAffineTransform(self.currentEditingView.frame, self.currentEditingView.transform);
     
     //    NSLog(@"%@", NSStringFromCGRect(rect));
     
@@ -260,9 +319,10 @@
 
 - (UIImageView *)imageViewInLocation:(CGPoint)loc
 {
-    for (UIImageView *imgView in self.imageViews) {
-        if (CGRectContainsPoint(imgView.frame, loc)) {
-            [self bringSubviewToFront:imgView];
+    for (UIImageView *imgView in self.watermarkArray) {
+        CGRect newRect = [imgView.superview convertRect:imgView.frame toView:self];
+        if (CGRectContainsPoint(newRect, loc)) {
+            [imgView.superview bringSubviewToFront:imgView];
             return imgView;
         }
     }
@@ -271,18 +331,20 @@
 
 
 - (void)hideEditingBtn:(BOOL)hidden
-
 {
+    if(!hidden){
+        [SLDelayPerform sl_cancelDelayPerform];
+    }
     self.deleteBtn.hidden = hidden;
     self.editBtn.hidden = hidden;
     self.dotBoarderLayer.hidden = hidden;
     if (!hidden) {
-        self.dotBoarderLayer.path = [UIBezierPath bezierPathWithRoundedRect:self.currentEditintImageView.bounds cornerRadius:0].CGPath;
-        if(!self.dotBoarderLayer.superlayer || ![self.currentEditintImageView.layer.sublayers containsObject:self.dotBoarderLayer]){
-            [self.currentEditintImageView.layer addSublayer:self.dotBoarderLayer];
+        self.dotBoarderLayer.path = [UIBezierPath bezierPathWithRoundedRect:self.currentEditingView.bounds cornerRadius:0].CGPath;
+        if(!self.dotBoarderLayer.superlayer || ![self.currentEditingView.layer.sublayers containsObject:self.dotBoarderLayer]){
+            [self.currentEditingView.layer addSublayer:self.dotBoarderLayer];
         }
-        self.editBtn.center = [self.currentEditintImageView convertPoint:CGPointMake(self.currentEditintImageView.bounds.size.width, self.currentEditintImageView.bounds.size.height) toView:self];
-         self.deleteBtn.center = [self.currentEditintImageView convertPoint:CGPointMake(self.currentEditintImageView.bounds.size.width,0) toView:self];
+        self.editBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width, self.currentEditingView.bounds.size.height) toView:self];
+        self.deleteBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width,0) toView:self];
     }
 }
 
@@ -328,16 +390,21 @@
 }
 
 #pragma mark -公共方法
+// 添加水平图片（可旋转缩放）
+- (void)addWatermarkView:(UIView *)watermarkView {
+    [self.watermarkArray addObject:watermarkView];
+}
+
 - (void)addWatermarkImage:(UIImage *)watermarkImage
 {
     UIImageView *imageView = [[UIImageView alloc] initWithImage:watermarkImage];
     imageView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
     [self addSubview:imageView];
-    [self.imageViews addObject:imageView];
+    [self.watermarkArray addObject:imageView];
 }
 - (void)endEditing
 {
-    self.currentEditintImageView = nil;
+    self.currentEditingView = nil;
     [self hideEditingBtn:YES];
     //    [self resetBorder];
 }
@@ -346,22 +413,37 @@
 // 删除按钮点击
 - (void)deleteBtnClick:(UIButton *)sender
 {
-    [self.currentEditintImageView removeFromSuperview];
-    [self.imageViews removeObject:self.currentEditintImageView];
-    self.currentEditintImageView = nil;
+    [self.currentEditingView removeFromSuperview];
+    [self.watermarkArray removeObject:self.currentEditingView];
+    self.currentEditingView = nil;
     [self hideEditingBtn:YES];
 }
 
 
 #pragma mark -UIGestureDelegate
 //这个是手势代理，允许同时响应多个手势。。。这个不多说了。
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+//    if(self.editBtn.isHidden && gestureRecognizer.delegate == self){//当没在编辑时候 当前页面的手势失效
+//        return YES;
+//    }
+//    return NO;
+//}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+//    if(!self.editBtn.isHidden && otherGestureRecognizer.delegate != self){
+//        return YES;
+//    }
+//    return NO;
+//}
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-
 {
+    
+    if(gestureRecognizer.numberOfTouches == 2 && otherGestureRecognizer.numberOfTouches == 2 && !self.editBtn.isHidden){
+        //正在编辑的时候
+        return NO;
+    }
     return YES;
 }
-
 
 @end
 

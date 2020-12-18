@@ -216,9 +216,9 @@
         _imageNamesSelected = @[@"EditMenuGraffitiSelected", @"EditMenuText",@"EditMenuMosaicSelected",@"EditMenuClipImage"];
     }else if (editObject == SLEditObjectVideo) {
         _menuTypes = @[@(SLEditMenuTypeGraffiti), @(SLEditMenuTypeSticking), @(SLEditMenuTypeText), @(SLEditMenuTypeVideoClipping)
-];
-        _imageNames = @[@"EditMenuGraffiti", @"EditMenuSticker", @"EditMenuText", @"EditMenuCut"];
-        _imageNamesSelected = @[@"EditMenuGraffitiSelected", @"EditMenuStickerSelected", @"EditMenuText", @"EditMenuCut"];
+    ];
+    _imageNames = @[@"EditMenuGraffiti", @"EditMenuSticker", @"EditMenuText", @"EditMenuCut"];
+    _imageNamesSelected = @[@"EditMenuGraffitiSelected", @"EditMenuStickerSelected", @"EditMenuText", @"EditMenuCut"];
     }
     [self createGradientLayer];
     [self createEditMenus];
@@ -364,22 +364,23 @@
 }
 #pragma mark - Help Methods
 - (void)hiddenView:(UIView *)view {
-    if (self.currentSubmenu == view || self.currentSubmenu == nil) {
-        [self hiddenView:view hidden:!view.hidden];
-    }else {
-        [self hiddenView:self.currentSubmenu hidden:YES];
-        [self hiddenView:view hidden:NO];
-    }
+    [self hiddenView:view hidden:!view.hidden];
 }
 - (void)hiddenView:(UIView *)view hidden:(BOOL)hidden{
     if(view == nil || view.hidden == hidden) return;
     if (hidden) {
-        view.hidden = YES;
-        [view removeFromSuperview];
-        self.hideSubMenuBlock(self.currentMenuType);
+        CGRect originalRect = view.frame;
+        [UIView animateWithDuration:0.25 animations:^{
+            view.frame = CGRectMake(0, self.frame.size.height, view.frame.size.width, view.frame.size.height);
+            [self layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            view.hidden = YES;
+            view.frame = originalRect;
+            [view removeFromSuperview];
+        }];
+        
     }else {
         view.hidden = NO;
-        self.currentSubmenu = view;
         [self addSubview:view];
         CGRect originalRect = view.frame;
         view.frame = CGRectMake(0, self.frame.size.height, view.frame.size.width, view.frame.size.height);
@@ -391,6 +392,7 @@
         }];
     }
 }
+
 @end
 
 

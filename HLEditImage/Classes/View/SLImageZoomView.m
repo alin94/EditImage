@@ -115,6 +115,9 @@
             [self.zoomViewDelegate zoomViewDidEndMoveImage:self];
         }
     }
+    if([self.zoomViewDelegate respondsToSelector:@selector(zoomViewDidEndZoom:)]){
+        [self.zoomViewDelegate zoomViewDidEndZoom:self];
+    }
 }
 //缩放中
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
@@ -126,5 +129,4 @@
         self.imageView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX, scrollView.contentSize.height * 0.5 + offsetY);
     }
 }
-
 @end

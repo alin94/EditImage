@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SLPaddingLabel : UILabel
 /// 内边距
 @property (nonatomic, assign) UIEdgeInsets textPadding;
+@property (nonatomic, assign) CGFloat cornerRadius;//圆角
+@property (nonatomic, strong) UIColor *sl_backgroundColor;
+
 @end
 
 NS_ASSUME_NONNULL_END

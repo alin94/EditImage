@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)zoomViewDidBeginMoveImage:(SLImageZoomView *)zoomView;
 /// 结束移动图像
 - (void)zoomViewDidEndMoveImage:(SLImageZoomView *)zoomView;
+//缩放
+- (void)zoomViewDidEndZoom:(SLImageZoomView *)zoomView;
 @end
 
 NS_ASSUME_NONNULL_END

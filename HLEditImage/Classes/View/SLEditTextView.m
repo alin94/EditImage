@@ -328,23 +328,31 @@
 }
 #pragma mark - Help Methods
 // 返回一个文本水印视图
-- (UILabel *)copyTextView:(UITextView *)textView {
+- (UITextView *)copyTextView:(UITextView *)textView {
     if(![textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length){
         //只有空格时候不显示
         return nil;
     }
-    SLPaddingLabel *label = [[SLPaddingLabel alloc] initWithFrame:textView.bounds];
+    
+    CGRect rect = textView.bounds;
+    CGSize contentSize = [self.textView sizeThatFits:CGSizeMake(CGFLOAT_MAX, 50)];
+    
+    if(contentSize.width < rect.size.width){
+        rect.size.width = contentSize.width;
+    }
+    SLPaddingLabel *label = [[SLPaddingLabel alloc] initWithFrame:rect];
+//    label.scrollEnabled = NO;
+//    label.editable = NO;
     label.userInteractionEnabled = YES;
-    label.lineBreakMode = NSLineBreakByCharWrapping;
-    label.layer.cornerRadius = 10;
-    label.clipsToBounds = YES;
+    label.cornerRadius = textView.layer.cornerRadius;
     label.textAlignment = textView.textAlignment;
     label.font = textView.font;
-    label.backgroundColor = textView.backgroundColor;
+    label.sl_backgroundColor = textView.backgroundColor;
     label.textColor = textView.textColor;
     label.textPadding = textView.textContainerInset;
+//    label.textContainerInset = textView.textContainerInset;
     label.text = textView.text;
-    label.numberOfLines = 0;
+    
     return label;
 }
 

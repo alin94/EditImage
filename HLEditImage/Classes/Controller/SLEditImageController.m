@@ -24,6 +24,8 @@
 #import "SLDelayPerform.h"
 #import "SLUtilsMacro.h"
 #import "UIButton+SLButton.h"
+#import "SLTransformGestureView.h"
+#import "SLPaddingLabel.h"
 
 #define SL_DISPATCH_ON_MAIN_THREAD(mainQueueBlock) dispatch_async(dispatch_get_main_queue(),mainQueueBlock);
 
@@ -34,6 +36,7 @@
 
 @interface SLEditImageController ()<UIGestureRecognizerDelegate, SLImageZoomViewDelegate>
 
+@property (nonatomic, strong) SLTransformGestureView *gestureView;
 @property (nonatomic, strong) SLImageZoomView *zoomView; // 预览视图 展示编辑的图片 可以缩放
 @property (nonatomic, strong) UIView *topNavView;
 @property (nonatomic, strong) UIButton *cancelEditBtn; //取消编辑
@@ -45,7 +48,7 @@
 @property (nonatomic, strong) SLDrawView *drawView;//画板
 
 @property (nonatomic, strong) NSMutableArray *watermarkArray; // 水印层 所有的贴图和文本
-@property (nonatomic, strong) SLEditSelectedBox *selectedBox; //水印选中框
+//@property (nonatomic, strong) SLEditSelectedBox *selectedBox; //水印选中框
 
 @property (nonatomic, assign) SLEditMenuType editingMenuType; //当前正在编辑的菜单类型
 
@@ -90,46 +93,60 @@
 #pragma mark - HelpMethods
 // 添加拖拽、缩放、旋转、单击、双击手势
 - (void)addRotateAndPinchGestureRecognizer:(UIView *)view {
-    //单击手势选中
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction:)];
-    singleTap.numberOfTapsRequired = 1;
-    singleTap.numberOfTouchesRequired = 1;
-    [view addGestureRecognizer:singleTap];
-    if ([view isKindOfClass:[UILabel class]]) {
-        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapAction:)];
-        doubleTap.numberOfTapsRequired = 2;
-        doubleTap.numberOfTouchesRequired = 1;
-        [singleTap requireGestureRecognizerToFail:doubleTap];
-        [view addGestureRecognizer:doubleTap];
+    view.userInteractionEnabled = YES;
+    if(!self.gestureView.superview){
+        [self.zoomView addSubview:self.gestureView];
     }
-    //拖拽手势
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragAction:)];
-    pan.minimumNumberOfTouches = 1;
-    [view addGestureRecognizer:pan];
-    //缩放手势
-    UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self
-                                                                                                 action:@selector(pinchAction:)];
-    pinchGestureRecognizer.delegate = self;
-    [view addGestureRecognizer:pinchGestureRecognizer];
-    //旋转手势
-    UIRotationGestureRecognizer *rotateRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self
-                                                                                                 action:@selector(rotateAction:)];
-    [view addGestureRecognizer:rotateRecognizer];
-    rotateRecognizer.delegate = self;
+    [self.gestureView addWatermarkView:view];
 }
 //置顶视图
 - (void)topSelectedView:(UIView *)topView {
     [self.zoomView.imageView bringSubviewToFront:topView];
     [self.watermarkArray removeObject:topView];
     [self.watermarkArray addObject:topView];
-    [SLDelayPerform sl_cancelDelayPerform]; //取消延迟执行
-    self.selectedBox.frame = topView.bounds;
-    [topView addSubview:self.selectedBox];
 }
 // 隐藏编辑时菜单按钮
 - (void)hiddenEditMenus:(BOOL)isHidden {
-    self.cancelEditBtn.hidden = self.topNavView.hidden = isHidden;
-    self.editMenuView.hidden = isHidden;
+    [self hiddenView:self.topNavView hidden:isHidden isBottom:NO] ;
+    [self hiddenView:self.cancelEditBtn hidden:isHidden isBottom:NO];
+    [self hiddenView:self.editMenuView hidden:isHidden isBottom:YES];
+}
+- (void)hiddenView:(UIView *)view hidden:(BOOL)hidden isBottom:(BOOL)isBottom{
+    if(view == nil || view.hidden == hidden){
+//        NSLog(@"隐藏视图是%@",view);
+        return;
+    }
+    if (hidden) {
+        CGRect originalRect = view.frame;
+        [UIView animateWithDuration:0.25 animations:^{
+            if(isBottom){
+                view.frame = CGRectMake(view.frame.origin.x, self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
+            }else {
+                view.frame = CGRectMake(view.frame.origin.x, -self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
+            }
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            view.hidden = YES;
+            view.frame = originalRect;
+            [view removeFromSuperview];
+        }];
+        
+    }else {
+        view.hidden = NO;
+        [self.view addSubview:view];
+        CGRect originalRect = view.frame;
+        if(isBottom){
+            view.frame = CGRectMake(view.frame.origin.x, self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
+        }else {
+            view.frame = CGRectMake(view.frame.origin.x, -self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
+        }
+        [UIView animateWithDuration:0.25 animations:^{
+            view.frame = originalRect;
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            
+        }];
+    }
 }
 //改变
 - (void)changeZoomViewRectWithIsEditing:(BOOL)isEditing {
@@ -338,9 +355,6 @@
                     [weakSelf.zoomView.imageView addSubview:imageView];
                     [weakSelf addRotateAndPinchGestureRecognizer:imageView];
                     [weakSelf topSelectedView:imageView];
-                    [SLDelayPerform sl_startDelayPerform:^{
-                        [weakSelf.selectedBox removeFromSuperview];
-                    } afterDelay:1.0];
                 }
             }
             if (editMenuType == SLEditMenuTypeText) {
@@ -364,14 +378,10 @@
                     label.transform = CGAffineTransformMakeScale(1/weakSelf.zoomView.zoomScale, 1/weakSelf.zoomView.zoomScale);
                     center = CGPointMake(center.x/weakSelf.zoomView.zoomScale, center.y/weakSelf.zoomView.zoomScale);
                     label.center = center;
-//                    [weakSelf.zoomView.imageView.layer addSublayer:label.layer];
                     [weakSelf.zoomView.imageView addSubview:label];
                     [weakSelf.watermarkArray addObject:label];
                     [weakSelf addRotateAndPinchGestureRecognizer:label];
                     [weakSelf topSelectedView:label];
-                    [SLDelayPerform sl_startDelayPerform:^{
-                        [weakSelf.selectedBox removeFromSuperview];
-                    } afterDelay:1.0];
                 };
                 weakSelf.topNavView.hidden = YES;
             }else{
@@ -396,7 +406,6 @@
                 weakSelf.isEditing = YES;
                 SLImageClipController *imageClipController = [[SLImageClipController alloc] init];
                 imageClipController.modalPresentationStyle = UIModalPresentationFullScreen;
-                [weakSelf.selectedBox removeFromSuperview];
                 UIImage *image = [weakSelf.zoomView.imageView sl_imageByViewInRect:weakSelf.zoomView.imageView.bounds shouldTranslateCTM:YES];
                 imageClipController.image = image;
                 [weakSelf presentViewController:imageClipController animated:NO completion:nil];
@@ -413,6 +422,7 @@
         _trashTips = [[UIButton alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 160)/2, self.view.frame.size.height - 80 - 10 - kSafeAreaBottomHeight, 160, 80)];
         _trashTips.layer.cornerRadius = 10;
         _trashTips.clipsToBounds = YES;
+        _trashTips.hidden = YES;
         [_trashTips setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _trashTips.titleLabel.font = [UIFont systemFontOfSize:12];
         [_trashTips setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -447,6 +457,30 @@
     }
     return _drawView;
 }
+- (SLTransformGestureView *)gestureView{
+    if(!_gestureView){
+        _gestureView = [[SLTransformGestureView alloc] initWithFrame:self.zoomView.imageView.bounds];
+        _gestureView.watermarkArray = self.watermarkArray;
+        WS(weakSelf);
+        _gestureView.gestureActionBlock = ^(UIGestureRecognizer *gesture, UIView *currentSelectView) {
+            if(currentSelectView){
+                if(gesture.state == UIGestureRecognizerStateBegan){
+                    [weakSelf topSelectedView:currentSelectView];
+                }
+                if([gesture isKindOfClass:[UITapGestureRecognizer class]]){
+                    UITapGestureRecognizer *tap = (UITapGestureRecognizer *)gesture;
+                    //单击
+                    if(tap.numberOfTapsRequired == 2 && currentSelectView){
+                        [weakSelf doubleTapAction:tap withView:currentSelectView];
+                    }
+                }else if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]){
+                    [weakSelf dragAction:(UIPanGestureRecognizer *)gesture withView:currentSelectView];
+                }
+            }
+        };
+    }
+    return _gestureView;
+}
 //- (SLDrawBrushTool *)currentDrawBrushTool{
 //    if(self.editingMenuType == SLEditMenuTypeGraffiti){
 //        return self.drawGraffitiBrushTool;
@@ -472,13 +506,6 @@
     }
     return _menuSetting;
 }
-- (SLEditSelectedBox *)selectedBox {
-    if (!_selectedBox) {
-        _selectedBox = [[SLEditSelectedBox alloc] init];
-    }
-    return _selectedBox;
-}
-
 #pragma mark - Events Handle
 //取消编辑
 - (void)cancelEditBtnClicked:(id)sender {
@@ -488,7 +515,6 @@
 }
 //完成编辑 导出编辑后的对象
 - (void)doneEditBtnClicked:(id)sender {
-    [self.selectedBox removeFromSuperview];
     self.image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
     if(self.editFinishedBlock){
         self.editFinishedBlock(self.image);
@@ -498,25 +524,14 @@
     }];
 
 }
-// 点击水印视图
-- (void)singleTapAction:(UITapGestureRecognizer *)singleTap {
-    [self topSelectedView:singleTap.view];
-    if (singleTap.state == UIGestureRecognizerStateFailed || singleTap.state == UIGestureRecognizerStateEnded) {
-        [SLDelayPerform sl_startDelayPerform:^{
-            [self.selectedBox removeFromSuperview];
-        } afterDelay:1.0];
-    }
-}
 //双击 文本水印 开始编辑文本
-- (void)doubleTapAction:(UITapGestureRecognizer *)doubleTap {
-    [self topSelectedView:doubleTap.view];
-    doubleTap.view.hidden = YES;
-    UILabel *tapLabel = (UILabel *)doubleTap.view;
+- (void)doubleTapAction:(UITapGestureRecognizer *)doubleTap withView:(UIView *)view {
+    view.hidden = YES;
+    SLPaddingLabel *tapLabel = (SLPaddingLabel *)view;
     SLEditTextView *editTextView = [[SLEditTextView alloc] initWithFrame:CGRectMake(0, kSafeAreaTopHeight, kScreenWidth, kScreenHeight - kSafeAreaTopHeight - kSafeAreaBottomHeight)];
-    
-    editTextView.configureEditParameters(@{@"textColor":tapLabel.textColor, @"backgroundColor":tapLabel.backgroundColor, @"text":tapLabel.text, @"textAlignment":@(tapLabel.textAlignment)});
+    editTextView.configureEditParameters(@{@"textColor":tapLabel.textColor, @"backgroundColor":tapLabel.sl_backgroundColor, @"text":tapLabel.text, @"textAlignment":@(tapLabel.textAlignment)});
     editTextView.editTextCompleted = ^(UILabel * _Nullable label) {
-        doubleTap.view.hidden = NO;
+        view.hidden = NO;
         if (label == nil) {
             return;
         }
@@ -528,26 +543,22 @@
         [self.zoomView.imageView addSubview:label];
         [self addRotateAndPinchGestureRecognizer:label];
         [self topSelectedView:label];
-        [SLDelayPerform sl_startDelayPerform:^{
-            [self.selectedBox removeFromSuperview];
-        } afterDelay:1.0];
     };
     [self.view addSubview:editTextView];
 }
 // 拖拽 水印视图
-- (void)dragAction:(UIPanGestureRecognizer *)pan {
+- (void)dragAction:(UIPanGestureRecognizer *)pan withView:(UIView *)view{
     // 返回的是相对于最原始的手指的偏移量
-    CGPoint transP = [pan translationInView:self.zoomView.imageView];
     if (pan.state == UIGestureRecognizerStateBegan) {
         self.zoomView.imageView.clipsToBounds = NO;
         [self hiddenEditMenus:YES];
-        [self.view addSubview:self.trashTips];
-        [self topSelectedView:pan.view];
+        [self hiddenView:self.trashTips hidden:NO isBottom:YES];
     } else if (pan.state == UIGestureRecognizerStateChanged ) {
-        pan.view.center = CGPointMake(pan.view.center.x + transP.x, pan.view.center.y + transP.y);
-        [pan setTranslation:CGPointZero inView:self.zoomView.imageView];
+        [self hiddenEditMenus:YES];
+        [self hiddenView:self.trashTips hidden:NO isBottom:YES];
+        
         //获取拖拽的视图在屏幕上的位置
-        CGRect rect = [pan.view convertRect: pan.view.bounds toView:self.view];
+        CGRect rect = [view convertRect: view.bounds toView:self.view];
         //是否删除 删除视图Y < 视图中心点Y坐标
         if (self.trashTips.center.y < rect.origin.y+rect.size.height/2.0) {
             [self.trashTips setTitle:kNSLocalizedString(@"松手即可删除") forState:UIControlStateNormal];
@@ -563,12 +574,12 @@
         [self hiddenEditMenus:NO];
         self.zoomView.imageView.clipsToBounds = YES;
         //获取拖拽的视图在屏幕上的位置
-        CGRect rect = [pan.view convertRect: pan.view.bounds toView:self.view];
+        CGRect rect = [view convertRect: view.bounds toView:self.view];
         CGRect imageRect = [self.zoomView convertRect:self.zoomView.imageView.frame toView:self.view];
         //删除拖拽的视图
         if (self.trashTips.center.y < rect.origin.y+rect.size.height/2.0) {
-            [pan.view  removeFromSuperview];
-            [self.watermarkArray removeObject:(SLImageView *)pan.view];
+            [view  removeFromSuperview];
+            [self.watermarkArray removeObject:view];
         }else if (!CGRectIntersectsRect(imageRect, rect)) {
             //如果出了父视图zoomView的范围，则置于父视图中心
             CGPoint center = CGPointZero;
@@ -580,43 +591,12 @@
                 center.y = fabs(imageRect.origin.y) + self.zoomView.sl_height/2.0;
             }
             center = CGPointMake(center.x/self.zoomView.zoomScale, center.y/self.zoomView.zoomScale);
-            pan.view.center = center;
+            view.center = center;
         }
-        [self.trashTips removeFromSuperview];
-        [SLDelayPerform sl_startDelayPerform:^{
-            [self.selectedBox removeFromSuperview];
-        } afterDelay:1.0];
+        [self hiddenView:self.trashTips hidden:YES isBottom:YES];
     }
 }
-//缩放 水印视图
-- (void)pinchAction:(UIPinchGestureRecognizer *)pinch {
-    if (pinch.state == UIGestureRecognizerStateBegan) {
-        [self topSelectedView:pinch.view];
-        self.zoomView.pinchGestureRecognizer.enabled = NO;
-        self.zoomView.imageView.clipsToBounds = NO;
-    }else if (pinch.state == UIGestureRecognizerStateFailed || pinch.state == UIGestureRecognizerStateEnded){
-        [SLDelayPerform sl_startDelayPerform:^{
-            [self.selectedBox removeFromSuperview];
-        } afterDelay:1.0];
-        self.zoomView.pinchGestureRecognizer.enabled = YES;
-        self.zoomView.imageView.clipsToBounds = YES;
-    }
-    pinch.view.transform = CGAffineTransformScale(pinch.view.transform, pinch.scale, pinch.scale);
-    pinch.scale = 1.0;
-}
-//旋转 水印视图 注意：旋转之后的frame会变！！！
-- (void)rotateAction:(UIRotationGestureRecognizer *)rotation {
-    if (rotation.state == UIGestureRecognizerStateBegan) {
-        [self topSelectedView:rotation.view];
-    }else if (rotation.state == UIGestureRecognizerStateFailed || rotation.state == UIGestureRecognizerStateEnded){
-        [SLDelayPerform sl_startDelayPerform:^{
-            [self.selectedBox removeFromSuperview];
-        } afterDelay:1.0];
-    }
-    rotation.view.transform = CGAffineTransformRotate(rotation.view.transform, rotation.rotation);
-    // 将旋转的弧度清零(注意不是将图片旋转的弧度清零, 而是将当前手指旋转的弧度清零)
-    rotation.rotation = 0;
-}
+
 // 图片裁剪完成
 - (void)imageClippingComplete:(NSNotification *)notification {
     UIImage *clipImage = notification.userInfo[@"image"];
@@ -641,6 +621,11 @@
 //    self.drawView.lineWidth = [self.menuSetting[@"lineWidth"] floatValue]/self.zoomView.zoomScale;
 //    self.mosaicView.squareWidth = 15/self.zoomView.zoomScale;
 //    self.mosaicView.paintSize = CGSizeMake(40/self.zoomView.zoomScale, 40/self.zoomView.zoomScale);
+}
+- (void)zoomViewDidEndZoom:(SLImageZoomView *)zoomView {
+    _gestureView.frame = zoomView.imageView.frame;
+    CGRect rect = [zoomView.imageView convertRect:zoomView.imageView.frame toView:self.zoomView];
+
 }
 
 @end
