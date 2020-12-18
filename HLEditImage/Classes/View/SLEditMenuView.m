@@ -369,6 +369,7 @@
 - (void)hiddenView:(UIView *)view hidden:(BOOL)hidden{
     if(view == nil || view.hidden == hidden) return;
     if (hidden) {
+        self.hideSubMenuBlock(self.currentMenuType);
         CGRect originalRect = view.frame;
         [UIView animateWithDuration:0.25 animations:^{
             view.frame = CGRectMake(0, self.frame.size.height, view.frame.size.width, view.frame.size.height);

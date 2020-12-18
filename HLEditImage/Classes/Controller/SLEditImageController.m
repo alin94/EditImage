@@ -204,26 +204,32 @@
         case SLEditMenuTypeUnknown:
             self.zoomView.scrollEnabled = YES;
             self.zoomView.pinchGestureRecognizer.enabled = YES;
+            self.gestureView.userInteractionEnabled = YES;
             break;
         case SLEditMenuTypeGraffiti:
             self.zoomView.pinchGestureRecognizer.enabled = YES;
             self.zoomView.scrollEnabled = NO;
+            self.gestureView.userInteractionEnabled = NO;
             break;
         case SLEditMenuTypeText:
             self.zoomView.scrollEnabled = YES;
             self.zoomView.pinchGestureRecognizer.enabled = NO;
+            self.gestureView.userInteractionEnabled = YES;
             break;
         case SLEditMenuTypeSticking:
             self.zoomView.scrollEnabled = YES;
             self.zoomView.pinchGestureRecognizer.enabled = NO;
+            self.gestureView.userInteractionEnabled = YES;
             break;
         case SLEditMenuTypePictureMosaic:
             self.zoomView.scrollEnabled = NO;
             self.zoomView.pinchGestureRecognizer.enabled = YES;
+            self.gestureView.userInteractionEnabled = NO;
             break;
         case SLEditMenuTypePictureClipping:
             self.zoomView.scrollEnabled = YES;
             self.zoomView.pinchGestureRecognizer.enabled = YES;
+            self.gestureView.userInteractionEnabled = NO;
             break;
         default:
             break;
