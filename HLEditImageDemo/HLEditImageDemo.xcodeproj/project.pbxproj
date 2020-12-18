@@ -176,6 +176,8 @@
 		C7D1FDF3258742DD002D180C /* SLSubmenuMosaicView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D1FDF2258742DD002D180C /* SLSubmenuMosaicView.m */; };
 		C7D1FDF6258753B9002D180C /* SLSubmenuLineWidthView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D1FDF5258753B9002D180C /* SLSubmenuLineWidthView.m */; };
 		C7D1FDF925884E0B002D180C /* SLSubMenuClipImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D1FDF825884E0B002D180C /* SLSubMenuClipImageView.m */; };
+		C7D1FDFC258B27DD002D180C /* SLTransformGestureView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D1FDFB258B27DD002D180C /* SLTransformGestureView.m */; };
+		C7D1FDFE258B29AF002D180C /* test.png in Resources */ = {isa = PBXBuildFile; fileRef = C7D1FDFD258B29AF002D180C /* test.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -381,6 +383,9 @@
 		C7D1FDF5258753B9002D180C /* SLSubmenuLineWidthView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLSubmenuLineWidthView.m; sourceTree = "<group>"; };
 		C7D1FDF725884E0B002D180C /* SLSubMenuClipImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLSubMenuClipImageView.h; sourceTree = "<group>"; };
 		C7D1FDF825884E0B002D180C /* SLSubMenuClipImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLSubMenuClipImageView.m; sourceTree = "<group>"; };
+		C7D1FDFA258B27DC002D180C /* SLTransformGestureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTransformGestureView.h; sourceTree = "<group>"; };
+		C7D1FDFB258B27DD002D180C /* SLTransformGestureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTransformGestureView.m; sourceTree = "<group>"; };
+		C7D1FDFD258B29AF002D180C /* test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -414,6 +419,7 @@
 		C7683D86257A288C00DA3061 /* HLEditImageDemo */ = {
 			isa = PBXGroup;
 			children = (
+				C7D1FDFD258B29AF002D180C /* test.png */,
 				C7683D87257A288C00DA3061 /* AppDelegate.h */,
 				C7683D88257A288C00DA3061 /* AppDelegate.m */,
 				C7683D8D257A288C00DA3061 /* ViewController.h */,
@@ -494,6 +500,8 @@
 		C7683DB8257A2C8F00DA3061 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				C7D1FDFA258B27DC002D180C /* SLTransformGestureView.h */,
+				C7D1FDFB258B27DD002D180C /* SLTransformGestureView.m */,
 				C7C12F9D2587083B00B1CC6D /* SLPaddingLabel.h */,
 				C7C12F9E2587083B00B1CC6D /* SLPaddingLabel.m */,
 				C7683DC4257A2C8F00DA3061 /* SLDrawView.h */,
@@ -779,6 +787,7 @@
 				C7683E02257DD6E300DA3061 /* EditMenuText@3x.png in Resources */,
 				C7C12F5A258063C600B1CC6D /* EditDragRotate@2x.png in Resources */,
 				C7C12F29258063C600B1CC6D /* EditMenuClipScaleRam@2x.png in Resources */,
+				C7D1FDFE258B29AF002D180C /* test.png in Resources */,
 				C7683E33257DD70300DA3061 /* EditImageClipCancel@3x.png in Resources */,
 				C7C12F3F258063C600B1CC6D /* EditMenuShape@3x.png in Resources */,
 				C7683E07257DD6E300DA3061 /* EditMenuTextColor@2x.png in Resources */,
@@ -920,6 +929,7 @@
 				C7683DD6257A2C8F00DA3061 /* SLDelayPerform.m in Sources */,
 				C7683DE1257A2C8F00DA3061 /* SLRoundCornerTextView.m in Sources */,
 				C7683DD3257A2C8F00DA3061 /* SLImageView.m in Sources */,
+				C7D1FDFC258B27DD002D180C /* SLTransformGestureView.m in Sources */,
 				C7683DD9257A2C8F00DA3061 /* SLGridView.m in Sources */,
 				C7683DDF257A2C8F00DA3061 /* SLMosaicView.m in Sources */,
 			);

@@ -18,7 +18,8 @@
 
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
-#define kNavigationHeight (FuncIsIPhoneX?88:64)
+#define kStatusbarHeight CGRectGetHeight([[UIApplication sharedApplication] statusBarFrame])
+#define kNavigationHeight (kStatusbarHeight+44)
 #define kSafeAreaBottomHeight (FuncIsIPhoneX ? 34 : 0)
 #define kSafeAreaTopHeight (FuncIsIPhoneX ? 24 : 0)
 
@@ -34,7 +35,6 @@
 //判断iPhoneXs Max
 #define IS_IPHONE_Xs_Max ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2688), [[UIScreen mainScreen] currentMode].size) && !IS_IPad : NO)
 
-#define IS_IPHONE_SERIES (kStatusbarHeight == 44)
 #define WS(weakSelf)  __weak __typeof(&*self)weakSelf = self;
 
 #endif /* SLUtilsMacro_h */
