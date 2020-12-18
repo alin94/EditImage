@@ -93,7 +93,6 @@
 #pragma mark - HelpMethods
 // 添加拖拽、缩放、旋转、单击、双击手势
 - (void)addRotateAndPinchGestureRecognizer:(UIView *)view {
-    view.userInteractionEnabled = YES;
     if(!self.gestureView.superview){
         [self.zoomView addSubview:self.gestureView];
     }
@@ -205,31 +204,37 @@
             self.zoomView.scrollEnabled = YES;
             self.zoomView.pinchGestureRecognizer.enabled = YES;
             self.gestureView.userInteractionEnabled = YES;
+            self.drawView.enableDraw = NO;
             break;
         case SLEditMenuTypeGraffiti:
-            self.zoomView.pinchGestureRecognizer.enabled = YES;
             self.zoomView.scrollEnabled = NO;
+            self.zoomView.pinchGestureRecognizer.enabled = YES;
             self.gestureView.userInteractionEnabled = NO;
+            self.drawView.enableDraw = YES;
             break;
         case SLEditMenuTypeText:
             self.zoomView.scrollEnabled = YES;
             self.zoomView.pinchGestureRecognizer.enabled = NO;
             self.gestureView.userInteractionEnabled = YES;
+            self.drawView.enableDraw = NO;
             break;
         case SLEditMenuTypeSticking:
             self.zoomView.scrollEnabled = YES;
             self.zoomView.pinchGestureRecognizer.enabled = NO;
             self.gestureView.userInteractionEnabled = YES;
+            self.drawView.enableDraw = NO;
             break;
         case SLEditMenuTypePictureMosaic:
             self.zoomView.scrollEnabled = NO;
             self.zoomView.pinchGestureRecognizer.enabled = YES;
             self.gestureView.userInteractionEnabled = NO;
+            self.drawView.enableDraw = YES;
             break;
         case SLEditMenuTypePictureClipping:
             self.zoomView.scrollEnabled = YES;
             self.zoomView.pinchGestureRecognizer.enabled = YES;
             self.gestureView.userInteractionEnabled = NO;
+            self.drawView.enableDraw = NO;
             break;
         default:
             break;
@@ -285,6 +290,7 @@
         };
         _editMenuView.hideSubMenuBlock = ^(SLEditMenuType menuType) {
             if(menuType == SLEditMenuTypeGraffiti || menuType == SLEditMenuTypePictureMosaic){
+                weakSelf.editingMenuType = SLEditMenuTypeUnknown;
                 [weakSelf changeZoomViewRectWithIsEditing:NO];
             }
         };
@@ -301,9 +307,9 @@
                     weakSelf.drawView.brushTool = weakSelf.drawMosicBrushTool;
                 }
                 [weakSelf changeZoomViewRectWithIsEditing:YES];
-                if(setting[@"hidden"]){
-                    weakSelf.drawView.enableDraw = ![setting[@"hidden"] boolValue];
-                }
+//                if(setting[@"hidden"]){
+//                    weakSelf.drawView.enableDraw = ![setting[@"hidden"] boolValue];
+//                }
                 if (setting[@"lineColor"]) {
                     weakSelf.drawView.brushTool.isErase = NO;
                     weakSelf.drawView.brushTool.lineColor = setting[@"lineColor"];
@@ -334,8 +340,6 @@
                 }
                 //更新设置
                 [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
-            }else {
-                weakSelf.drawView.userInteractionEnabled = NO;
             }
             if (editMenuType == SLEditMenuTypeSticking) {
                 SLImage *image = setting[@"image"];
@@ -343,7 +347,6 @@
                 if (image) {
                     SLImageView *imageView = [[SLImageView alloc] initWithFrame:CGRectMake(0, 0, image.size.width/[UIScreen mainScreen].scale, image.size.height/[UIScreen mainScreen].scale)];
                     imageView.autoPlayAnimatedImage = NO;
-                    imageView.userInteractionEnabled = YES;
                     CGRect imageRect = [weakSelf.zoomView convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.view];
                     CGPoint center = CGPointZero;
                     center.x = fabs(imageRect.origin.x)+weakSelf.zoomView.sl_width/2.0;
@@ -366,8 +369,8 @@
             if (editMenuType == SLEditMenuTypeText) {
                 SLEditTextView *editTextView = [[SLEditTextView alloc] initWithFrame:CGRectMake(0, kSafeAreaTopHeight, kScreenWidth, kScreenHeight - kSafeAreaTopHeight - kSafeAreaBottomHeight)];
                 [weakSelf.view addSubview:editTextView];
-                if ([setting[@"hidden"] boolValue]) weakSelf.editingMenuType = SLEditMenuTypeUnknown;
                 editTextView.editTextCompleted = ^(UILabel * _Nullable label) {
+                    weakSelf.editingMenuType = SLEditMenuTypeUnknown;
                     weakSelf.topNavView.hidden = NO;
                     if (label.text.length == 0 || label == nil) {
                         return;
@@ -393,30 +396,10 @@
             }else{
                 weakSelf.topNavView.hidden = NO;
             }
-//            if(editMenuType == SLEditMenuTypePictureMosaic) {
-//                if (setting[@"mosaicType"]) {
-//                    weakSelf.mosaicView.userInteractionEnabled = ![setting[@"hidden"] boolValue];
-//                    if ([setting[@"hidden"] boolValue]) weakSelf.editingMenuType = SLEditMenuTypeUnknown;
-//                    weakSelf.mosaicView.mosaicType = [setting[@"mosaicType"] integerValue];
-//                    [weakSelf.zoomView.imageView insertSubview:weakSelf.mosaicView atIndex:0];
-//                }
-//                if (setting[@"goBack"]) {
-//                    [weakSelf.mosaicView goBack];
-//                }
-//                //更新设置
-//                [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
-//            }else {
-//                weakSelf.mosaicView.userInteractionEnabled = NO;
-//            }
             if (editMenuType == SLEditMenuTypePictureClipping) {
                 weakSelf.isEditing = YES;
-                SLImageClipController *imageClipController = [[SLImageClipController alloc] init];
-                imageClipController.modalPresentationStyle = UIModalPresentationFullScreen;
-                UIImage *image = [weakSelf.zoomView.imageView sl_imageByViewInRect:weakSelf.zoomView.imageView.bounds shouldTranslateCTM:YES];
-                imageClipController.image = image;
-                [weakSelf presentViewController:imageClipController animated:NO completion:nil];
+                [weakSelf showImageClipVC];
             }
-            weakSelf.editingMenuType = ![setting[@"hidden"] boolValue] ? editMenuType : SLEditMenuTypeUnknown;
 
         };
         [self.view addSubview:_editMenuView];
@@ -487,16 +470,7 @@
     }
     return _gestureView;
 }
-//- (SLDrawBrushTool *)currentDrawBrushTool{
-//    if(self.editingMenuType == SLEditMenuTypeGraffiti){
-//        return self.drawGraffitiBrushTool;
-//    }
-//    if(self.editingMenuType  == SLEditMenuTypePictureMosaic){
-//        return self.drawMosicBrushTool;
-//    }
-//    return nil;
-//
-//}
+
 - (NSMutableArray *)watermarkArray {
     if (!_watermarkArray) {
         _watermarkArray = [NSMutableArray array];
@@ -513,6 +487,17 @@
     return _menuSetting;
 }
 #pragma mark - Events Handle
+- (void)showImageClipVC {
+    [self changeZoomViewRectWithIsEditing:YES];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        SLImageClipController *imageClipController = [[SLImageClipController alloc] init];
+        imageClipController.modalPresentationStyle = UIModalPresentationFullScreen;
+        UIImage *image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
+        imageClipController.image = image;
+        imageClipController.originalImage = self.image;
+        [self presentViewController:imageClipController animated:NO completion:nil];
+    });
+}
 //取消编辑
 - (void)cancelEditBtnClicked:(id)sender {
     [self dismissViewControllerAnimated:NO completion:^{
@@ -609,11 +594,6 @@
     self.zoomView.zoomScale = 1;
     self.zoomView.image = clipImage;
     [self changeZoomViewRectWithIsEditing:NO];
-    [_drawView clear];
-    for (UIView *view in self.watermarkArray) {
-        [view removeFromSuperview];
-    }
-    [self.watermarkArray removeAllObjects];
 }
 #pragma mark - UIGestureRecognizerDelegate
 // 该方法返回的BOOL值决定了view是否能够同时响应多个手势

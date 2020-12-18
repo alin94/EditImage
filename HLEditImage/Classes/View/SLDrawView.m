@@ -116,6 +116,7 @@
         self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds = YES;
         self.exclusiveTouch = YES;
+        self.userInteractionEnabled = YES;
     }
     return self;
 }

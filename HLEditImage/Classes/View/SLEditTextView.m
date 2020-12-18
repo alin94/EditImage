@@ -350,6 +350,7 @@
     label.sl_backgroundColor = textView.backgroundColor;
     label.textColor = textView.textColor;
     label.textPadding = textView.textContainerInset;
+    label.numberOfLines = 0;
 //    label.textContainerInset = textView.textContainerInset;
     label.text = textView.text;
     

@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SLImageClipController : UIViewController
+@property (nonatomic, strong) UIImage *originalImage;
 @property (nonatomic, strong) UIImage *image;
 @end
 
