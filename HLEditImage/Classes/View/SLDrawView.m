@@ -161,6 +161,9 @@
             [path moveToPoint:point];
         }
         [self.brushTool.lineArray addObject:path];
+        //清理已删除的笔画
+        [self.brushTool.deleteLayerArray removeAllObjects];
+        [self.brushTool.deleteLineArray removeAllObjects];
         CAShapeLayer *slayer = [self createShapeLayer:path];
         [self.layer addSublayer:slayer];
         [self.brushTool.layerArray addObject:slayer];
