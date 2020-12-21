@@ -256,8 +256,8 @@
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"shape":[NSNumber numberWithInteger:shapeType]});
 
         };
-        _submenuGraffiti.lineWidthChangedBlock = ^(CGFloat lineWidth) {
-            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"lineWidth":@(lineWidth)});
+        _submenuGraffiti.lineWidthChangedBlock = ^(CGFloat lineWidth, NSInteger lineWidthIndex) {
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"lineWidth":@(lineWidth),@"lineWidthIndex":@(lineWidthIndex)});
         };
     }
     return _submenuGraffiti;

@@ -58,9 +58,9 @@
         _deleteLineArray = [NSMutableArray array];
         _deleteLayerArray = [NSMutableArray array];
         _lineWidth = 8.f;
+        _lineWidthIndex = 2;
         _lineColor = [UIColor blackColor];
         _shapeType = SLDrawShapeRandom;
-
     }
     return self;
 }
@@ -190,9 +190,12 @@
                 path = [SLDrawBezierPath bezierPathWithRect:[self getRectWithStartPoint:self.beginPoint endPoint:point]];
             }else if (self.brushTool.shapeType == SLDrawShapeArrow){
                 path = [[SLDrawBezierPath alloc] init];
-                [path moveToPoint:self.beginPoint];;
-                [path addLineToPoint:point];
-                [path appendPath:[self createArrowWithStartPoint:self.beginPoint endPoint:point]];
+                [path appendPath:[self createArrowWithBeginPoint:self.beginPoint endPoint:point]];
+                [path closePath];
+//
+//                [path moveToPoint:self.beginPoint];;
+//                [path addLineToPoint:point];
+//                [path appendPath:[self createArrowWithStartPoint:self.beginPoint endPoint:point]];
             }
             //重新设置属性
             if(self.brushTool.shapeType != SLDrawShapeRandom){
@@ -244,13 +247,16 @@
     SLShapelayer *slayer = [SLShapelayer layer];
     slayer.path = path.CGPath;
     slayer.backgroundColor = [UIColor clearColor].CGColor;
-    slayer.fillColor = [UIColor clearColor].CGColor;
     if(self.brushTool.shapeType != SLDrawShapeArrow){
+        slayer.fillColor = [UIColor clearColor].CGColor;
         slayer.lineCap = kCALineCapRound;
         slayer.lineJoin = kCALineJoinRound;
+        slayer.lineWidth = path.lineWidth;
+    }else {
+        slayer.fillColor = path.color.CGColor;
+        slayer.lineWidth = 0.1;
     }
     slayer.strokeColor = path.color.CGColor;
-    slayer.lineWidth = path.lineWidth;
     
     //自定义路径的描述
     slayer.shapeType = self.brushTool.shapeType;
@@ -278,55 +284,89 @@
     CGFloat yDist = (endPoint.y - startPoint.y);
     return sqrt((xDist * xDist) + (yDist * yDist));
 }
-- (UIBezierPath *)createArrowWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint {
-    CGPoint controllPoint = CGPointZero;
-    CGPoint pointUp = CGPointZero;
-    CGPoint pointDown = CGPointZero;
-    CGFloat distance = [self distanceBetweenStartPoint:startPoint endPoint:endPoint];
-    CGFloat distanceX = self.brushTool.lineWidth*2 * (ABS(endPoint.x - startPoint.x) / distance);
-    CGFloat distanceY = self.brushTool.lineWidth*2 * (ABS(endPoint.y - startPoint.y) / distance);
-    CGFloat distX = self.brushTool.lineWidth * (ABS(endPoint.y - startPoint.y) / distance);
-    CGFloat distY = self.brushTool.lineWidth * (ABS(endPoint.x - startPoint.x) / distance);
-    if (endPoint.x >= startPoint.x)
-    {
-        if (endPoint.y >= startPoint.y)
-        {
-            controllPoint = CGPointMake(endPoint.x - distanceX, endPoint.y - distanceY);
-            pointUp = CGPointMake(controllPoint.x + distX, controllPoint.y - distY);
-            pointDown = CGPointMake(controllPoint.x - distX, controllPoint.y + distY);
-        }
-        else
-        {
-            controllPoint = CGPointMake(endPoint.x - distanceX, endPoint.y + distanceY);
-            pointUp = CGPointMake(controllPoint.x - distX, controllPoint.y - distY);
-            pointDown = CGPointMake(controllPoint.x + distX, controllPoint.y + distY);
-        }
-    }
-    else
-    {
-        if (endPoint.y >= startPoint.y)
-        {
-            controllPoint = CGPointMake(endPoint.x + distanceX, endPoint.y - distanceY);
-            pointUp = CGPointMake(controllPoint.x - distX, controllPoint.y - distY);
-            pointDown = CGPointMake(controllPoint.x + distX, controllPoint.y + distY);
-        }
-        else
-        {
-            controllPoint = CGPointMake(endPoint.x + distanceX, endPoint.y + distanceY);
-            pointUp = CGPointMake(controllPoint.x + distX, controllPoint.y - distY);
-            pointDown = CGPointMake(controllPoint.x - distX, controllPoint.y + distY);
-        }
-    }
-    NSLog(@"control %@",NSStringFromCGPoint(controllPoint));
-    UIBezierPath *arrowPath = [UIBezierPath bezierPath];
-    [arrowPath moveToPoint:endPoint];
-    [arrowPath addLineToPoint:pointDown];
-    [arrowPath addLineToPoint:pointUp];
-    [arrowPath addLineToPoint:endPoint];
-    return arrowPath;
+- (CGFloat)angleBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint{
+    CGFloat height = endPoint.y - startPoint.y;
+    CGFloat width = startPoint.x - endPoint.x;
+    CGFloat rads = atan(height/width);
+    return rads;
 }
+- (UIBezierPath *)createArrowWithBeginPoint:(CGPoint)beginPoint endPoint:(CGPoint)endPoint {
+    //箭头的角度
+    CGFloat arrowAngle = 70*M_PI/180.f;
+    //箭头腰长
+    CGFloat arrowWaistLength = 34.f;
+    //箭头空白地儿宽度
+    CGFloat arrowGapWidth = 10.f;
+    //起点圆角半径
+    CGFloat radius = 1.7;
 
-
+    NSInteger arrowSizeIndex = self.brushTool.lineWidthIndex;
+    if(arrowSizeIndex == 0){
+        arrowWaistLength = 20.f;
+        arrowGapWidth = 6.f;
+        radius = 1.f;
+    }else if (arrowSizeIndex == 1){
+        arrowWaistLength = 26.f;
+        arrowGapWidth = 8.f;
+        radius = 1.4;
+    }else if (arrowSizeIndex == 2){
+        arrowWaistLength = 34.f;
+        arrowGapWidth = 10.f;
+        radius = 1.7;
+    }else if (arrowSizeIndex == 3){
+        arrowWaistLength = 48.f;
+        arrowGapWidth = 14.f;
+        radius = 2.4f;
+    }else if (arrowSizeIndex == 4){
+        arrowWaistLength = 66.f;
+        arrowGapWidth = 20.f;
+        radius = 3.5f;
+    }
+    CGPoint point2 = CGPointZero;//左边内角
+    CGPoint point3 = CGPointZero;//左边外角
+    CGPoint point4 = endPoint;//终点
+    CGPoint point5 = CGPointZero;//右边外角
+    CGPoint point6 = CGPointZero;//右边内角
+    
+    CGFloat lineAngle = [self angleBetweenStartPoint:beginPoint endPoint:endPoint];
+    //箭头底边长
+    CGFloat arrowBottomLength = arrowWaistLength*sin(arrowAngle/2.f)*2;
+    
+    //箭头垂直高度
+    CGFloat arrowVerticalLenght = arrowWaistLength *cos(arrowAngle/2.f);
+    //箭头垂直中心点
+    CGPoint arrowGapCenter = CGPointZero;
+    if(endPoint.x > beginPoint.x){
+        arrowGapCenter = CGPointMake(endPoint.x - arrowVerticalLenght*cos(lineAngle), endPoint.y + arrowVerticalLenght*sin(lineAngle));
+    }else {
+        arrowGapCenter = CGPointMake(endPoint.x + arrowVerticalLenght*cos(lineAngle), endPoint.y - arrowVerticalLenght*sin(lineAngle));
+    }
+    //两个箭头左右尖端
+    point5 = CGPointMake(arrowGapCenter.x+ arrowBottomLength/2.f*sin(lineAngle), arrowGapCenter.y + arrowBottomLength/2.f*cos(lineAngle));
+    point3 = CGPointMake(arrowGapCenter.x- arrowBottomLength/2.f*sin(lineAngle), arrowGapCenter.y - arrowBottomLength/2.f*cos(lineAngle));
+    
+    //两个箭头内角
+    point6 = CGPointMake(arrowGapCenter.x+ arrowGapWidth/2.f*sin(lineAngle), arrowGapCenter.y + arrowGapWidth/2.f*cos(lineAngle));
+    point2 = CGPointMake(arrowGapCenter.x- arrowGapWidth/2.f*sin(lineAngle), arrowGapCenter.y - arrowGapWidth/2.f*cos(lineAngle));
+    
+    UIBezierPath *path = [[UIBezierPath alloc] init];
+    path.lineWidth = 1;
+    //底部半圆弧形
+    if(endPoint.x > beginPoint.x){
+        CGPoint arcCenter = CGPointMake(beginPoint.x + radius*cos(lineAngle), beginPoint.y - radius*sin(lineAngle));
+        [path addArcWithCenter:arcCenter radius:M_PI startAngle:M_PI_2 - lineAngle endAngle:M_PI_2 - lineAngle + M_PI clockwise:YES];
+    }else {
+        CGPoint arcCenter = CGPointMake(beginPoint.x - radius*cos(lineAngle), beginPoint.y + radius*sin(lineAngle));
+        [path addArcWithCenter:arcCenter radius:M_PI startAngle:M_PI_2 - lineAngle endAngle:M_PI_2 - lineAngle + M_PI clockwise:NO];
+    }
+    [path addLineToPoint:point2];
+    [path addLineToPoint:point3];
+    [path addLineToPoint:point4];
+    [path addLineToPoint:point5];
+    [path addLineToPoint:point6];
+    [path closePath];
+    return path;
+}
 
 #pragma mark - Getter
 - (BOOL)isDrawing {

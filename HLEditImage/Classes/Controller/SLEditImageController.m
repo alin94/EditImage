@@ -335,6 +335,10 @@
                 if (setting[@"lineWidth"]) {
                     weakSelf.drawView.brushTool.lineWidth = [setting[@"lineWidth"] floatValue];
                 }
+                if (setting[@"lineWidthIndex"]) {
+                    weakSelf.drawView.brushTool.lineWidthIndex = [setting[@"lineWidthIndex"] floatValue];
+                }
+
                 if(setting[@"shape"]){
                     weakSelf.drawView.brushTool.shapeType = [setting[@"shape"] integerValue];
                 }

@@ -433,7 +433,7 @@
             if(weakSelf.currentLineWidth != selectlineWidth){
                 weakSelf.currentLineWidth = selectlineWidth;
                 if(weakSelf.lineWidthChangedBlock){
-                    weakSelf.lineWidthChangedBlock(selectlineWidth);
+                    weakSelf.lineWidthChangedBlock(selectlineWidth,selectIndex);
                 }
                 [weakSelf.lineWidthBtn setImage:selectIconImage forState:UIControlStateNormal];
             }

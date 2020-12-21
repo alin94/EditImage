@@ -27,7 +27,7 @@ typedef NS_ENUM(NSUInteger, SLGraffitiShapeType) {
 @property (nonatomic, copy) void (^goForwardBlock)(void);//上一步
 @property (nonatomic, copy) void (^cancelBlock)(void);//取消
 @property (nonatomic, copy) void (^doneBlock)(void);//完成
-@property (nonatomic, copy) void (^lineWidthChangedBlock)(CGFloat lineWidth);//画笔宽度改变
+@property (nonatomic, copy) void (^lineWidthChangedBlock)(CGFloat lineWidth,NSInteger lineWidthIndex);//画笔宽度改变
 @property (nonatomic, copy) void (^brushShapeChangedBlock)(SLGraffitiShapeType shapeType);//画笔类型改变
 @property (nonatomic, assign) BOOL backBtnEnable;
 @property (nonatomic, assign) BOOL forwardBtnEnable;

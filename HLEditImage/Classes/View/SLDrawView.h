@@ -18,6 +18,7 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 
 //管理画笔数据的
 @interface SLDrawBrushTool : NSObject
+
 @property (nonatomic, strong) UIImage *image;
 /// 线粗 默认5.0
 @property (nonatomic, assign) CGFloat lineWidth;
@@ -27,9 +28,10 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 @property (nonatomic, assign) BOOL isErase;
 ///马赛克方块大小
 @property (nonatomic, assign) CGFloat squareWidth;
-
 ///画笔形状 默认 自由模式
 @property (nonatomic, assign) SLDrawShapeType shapeType;
+//箭头大小
+@property (nonatomic, assign) NSInteger lineWidthIndex;
 
 - (instancetype)initWithDrawBounds:(CGRect)bounds;
 
