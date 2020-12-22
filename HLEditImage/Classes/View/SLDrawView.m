@@ -334,6 +334,20 @@
     
     //箭头垂直高度
     CGFloat arrowVerticalLenght = arrowWaistLength *cos(arrowAngle/2.f);
+    
+    //图形最小长度
+    CGFloat minLength = 12 + arrowVerticalLenght;
+    
+    if([self distanceBetweenStartPoint:beginPoint endPoint:endPoint] < minLength){
+        //尾巴长度小于这个长度
+        if(endPoint.x > beginPoint.x){
+            endPoint = CGPointMake(beginPoint.x + minLength* cos(lineAngle) , beginPoint.y - minLength*sin(lineAngle));
+        }else {
+            endPoint = CGPointMake(beginPoint.x - minLength* cos(lineAngle) , beginPoint.y + minLength*sin(lineAngle));
+        }
+        point4 = endPoint;
+    }
+
     //箭头垂直中心点
     CGPoint arrowGapCenter = CGPointZero;
     if(endPoint.x > beginPoint.x){
