@@ -120,5 +120,22 @@
     self.frame = frame;
 }
 
+- (CGFloat)sl_degrees {
+    CGFloat radians = atan2f(self.transform.b, self.transform.a);
+    return radians;
+}
+
+- (CGFloat)sl_scaleX {
+    CGAffineTransform t = self.transform;
+    CGFloat radians = atan2f(t.b, t.a);
+    CGFloat scale = t.a/cos(radians);
+    return scale;
+}
+- (CGFloat)sl_scaleY {
+    CGAffineTransform t = self.transform;
+    CGFloat radians = atan2f(t.b, t.a);
+    CGFloat scale = t.d/cos(radians);
+    return scale;
+}
 
 @end

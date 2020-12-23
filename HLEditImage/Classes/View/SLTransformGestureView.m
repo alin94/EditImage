@@ -203,10 +203,12 @@
             CGFloat scale = pinch.scale;
             CGAffineTransform t = self.currentEditingView.transform;;
 
-            if(scale*t.a < kMinScale){
-                scale = kMinScale/t.a;
-            }else if (scale*t.a > kMaxScale){
-                scale = kMaxScale/t.a;
+            CGFloat radians = atan2f(t.b, t.a);
+            CGFloat preScale = t.a/cos(radians);
+            if(scale*preScale < kMinScale){
+                scale = kMinScale/preScale;
+            }else if (scale*preScale > kMaxScale){
+                scale = kMaxScale/preScale;
                 NSLog(@"超出去啦%@",self.currentEditingView);
             }
             self.currentEditingView.transform = CGAffineTransformScale(self.currentEditingView.transform, scale, scale);
@@ -287,10 +289,13 @@
             //2.然后两长度的比值就是缩放比例啦，
             CGFloat scale = currentDistance / previousDistance;
             // 然后设置两者结合后的transform赋值给当前水平图片即可
-            if(scale*t.a < kMinScale){
-                scale = kMinScale/t.a;
-            }else if (scale*t.a > kMaxScale){
-                scale = kMaxScale/t.a;
+            CGFloat radians = atan2f(t.b, t.a);
+            
+            CGFloat preScale = t.a/cos(radians);
+            if(scale*preScale < kMinScale){
+                scale = kMinScale/preScale;
+            }else if (scale*preScale > kMaxScale){
+                scale = kMaxScale/preScale;
                 NSLog(@"超出去啦%@",self.currentEditingView);
             }
             t = CGAffineTransformScale(t, scale, scale);
@@ -339,15 +344,16 @@
     self.editBtn.hidden = hidden;
     self.dotBoarderLayer.hidden = hidden;
     if (!hidden) {
-        self.clipsToBounds = NO;
+        self.clipsToBounds = self.superview.clipsToBounds = NO;
         self.dotBoarderLayer.path = [UIBezierPath bezierPathWithRoundedRect:self.currentEditingView.bounds cornerRadius:0].CGPath;
         if(!self.dotBoarderLayer.superlayer || ![self.currentEditingView.layer.sublayers containsObject:self.dotBoarderLayer]){
             [self.currentEditingView.layer addSublayer:self.dotBoarderLayer];
         }
+        self.editBtn.transform = CGAffineTransformInvert(self.transform);
         self.editBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width, self.currentEditingView.bounds.size.height) toView:self];
         self.deleteBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width,0) toView:self];
     }else {
-        self.clipsToBounds = YES;
+        self.clipsToBounds = self.superview.clipsToBounds = YES;;
     }
 }
 

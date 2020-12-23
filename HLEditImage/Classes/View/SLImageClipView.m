@@ -38,7 +38,7 @@
 @property (nonatomic, strong) SLImageClipZoomViewProperty *subViewProperty;
 
 //只用记录当前初始视图的
-@property (nonatomic, assign) CGFloat rotateAngle;
+@property (nonatomic, assign) NSInteger rotateAngle;
 @property (nonatomic, assign) CGFloat fixedScale;
 @property (nonatomic, assign) NSInteger menuScaleSelectIndex;
 
@@ -138,6 +138,8 @@
     [self resetMinimumZoomScale];
     //显示底部菜单
     [self hiddenView:self.menuViewContainer];
+    double scale =  [self transScaleX];
+    NSLog(@"%f",scale);
     
 }
 - (void)endEdit {
@@ -250,6 +252,47 @@
     _imageOrientation = orientation;
     return orientation;
 }
+- (CGFloat)transScaleX {
+
+    CGAffineTransform trans = self.zoomView.transform;
+    if(!trans.b){
+        return trans.a;
+    }
+    CGFloat angleInRadians = 0;
+    NSInteger angle = self.currentPropertyModel.rotateAngle;
+    switch (angle) {
+        case 90:    angleInRadians = M_PI_2;            break;
+        case -90:   angleInRadians = -M_PI_2;           break;
+        case 180:   angleInRadians = M_PI;              break;
+        case -180:  angleInRadians = -M_PI;             break;
+        case 270:   angleInRadians = (M_PI + M_PI_2);   break;
+        case -270:  angleInRadians = -(M_PI + M_PI_2);  break;
+        default:                                        break;
+    }
+
+    double aa = cos(angleInRadians);
+    return trans.a/aa;
+}
+- (CGFloat)transScaleY {
+    return [self transScaleX];
+    if(!self.scaleTrans.b){
+        return self.scaleTrans.d;
+    }
+    CGFloat angleInRadians = 0;
+    NSInteger angle = self.currentPropertyModel.rotateAngle;
+    switch (angle) {
+        case 90:    angleInRadians = M_PI_2;            break;
+        case -90:   angleInRadians = -M_PI_2;           break;
+        case 180:   angleInRadians = M_PI;              break;
+        case -180:  angleInRadians = -M_PI;             break;
+        case 270:   angleInRadians = (M_PI + M_PI_2);   break;
+        case -270:  angleInRadians = -(M_PI + M_PI_2);  break;
+        default:                                        break;
+    }
+    double aa = sin(angleInRadians);
+    return self.scaleTrans.d/aa;
+}
+
 #pragma mark - HelpMethods
 - (void)configZoomViewWithPropertyModel:(SLImageClipZoomViewProperty *)model{
     self.zoomView.transform = model.transform;
@@ -329,7 +372,7 @@
     }
     //设置最小缩放系数
     CGFloat zoomScale = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect));
-    CGFloat zoomScale1 = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect)) * self.scaleTrans.a;
+    CGFloat zoomScale1 = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect)) * [self transScaleX];
     
     NSLog(@"最小比例是===%f ====%f",zoomScale,zoomScale1);
     self.zoomView.minimumZoomScale = zoomScale1;
@@ -397,7 +440,12 @@
     CGRect gridRectOfImage = [self rectOfGridOnImageByGridRect:self.gridView.gridRect];
     /// 旋转变形
     CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformIdentity, angleInRadians);
-    CGAffineTransform com = CGAffineTransformConcat(self.scaleTrans, transform);
+//    CGAffineTransformMakeRotation(angleInRadians);
+    
+//    CGAffineTransform com = CGAffineTransformConcat(self.scaleTrans, transform);
+    CGAffineTransform com = CGAffineTransformConcat(transform, self.scaleTrans);
+
+    
     self.zoomView.transform = com;
     //transform后，bounds不会变，frame会变
     CGFloat width = CGRectGetWidth(self.zoomView.frame);
@@ -453,10 +501,10 @@
     [self.zoomView setZoomScale:self.zoomView.zoomScale * scale];
     // 调整contentOffset
     if(_rotateAngle%180 != 0){
-        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*self.scaleTrans.a - (self.gridView.gridRect.origin.y - self.zoomView.sl_y), gridRectOfImage.origin.y*self.zoomView.zoomScale*self.scaleTrans.d - (self.gridView.gridRect.origin.x - self.zoomView.sl_x));
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX] - (self.gridView.gridRect.origin.y - self.zoomView.sl_y), gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY] - (self.gridView.gridRect.origin.x - self.zoomView.sl_x));
         
     }else {
-        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*self.scaleTrans.a - (self.gridView.gridRect.origin.x - self.zoomView.sl_x), gridRectOfImage.origin.y*self.zoomView.zoomScale*self.scaleTrans.d - (self.gridView.gridRect.origin.y - self.zoomView.sl_y));
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX] - (self.gridView.gridRect.origin.x - self.zoomView.sl_x), gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY] - (self.gridView.gridRect.origin.y - self.zoomView.sl_y));
     }
     NSLog(@"偏移===%@",NSStringFromCGPoint(self.zoomView.contentOffset));
     //检查还原按钮
@@ -510,6 +558,7 @@
 
 //完成编辑
 - (void)doneClipClicked:(id)sender {
+    [self resetZoomView];
     //记录上一次的状态
     self.lastPropertyModel = [SLImageClipZoomViewProperty getPropertyModelWithZoomView:self.zoomView];
     //结束编辑
@@ -526,6 +575,7 @@
         self.doneBtnClickBlock();
     }
 }
+
 
 #pragma mark - SLGridViewDelegate
 //开始调整
@@ -568,10 +618,37 @@
                          gridView.gridRect = self.zoomView.frame;
                          NSLog(@"现在的缩放比例是===%f",zoomScale);
                          [self.zoomView setZoomScale:self.zoomView.zoomScale * zoomScale];
-                         self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*self.scaleTrans.a, gridRectOfImage.origin.y*self.zoomView.zoomScale*self.scaleTrans.d);
+                         self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX], gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY]);
                      } completion:^(BOOL finished) {
                          [self checkRecoverBtnIfEnable];
                      }];
+}
+
+- (void)resetZoomView {
+    SLGridView *gridView = self.gridView;
+    CGRect gridRectOfImage = [self rectOfGridOnImageByGridRect:gridView.gridRect];
+    CGRect preZoomViewRect = self.zoomView.frame;
+
+    CGSize newSize = CGSizeMake(self.sl_width - 2 * KGridLRMargin, (self.sl_width - 2 * KGridLRMargin)*gridView.gridRect.size.height/gridView.gridRect.size.width);
+    if (newSize.height > self.gridView.maxGridRect.size.height) {
+        newSize = CGSizeMake(self.gridView.maxGridRect.size.height*gridView.gridRect.size.width/gridView.gridRect.size.height, self.gridView.maxGridRect.size.height);
+        self.zoomView.sl_size = newSize;
+        self.zoomView.sl_y = KGridTopMargin;
+        self.zoomView.sl_centerX = self.sl_width/2.0;
+    }else {
+        self.zoomView.sl_size = newSize;
+        self.zoomView.center = CGPointMake(self.sl_width/2.0, (self.sl_height - KBottomMenuHeight)/2.0);
+    }
+    //重置最小缩放系数
+    [self resetMinimumZoomScale];
+    [self.zoomView setZoomScale:self.zoomView.zoomScale];
+    // 调整contentOffset
+    //        CGFloat zoomScale = self.zoomView.sl_width/gridView.gridRect.size.width;
+    CGFloat zoomScale = MIN(preZoomViewRect.size.width/gridView.gridRect.size.width, preZoomViewRect.size.height/gridView.gridRect.size.height);
+    gridView.gridRect = self.zoomView.frame;
+    NSLog(@"现在的缩放比例是===%f",zoomScale);
+    [self.zoomView setZoomScale:self.zoomView.zoomScale * zoomScale];
+    self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX], gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY]);
 }
 
 #pragma mark - SLZoomViewDelegate
