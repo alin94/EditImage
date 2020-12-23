@@ -299,7 +299,7 @@
     CGFloat arrowGapWidth = 10.f;
     //起点圆角半径
     CGFloat radius = 1.7;
-
+    //当前画笔大小索引
     NSInteger arrowSizeIndex = self.brushTool.lineWidthIndex;
     if(arrowSizeIndex == 0){
         arrowWaistLength = 20.f;

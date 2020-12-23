@@ -28,6 +28,7 @@
 //底部操作栏
 @property (nonatomic, strong) SLSubMenuClipImageView *menuView;
 
+@property (nonatomic, strong) UILabel *testLabel;
 
 /// 原始位置区域
 @property (nonatomic, assign) CGRect originalRect;
@@ -43,11 +44,24 @@
 @property (nonatomic, assign) UIImageOrientation imageOrientation;
 @property (nonatomic, assign) CGPoint originalOffset;
 @property (nonatomic, assign) CGRect rotatedOriginalRect;
+@property (nonatomic, assign) CGAffineTransform scaleTrans;
 
 @end
 
 @implementation SLImageClipController
 
+//- (instancetype)initWithZoomView:(SLImageZoomView *)zoomView;{
+//    self = [super init];
+//    if(self){
+//        self.scaleTrans = zoomView.transform;
+//        self.image = zoomView.imageView.image;
+//        _zoomView = zoomView;
+//        _zoomView.imageView.backgroundColor = [UIColor greenColor];
+//        [_zoomView removeFromSuperview];
+//    }
+//    return self;
+//}
+//
 #pragma mark - Override
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -64,7 +78,7 @@
 - (void)setupUI {
     self.zoomView.image = self.image;
     self.maxGridRect = CGRectMake(KGridLRMargin, KGridTopMargin, self.view.sl_width - KGridLRMargin * 2, self.view.sl_height - KGridTopMargin - KGridBottomMargin- KBottomMenuHeight);
-    
+
     CGSize newSize = CGSizeMake(self.view.sl_width - 2 * KGridLRMargin, (self.view.sl_width - 2 * KGridLRMargin)*self.image.size.height/self.image.size.width);
     if (newSize.height > self.maxGridRect.size.height) {
         newSize = CGSizeMake(self.maxGridRect.size.height*self.image.size.width/self.image.size.height, self.maxGridRect.size.height);
@@ -75,7 +89,7 @@
         self.zoomView.sl_size = newSize;
         self.zoomView.center = CGPointMake(self.view.sl_width/2.0, (self.view.sl_height - KBottomMenuHeight)/2.0);
     }
-    
+
     [self.view addSubview:self.zoomView];
     self.zoomView.imageView.frame = self.zoomView.bounds;
     self.originalRect = self.zoomView.frame;
@@ -90,7 +104,15 @@
     bottomBar.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:bottomBar];
     [self.view addSubview:self.menuView];
+//    [self addTest];
+    [self resetMinimumZoomScale];
     
+}
+- (void)addTest {
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 30, 100, 40)];
+    label.text = @"测试文字位置label呀";
+    label.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.4];
+    [self.zoomView.imageView addSubview:label];
 }
 
 #pragma mark - Getter
@@ -100,7 +122,9 @@
         _zoomView.sl_centerY = (self.view.sl_height - KBottomMenuHeight)/2.0;
         _zoomView.backgroundColor = [UIColor blackColor];
         _zoomView.backgroundColor = [UIColor redColor];
+        _zoomView.imageView.backgroundColor = [UIColor greenColor];
         _zoomView.zoomViewDelegate = self;
+        _scaleTrans = _zoomView.transform;
     }
     return _zoomView;
 }
@@ -240,8 +264,12 @@
     }
     //设置最小缩放系数
     CGFloat zoomScale = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect));
-    NSLog(@"最小比例是===%f",zoomScale);
-    self.zoomView.minimumZoomScale = zoomScale;
+    CGFloat zoomScale1 = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect)) * self.scaleTrans.a;
+
+    NSLog(@"最小比例是===%f ====%f",zoomScale,zoomScale1);
+    self.zoomView.minimumZoomScale = zoomScale1;
+//    self.zoomView.minimumZoomScale = 1;
+
 }
 //获取网格区域在图片上的相对位置
 - (CGRect)rectOfGridOnImageByGridRect:(CGRect)cropRect {
@@ -274,7 +302,8 @@
     
     /// 旋转变形
     CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformIdentity, angleInRadians);
-    self.zoomView.transform = transform;
+    CGAffineTransform com = CGAffineTransformConcat(self.scaleTrans, transform);
+    self.zoomView.transform = com;
     //transform后，bounds不会变，frame会变
     CGFloat width = CGRectGetWidth(self.zoomView.frame);
     CGFloat height = CGRectGetHeight(self.zoomView.frame);
@@ -329,27 +358,32 @@
     [self.zoomView setZoomScale:self.zoomView.zoomScale * scale];
     // 调整contentOffset
     if(_rotateAngle%180 != 0){
-        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (self.gridView.gridRect.origin.y - self.zoomView.sl_y), gridRectOfImage.origin.y*self.zoomView.zoomScale - (self.gridView.gridRect.origin.x - self.zoomView.sl_x));
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*self.scaleTrans.a - (self.gridView.gridRect.origin.y - self.zoomView.sl_y), gridRectOfImage.origin.y*self.zoomView.zoomScale*self.scaleTrans.d - (self.gridView.gridRect.origin.x - self.zoomView.sl_x));
 
     }else {
-        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (self.gridView.gridRect.origin.x - self.zoomView.sl_x), gridRectOfImage.origin.y*self.zoomView.zoomScale - (self.gridView.gridRect.origin.y - self.zoomView.sl_y));
-
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*self.scaleTrans.a - (self.gridView.gridRect.origin.x - self.zoomView.sl_x), gridRectOfImage.origin.y*self.zoomView.zoomScale*self.scaleTrans.d - (self.gridView.gridRect.origin.y - self.zoomView.sl_y));
     }
     
+    NSLog(@"偏移===%@",NSStringFromCGPoint(self.zoomView.contentOffset));
+
     self.originalOffset = self.zoomView.contentOffset;
     //检查还原按钮
     [self checkRecoverBtnIfEnable];
 }
 - (void)cancleClipClicked:(id)sender {
+    [self recoveryClicked:nil];
     [self dismissViewControllerAnimated:NO completion:nil];
+    if(self.clipFinishedBlock){
+        self.clipFinishedBlock(self.zoomView);
+    }
 }
 //还原
 - (void)recoveryClicked:(UIButton *)sender {
     self.zoomView.minimumZoomScale = 1;
     self.zoomView.zoomScale = 1;
-    self.zoomView.transform = CGAffineTransformIdentity;
+    self.zoomView.transform = self.scaleTrans;
     self.zoomView.frame = self.originalRect;
-    self.zoomView.imageView.frame = self.zoomView.bounds;
+//    self.zoomView.imageView.frame = self.zoomView.bounds;
     self.gridView.gridRect = self.zoomView.frame;
     self.gridView.originalGridRect = self.zoomView.frame;
     self.rotatedOriginalRect = self.originalRect;
@@ -361,9 +395,15 @@
 //完成编辑
 - (void)doneClipClicked:(id)sender {
     [self dismissViewControllerAnimated:NO completion:nil];
+
     UIImage *clipImage = [self.zoomView.imageView sl_imageByViewInRect:[self rectOfGridOnImageByGridRect:_gridView.gridRect]];
     UIImage *roImage = [UIImage imageWithCGImage:clipImage.CGImage scale:[UIScreen mainScreen].scale orientation:self.imageOrientation];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"sl_ImageClippingComplete" object:nil userInfo:@{@"image" : roImage}];
+    self.zoomView.image = roImage;
+    if(self.clipFinishedBlock){
+        self.clipFinishedBlock(self.zoomView);
+    }
+
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"sl_ImageClippingComplete" object:nil userInfo:@{@"image" : roImage}];
 }
 
 #pragma mark - SLGridViewDelegate
@@ -407,7 +447,7 @@
         gridView.gridRect = self.zoomView.frame;
          NSLog(@"现在的缩放比例是===%f",zoomScale);
         [self.zoomView setZoomScale:self.zoomView.zoomScale * zoomScale];
-        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale);
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*self.scaleTrans.a, gridRectOfImage.origin.y*self.zoomView.zoomScale*self.scaleTrans.d);
     } completion:^(BOOL finished) {
         [self checkRecoverBtnIfEnable];
     }];

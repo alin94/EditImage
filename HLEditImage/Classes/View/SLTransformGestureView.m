@@ -339,12 +339,15 @@
     self.editBtn.hidden = hidden;
     self.dotBoarderLayer.hidden = hidden;
     if (!hidden) {
+        self.clipsToBounds = NO;
         self.dotBoarderLayer.path = [UIBezierPath bezierPathWithRoundedRect:self.currentEditingView.bounds cornerRadius:0].CGPath;
         if(!self.dotBoarderLayer.superlayer || ![self.currentEditingView.layer.sublayers containsObject:self.dotBoarderLayer]){
             [self.currentEditingView.layer addSublayer:self.dotBoarderLayer];
         }
         self.editBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width, self.currentEditingView.bounds.size.height) toView:self];
         self.deleteBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width,0) toView:self];
+    }else {
+        self.clipsToBounds = YES;
     }
 }
 

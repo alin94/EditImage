@@ -177,6 +177,7 @@
 		C7D1FDF6258753B9002D180C /* SLSubmenuLineWidthView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D1FDF5258753B9002D180C /* SLSubmenuLineWidthView.m */; };
 		C7D1FDF925884E0B002D180C /* SLSubMenuClipImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D1FDF825884E0B002D180C /* SLSubMenuClipImageView.m */; };
 		C7D1FDFC258B27DD002D180C /* SLTransformGestureView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D1FDFB258B27DD002D180C /* SLTransformGestureView.m */; };
+		C7D1FE072590AF1B002D180C /* SLImageClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7D1FE062590AF1B002D180C /* SLImageClipView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -384,6 +385,8 @@
 		C7D1FDF825884E0B002D180C /* SLSubMenuClipImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLSubMenuClipImageView.m; sourceTree = "<group>"; };
 		C7D1FDFA258B27DC002D180C /* SLTransformGestureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTransformGestureView.h; sourceTree = "<group>"; };
 		C7D1FDFB258B27DD002D180C /* SLTransformGestureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTransformGestureView.m; sourceTree = "<group>"; };
+		C7D1FE052590AF1B002D180C /* SLImageClipView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLImageClipView.h; sourceTree = "<group>"; };
+		C7D1FE062590AF1B002D180C /* SLImageClipView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLImageClipView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -497,6 +500,8 @@
 		C7683DB8257A2C8F00DA3061 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				C7D1FE052590AF1B002D180C /* SLImageClipView.h */,
+				C7D1FE062590AF1B002D180C /* SLImageClipView.m */,
 				C7D1FDFA258B27DC002D180C /* SLTransformGestureView.h */,
 				C7D1FDFB258B27DD002D180C /* SLTransformGestureView.m */,
 				C7C12F9D2587083B00B1CC6D /* SLPaddingLabel.h */,
@@ -898,6 +903,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7683DDC257A2C8F00DA3061 /* SLEditMenuView.m in Sources */,
+				C7D1FE072590AF1B002D180C /* SLImageClipView.m in Sources */,
 				C7683D8F257A288C00DA3061 /* ViewController.m in Sources */,
 				C7683DDB257A2C8F00DA3061 /* SLDrawView.m in Sources */,
 				C7683DCF257A2C8F00DA3061 /* UIView+SLFrame.m in Sources */,

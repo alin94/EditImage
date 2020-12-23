@@ -41,6 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否正在拖动 
 @property(nonatomic,assign,readonly) BOOL dragging;
 
+- (void)changeMaskLayerColor:(UIColor *)color;
+- (void)hideGrid:(BOOL)hidden;
+
 @end
 
 NS_ASSUME_NONNULL_END

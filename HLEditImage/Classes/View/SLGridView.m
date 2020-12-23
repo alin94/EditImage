@@ -181,7 +181,7 @@
         CGPoint translation = [gestureRecognizer translationInView:self.superview];
         self.translation = CGPointMake(roundf(self.startPoint.x + translation.x),
                                        roundf(self.startPoint.y + translation.y));
-        
+        NSLog(@"改变====%@",NSStringFromCGPoint(translation));
         if ([self.delegate respondsToSelector:@selector(resizeConrolDidResizing:)]) {
             [self.delegate resizeConrolDidResizing:self];
         }
@@ -278,6 +278,12 @@ const CGFloat kSLControlWidth = 30.f;
     [self addSubview:control];
     control.userInteractionEnabled = YES;
     return control;
+}
+- (void)changeMaskLayerColor:(UIColor *)color {
+    _gridMaskLayer.maskColor = color.CGColor;
+}
+- (void)hideGrid:(BOOL)hidden{
+    self.gridLayer.hidden = hidden;
 }
 
 #pragma mark - Getter

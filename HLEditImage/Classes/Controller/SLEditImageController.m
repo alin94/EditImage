@@ -26,6 +26,8 @@
 #import "UIButton+SLButton.h"
 #import "SLTransformGestureView.h"
 #import "SLPaddingLabel.h"
+#import "SLImageClipView.h"
+
 
 #define SL_DISPATCH_ON_MAIN_THREAD(mainQueueBlock) dispatch_async(dispatch_get_main_queue(),mainQueueBlock);
 
@@ -47,6 +49,8 @@
 @property (nonatomic, strong) SLDrawBrushTool *drawMosicBrushTool;//马赛克工具
 @property (nonatomic, strong) SLDrawView *drawView;//画板
 
+@property (nonatomic, strong) SLImageClipView *clipView;//裁剪视图
+
 @property (nonatomic, strong) NSMutableArray *watermarkArray; // 水印层 所有的贴图和文本
 //@property (nonatomic, strong) SLEditSelectedBox *selectedBox; //水印选中框
 
@@ -55,6 +59,14 @@
 @property (nonatomic, strong) NSMutableDictionary *menuSetting;//全部的设置
 
 @property (nonatomic, assign) BOOL isEditing;
+@property (nonatomic, assign) CGAffineTransform normalTrans;
+@property (nonatomic, assign) CGAffineTransform editingTrans;
+
+@property (nonatomic, assign) CGFloat minNormalScale;
+@property (nonatomic, assign) CGFloat minEditingScale;
+
+@property (nonatomic, assign) NSInteger clipTime;
+
 
 @end
 
@@ -63,6 +75,9 @@
 #pragma mark - Override
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _normalTrans = CGAffineTransformIdentity;
+    _editingTrans = CGAffineTransformIdentity;
+    self.minNormalScale = 1;
     [self setupUI];
 }
 - (void)viewWillDisappear:(BOOL)animated {
@@ -82,7 +97,25 @@
     [self.view addSubview:self.zoomView];
     self.zoomView.pinchGestureRecognizer.enabled = YES;
     self.zoomView.image = self.image;
-    [self reConfigZoomImageViewRect];
+    
+    //重新设置位置
+    CGRect maxRect = self.view.bounds;
+    UIImage *currentImage = self.zoomView.image;
+    CGRect zoomViewBounds = CGRectZero;
+    self.zoomView.contentOffset = CGPointZero;
+    if(currentImage.size.width/currentImage.size.height > maxRect.size.width/maxRect.size.height){
+        zoomViewBounds = CGRectMake(0, 0, maxRect.size.width, maxRect.size.width * currentImage.size.height/currentImage.size.width);
+    }else {
+        zoomViewBounds = CGRectMake(0, 0, maxRect.size.height*currentImage.size.width/currentImage.size.height, maxRect.size.height);
+    }
+    self.zoomView.frame = zoomViewBounds;
+    self.zoomView.imageView.frame = self.zoomView.bounds;
+    [self.zoomView.imageView addSubview:self.drawView];
+    [self.zoomView.imageView addSubview:self.gestureView];
+
+
+//    [self reConfigZoomImageViewRectWithMaxRect:self.view.bounds];
+//    [self reConfigZoomImageViewRect];
     //添加裁剪完成监听
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(imageClippingComplete:) name:@"sl_ImageClippingComplete" object:nil];
     
@@ -94,7 +127,7 @@
 // 添加拖拽、缩放、旋转、单击、双击手势
 - (void)addRotateAndPinchGestureRecognizer:(UIView *)view {
     if(!self.gestureView.superview){
-        [self.zoomView addSubview:self.gestureView];
+        [self.zoomView.imageView addSubview:self.gestureView];
     }
     [self.gestureView addWatermarkView:view];
 }
@@ -147,56 +180,77 @@
         }];
     }
 }
-//改变
-- (void)changeZoomViewRectWithIsEditing:(BOOL)isEditing {
+- (void)changeZoomViewRectWithIsEditing:(BOOL)isEditing isClip:(BOOL)isClip {
     if(self.isEditing == isEditing){
         return;
     }
-    self.zoomView.zoomScale = 1;
     self.isEditing = isEditing;
-    if(isEditing){
-        CGRect maxRect = CGRectMake(KImageLRMargin, KImageTopMargin, self.view.sl_width - KImageLRMargin * 2, self.view.sl_height - KImageTopMargin - KImageBottomMargin- KBottomMenuHeight);
-        CGSize newSize = CGSizeMake(self.view.sl_width - 2 * KImageLRMargin, (self.view.sl_width - 2 * KImageLRMargin)*self.zoomView.imageView.image.size.height/self.zoomView.imageView.image.size.width);
-        CGPoint newCenter;
-        if (newSize.height > maxRect.size.height) {
-            newSize = CGSizeMake(maxRect.size.height*self.zoomView.imageView.image.size.width/self.zoomView.imageView.image.size.height, maxRect.size.height);
-            newCenter = CGPointMake(self.view.sl_width/2.0, KImageTopMargin +newSize.height/2.0);
-        }else {
-            newCenter =  CGPointMake(self.view.sl_width/2.0, (self.view.sl_height - KBottomMenuHeight)/2.0);
+    self.zoomView.minimumZoomScale = 1;
+    self.zoomView.zoomScale = 1;
+    self.zoomView.contentOffset = CGPointZero;
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        CGRect maxRect = self.view.bounds;
+        if(isEditing){
+            maxRect = CGRectMake(KImageLRMargin, KImageTopMargin, self.view.sl_width - KImageLRMargin * 2, self.view.sl_height - KImageTopMargin - KImageBottomMargin- KBottomMenuHeight);
         }
-        CGFloat scaleX = newSize.width/self.zoomView.imageView.frame.size.width;
-        CGFloat scaleY = newSize.height/self.zoomView.imageView.frame.size.height;
-        [UIView animateWithDuration:0.25 animations:^{
-            self.zoomView.center = newCenter;
-            self.zoomView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scaleX, scaleY);
-            [self.view layoutIfNeeded];
-        } completion:^(BOOL finished) {
-            
-        }];
-
+        [self reConfigZoomImageViewRectWithMaxRect:maxRect isClip:isClip];
+        [self.zoomView layoutIfNeeded];
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        NSLog(@"%@",self.drawView);
+    }];
+}
+- (void)reConfigZoomImageViewRectWithMaxRect:(CGRect)maxRect isClip:(BOOL)isClip {
+    UIImage *currentImage = self.zoomView.image;
+    CGRect zoomViewBounds = CGRectZero;
+    self.zoomView.contentOffset = CGPointZero;
+    if(currentImage.size.width/currentImage.size.height > maxRect.size.width/maxRect.size.height){
+        zoomViewBounds = CGRectMake(0, 0, maxRect.size.width, maxRect.size.width * currentImage.size.height/currentImage.size.width);
     }else {
-        [UIView animateWithDuration:0.25 animations:^{
-            self.zoomView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-            self.zoomView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
-            [self reConfigZoomImageViewRect];
-            [self.zoomView layoutIfNeeded];
-            [self.view layoutIfNeeded];
-        } completion:^(BOOL finished) {
-            
-        }];
+        zoomViewBounds = CGRectMake(0, 0, maxRect.size.height*currentImage.size.width/currentImage.size.height, maxRect.size.height);
     }
+    if(maxRect.size.width != self.view.sl_width){
+        CGSize newSize = zoomViewBounds.size;
+        CGFloat scaleX = newSize.width/self.zoomView.imageView.frame.size.width;
+        CGAffineTransform rotate = CGAffineTransformRotate(CGAffineTransformIdentity, self.clipView.rotateAngle/180.f*M_PI);
+        CGAffineTransform scale = CGAffineTransformScale(CGAffineTransformIdentity, scaleX, scaleX);
+        //        self.zoomView.transform = CGAffineTransformConcat(rotate,scale);
+        if(CGAffineTransformEqualToTransform(CGAffineTransformIdentity, self.editingTrans)){
+            //最开始时候赋值
+            self.editingTrans = scale;
+        }
+        self.zoomView.transform = self.editingTrans;
+        self.zoomView.center = CGPointMake(maxRect.size.width/2.f+ maxRect.origin.x, maxRect.size.height/2.f + maxRect.origin.y);
+        
+    }else {
+        //正常状态
+        CGAffineTransform rotate = CGAffineTransformRotate(CGAffineTransformIdentity, self.clipView.rotateAngle/180.f*M_PI);
+        //        self.zoomView.transform = CGAffineTransformConcat(rotate,scale);
+        
+        if(CGAffineTransformEqualToTransform(CGAffineTransformIdentity, self.normalTrans)){
+            CGAffineTransform scale = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+            //最开始时候赋值
+            self.normalTrans = scale;
+        }
+        
+        self.zoomView.transform = self.normalTrans;
+        self.zoomView.center = CGPointMake(maxRect.size.width/2.f+ maxRect.origin.x, maxRect.size.height/2.f + maxRect.origin.y);
+    }
+    self.zoomView.contentSize = self.zoomView.imageView.frame.size;
 }
-//重新设置图片视图frame
-- (void)reConfigZoomImageViewRect{
-    if (self.image.size.width > 0) {
-        self.zoomView.imageView.frame = CGRectMake(0, 0, self.zoomView.sl_width, self.zoomView.sl_width * self.zoomView.imageView.image.size.height/self.zoomView.imageView.image.size.width);
-    }
-    if (self.zoomView.imageView.sl_height <= self.zoomView.sl_height) {
-        self.zoomView.imageView.center = CGPointMake(self.zoomView.sl_width/2.0, self.zoomView.sl_height/2.0);
-    }
-    _drawView.frame = self.zoomView.imageView.bounds;
+
+//改变
+- (void)changeZoomViewRectWithIsEditing:(BOOL)isEditing {
+    [self changeZoomViewRectWithIsEditing:isEditing isClip:NO];
 }
+
 #pragma mark - Setter
+- (void)setIsEditing:(BOOL)isEditing {
+    _isEditing = isEditing;
+    [self hiddenView:self.topNavView hidden:isEditing isBottom:NO] ;
+    [self hiddenView:self.cancelEditBtn hidden:isEditing isBottom:NO];
+}
 - (void)setEditingMenuType:(SLEditMenuType)editingMenuType {
     _editingMenuType = editingMenuType;
     switch (_editingMenuType) {
@@ -242,6 +296,60 @@
 }
 
 #pragma mark - Getter
+-(SLImageClipView *)clipView {
+    if(!_clipView){
+        _clipView = [[SLImageClipView alloc] initWithFrame:self.view.bounds];
+        WS(weakSelf);
+        _clipView.cancelBtnClickBlock = ^{
+            weakSelf.editingMenuType = SLEditMenuTypeUnknown;
+            [weakSelf changeZoomViewRectWithIsEditing:NO isClip:YES];
+        };
+        _clipView.doneBtnClickBlock = ^{
+            CGFloat zoomScale = weakSelf.zoomView.zoomScale;
+            CGPoint offset = weakSelf.zoomView.contentOffset;
+            CGSize imageSize = weakSelf.zoomView.imageView.frame.size;
+            CGPoint center1 = weakSelf.zoomView.imageView.center;
+            NSLog(@"起始值==zoomScale=%f 偏移%@ 图片大小==%@  中心点==%@",zoomScale,NSStringFromCGPoint(offset),NSStringFromCGSize(imageSize),NSStringFromCGPoint(center1));
+            weakSelf.zoomView.minimumZoomScale = 1;
+            weakSelf.zoomView.zoomScale = 1;
+            weakSelf.zoomView.contentOffset = CGPointZero;
+            //记录编辑状态下视图的转变
+            weakSelf.editingTrans = weakSelf.zoomView.transform;
+            //正常的trans
+            CGFloat scaleX = weakSelf.view.sl_width/weakSelf.zoomView.sl_width;
+            CGFloat scaleY = weakSelf.view.sl_height/weakSelf.zoomView.sl_height;
+            if(scaleX >scaleY){
+                weakSelf.normalTrans =
+                weakSelf.zoomView.transform = CGAffineTransformScale(weakSelf.editingTrans, scaleY, scaleY);
+            }else {
+                weakSelf.normalTrans =
+                weakSelf.zoomView.transform = CGAffineTransformScale(weakSelf.editingTrans, scaleX, scaleX);
+            }
+            weakSelf.zoomView.center = CGPointMake(self.view.sl_width/2.f, self.view.sl_height/2.f);
+            weakSelf.zoomView.imageView.frame = weakSelf.zoomView.bounds;
+            weakSelf.zoomView.contentSize = weakSelf.zoomView.imageView.bounds.size;
+
+            CGPoint center2 = weakSelf.zoomView.imageView.center;
+            NSLog(@"设置完==图片大小==%@  中心点==%@",NSStringFromCGSize(weakSelf.zoomView.imageView.frame.size),NSStringFromCGPoint(center2));
+
+            //imageview上的子视图做对应的transform
+            for(UIView *subView in weakSelf.zoomView.imageView.subviews){
+                CGSize oldSize = subView.frame.size;
+                NSLog(@"老的中心点===%@",NSStringFromCGPoint(subView.center));
+                subView.transform = CGAffineTransformScale(subView.transform, zoomScale, zoomScale);
+                NSLog(@"转变后的的中心点===%@",NSStringFromCGPoint(subView.center));
+                    CGPoint center = subView.center;
+                    center.x+= (subView.sl_width - oldSize.width)/2 - offset.x;
+                    center.y+= (subView.sl_height - oldSize.height)/2 - offset.y;
+                    subView.center = center;
+            }
+            weakSelf.editingMenuType = SLEditMenuTypeUnknown;
+            weakSelf.isEditing = NO;
+
+        };
+    }
+    return _clipView;
+}
 - (SLImageZoomView *)zoomView {
     if (_zoomView == nil) {
         _zoomView = [[SLImageZoomView alloc] initWithFrame:self.view.bounds];
@@ -249,6 +357,9 @@
         _zoomView.userInteractionEnabled = YES;
         _zoomView.maximumZoomScale = 4;
         _zoomView.zoomViewDelegate = self;
+//        _zoomView.imageView.autoresizesSubviews =YES;
+        _zoomView.imageView.autoresizesSubviews = NO;
+
     }
     return _zoomView;
 }
@@ -391,7 +502,8 @@
                     label.transform = CGAffineTransformMakeScale(1/weakSelf.zoomView.zoomScale, 1/weakSelf.zoomView.zoomScale);
                     center = CGPointMake(center.x/weakSelf.zoomView.zoomScale, center.y/weakSelf.zoomView.zoomScale);
                     label.center = center;
-                    [weakSelf.zoomView.imageView addSubview:label];
+//                    [weakSelf.zoomView.imageView addSubview:label];
+                    [weakSelf.gestureView addSubview:label];
                     [weakSelf.watermarkArray addObject:label];
                     [weakSelf addRotateAndPinchGestureRecognizer:label];
                     [weakSelf topSelectedView:label];
@@ -401,7 +513,6 @@
                 weakSelf.topNavView.hidden = NO;
             }
             if (editMenuType == SLEditMenuTypePictureClipping) {
-                weakSelf.isEditing = YES;
                 [weakSelf showImageClipVC];
             }
 
@@ -447,6 +558,22 @@
         _drawView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
             [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
         };
+//        _drawView.autoresizingMask =
+//
+//        UIViewAutoresizingFlexibleLeftMargin   |
+//
+//        UIViewAutoresizingFlexibleWidth        |
+//
+//        UIViewAutoresizingFlexibleRightMargin  |
+//
+//        UIViewAutoresizingFlexibleTopMargin    |
+//
+//        UIViewAutoresizingFlexibleHeight       |
+//
+//        UIViewAutoresizingFlexibleBottomMargin ;
+        
+
+
     }
     return _drawView;
 }
@@ -493,13 +620,33 @@
 #pragma mark - Events Handle
 - (void)showImageClipVC {
     [self changeZoomViewRectWithIsEditing:YES];
+    if(!self.clipView.superview){
+        [self.view addSubview:self.clipView];
+    }
+//    CGAffineTransform retrans =  CGAffineTransformInvert(self.editingTrans);
+//    self.zoomView.transform = retrans;
+    [self.clipView startEditWithZoomView:self.zoomView];
+    return;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         SLImageClipController *imageClipController = [[SLImageClipController alloc] init];
+
+//        WS(weakSelf);
+//        imageClipController.clipFinishedBlock = ^(SLImageZoomView * _Nonnull zoomImage) {
+//            [weakSelf.zoomView removeFromSuperview];
+//            [weakSelf.view insertSubview:zoomImage belowSubview:weakSelf.editMenuView];
+//            [weakSelf changeZoomViewRectWithIsEditing:NO];
+//            weakSelf.editingMenuType = SLEditObjectUnknow;
+//        };
         imageClipController.modalPresentationStyle = UIModalPresentationFullScreen;
         UIImage *image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
         imageClipController.image = image;
-        imageClipController.originalImage = self.image;
+//        imageClipController.originalImage = self.image;
         [self presentViewController:imageClipController animated:NO completion:nil];
+        
+        if(!self.clipView.superview){
+            [self.view addSubview:self.clipView];
+
+        }
     });
 }
 //取消编辑
@@ -613,9 +760,8 @@
 //    self.mosaicView.paintSize = CGSizeMake(40/self.zoomView.zoomScale, 40/self.zoomView.zoomScale);
 }
 - (void)zoomViewDidEndZoom:(SLImageZoomView *)zoomView {
-    _gestureView.frame = zoomView.imageView.frame;
+//    _gestureView.frame = zoomView.imageView.frame;
     CGRect rect = [zoomView.imageView convertRect:zoomView.imageView.frame toView:self.zoomView];
-
 }
 
 @end
