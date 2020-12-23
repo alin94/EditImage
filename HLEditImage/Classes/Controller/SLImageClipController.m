@@ -50,18 +50,6 @@
 
 @implementation SLImageClipController
 
-//- (instancetype)initWithZoomView:(SLImageZoomView *)zoomView;{
-//    self = [super init];
-//    if(self){
-//        self.scaleTrans = zoomView.transform;
-//        self.image = zoomView.imageView.image;
-//        _zoomView = zoomView;
-//        _zoomView.imageView.backgroundColor = [UIColor greenColor];
-//        [_zoomView removeFromSuperview];
-//    }
-//    return self;
-//}
-//
 #pragma mark - Override
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -396,6 +384,7 @@
 - (void)doneClipClicked:(id)sender {
     [self dismissViewControllerAnimated:NO completion:nil];
 
+    [self gridViewDidResizing:self.gridView];
     UIImage *clipImage = [self.zoomView.imageView sl_imageByViewInRect:[self rectOfGridOnImageByGridRect:_gridView.gridRect]];
     UIImage *roImage = [UIImage imageWithCGImage:clipImage.CGImage scale:[UIScreen mainScreen].scale orientation:self.imageOrientation];
     self.zoomView.image = roImage;

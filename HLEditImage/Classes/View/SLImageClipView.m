@@ -254,7 +254,7 @@
 }
 - (CGFloat)transScaleX {
 
-    CGAffineTransform trans = self.zoomView.transform;
+    CGAffineTransform trans = self.scaleTrans;
     if(!trans.b){
         return trans.a;
     }
@@ -295,12 +295,12 @@
 
 #pragma mark - HelpMethods
 - (void)configZoomViewWithPropertyModel:(SLImageClipZoomViewProperty *)model{
+    self.zoomView.minimumZoomScale = model.minimumZoomScale;
+    self.zoomView.zoomScale = model.zoomScale;
     self.zoomView.transform = model.transform;
     self.zoomView.frame = model.frame;
     self.zoomView.center = model.center;
-    self.zoomView.zoomScale = model.zoomScale;
     self.zoomView.contentOffset = model.contentOffset;
-    self.zoomView.minimumZoomScale = model.minimumZoomScale;
     
     self.zoomView.imageView.frame = model.imageViewFrame;
     self.zoomView.imageView.center = model.imageViewCenter;
