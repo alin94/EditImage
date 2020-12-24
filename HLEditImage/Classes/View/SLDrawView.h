@@ -56,7 +56,8 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 @property (nonatomic, copy) void (^lineCountChangedBlock)(BOOL canBack,BOOL canForward);
 /// 数据  笔画数据
 @property (nonatomic, strong) NSDictionary *data;
-
+///父视图缩放比例
+@property (nonatomic, assign) CGFloat superViewZoomScale;
 
 /// 前进一步
 - (void)goForward;

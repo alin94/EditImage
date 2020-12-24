@@ -94,7 +94,9 @@
     return _watermarkArray;
     
 }
-
+- (BOOL)isEditing {
+    return !self.editBtn.isHidden;
+}
 #pragma mark - override
 
 - (void)awakeFromNib
@@ -155,7 +157,7 @@
         // 正在编辑
         [self hideEditingBtn:NO];
         
-    }else if (rotate.state == UIGestureRecognizerStateEnded) {
+    }else if (rotate.state == UIGestureRecognizerStateEnded || rotate.state == UIGestureRecognizerStateFailed) {
         if (!self.currentEditingView) return;
         // 结束编辑
         WS(weakSelf);
@@ -190,7 +192,7 @@
         if(self.gestureActionBlock){
             self.gestureActionBlock(pinch, self.currentEditingView);
         }
-    }else if (pinch.state == UIGestureRecognizerStateEnded) {
+    }else if (pinch.state == UIGestureRecognizerStateEnded || pinch.state == UIGestureRecognizerStateFailed) {
         if (!self.currentEditingView) return;
         // 结束编辑
         WS(weakSelf);
@@ -260,7 +262,7 @@
         self.editGusture = CGRectContainsPoint(self.editBtn.frame, loc);
         [self hideEditingBtn:NO];
         self.previousPoint = loc;
-    }else if (pan.state == UIGestureRecognizerStateEnded) {
+    }else if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateFailed) {
         if (!self.currentEditingView) return;
         // 结束编辑
         WS(weakSelf);
@@ -415,7 +417,6 @@
 {
     self.currentEditingView = nil;
     [self hideEditingBtn:YES];
-    //    [self resetBorder];
 }
 
 #pragma mark- Event Handle
@@ -430,25 +431,16 @@
 
 
 #pragma mark -UIGestureDelegate
-//这个是手势代理，允许同时响应多个手势。。。这个不多说了。
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-//    if(self.editBtn.isHidden && gestureRecognizer.delegate == self){//当没在编辑时候 当前页面的手势失效
-//        return YES;
-//    }
-//    return NO;
-//}
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-//    if(!self.editBtn.isHidden && otherGestureRecognizer.delegate != self){
-//        return YES;
-//    }
-//    return NO;
-//}
-
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    if(gestureRecognizer.state == UIGestureRecognizerStateChanged && self.isEditing){
+        return YES;
+    }
+    return NO;
+}
+//允许同时响应多个手势
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    
-    if(gestureRecognizer.numberOfTouches == 2 && otherGestureRecognizer.numberOfTouches == 2 && !self.editBtn.isHidden){
-        //正在编辑的时候
+    if([otherGestureRecognizer.delegate isKindOfClass:[UIScrollView class]] && self.isEditing){
         return NO;
     }
     return YES;

@@ -109,6 +109,7 @@
         zoomViewBounds = CGRectMake(0, 0, maxRect.size.height*currentImage.size.width/currentImage.size.height, maxRect.size.height);
     }
     self.zoomView.frame = zoomViewBounds;
+    self.zoomView.center = CGPointMake(self.view.sl_width/2, self.view.sl_height/2);
     self.zoomView.imageView.frame = self.zoomView.bounds;
     [self.zoomView.imageView addSubview:self.drawView];
     [self.zoomView.imageView addSubview:self.gestureView];
@@ -482,36 +483,36 @@
                     [weakSelf topSelectedView:imageView];
                 }
             }
+#pragma mark- 添加文字
             if (editMenuType == SLEditMenuTypeText) {
-                [weakSelf changeZoomViewRectWithIsEditing:YES];
+                weakSelf.isEditing = YES;
+                weakSelf.editingMenuType = SLEditMenuTypeText;
                 SLEditTextView *editTextView = [[SLEditTextView alloc] initWithFrame:CGRectMake(0, kSafeAreaTopHeight, kScreenWidth, kScreenHeight - kSafeAreaTopHeight - kSafeAreaBottomHeight)];
                 [weakSelf.view addSubview:editTextView];
                 editTextView.editTextCompleted = ^(UILabel * _Nullable label) {
-                    [weakSelf changeZoomViewRectWithIsEditing:NO];
+                    weakSelf.isEditing = NO;
                     weakSelf.editingMenuType = SLEditMenuTypeUnknown;
-                    weakSelf.topNavView.hidden = NO;
                     if (label.text.length == 0 || label == nil) {
                         return;
                     }
-                    CGPoint newCenter = [weakSelf.zoomView.imageView convertPoint:weakSelf.zoomView.imageView.center toView:weakSelf.gestureView];
-                    
+                    //始终放在屏幕最中间
+                    CGPoint newCenter = [weakSelf.view convertPoint:weakSelf.view.center toView:weakSelf.gestureView];
+                    //恢复形变
                    CGFloat radians = atan2f(weakSelf.normalTrans.b, weakSelf.normalTrans.a);
-                    
-                    CGAffineTransform rotate = CGAffineTransformRotate(CGAffineTransformIdentity,radians);
-                    
-                    CGAffineTransform trans = CGAffineTransformInvert(rotate);
-                    CGAffineTransform scale = CGAffineTransformScale(trans, 1/weakSelf.gestureView.sl_scaleX, 1/weakSelf.gestureView.sl_scaleY);
-                    label.transform = scale;
+                    CGAffineTransform rotateTrans = CGAffineTransformRotate(CGAffineTransformIdentity,radians);
+                    CGAffineTransform invertTrans = CGAffineTransformInvert(rotateTrans);
+                    CGFloat zoomScale = weakSelf.gestureView.sl_scaleX*weakSelf.zoomView.zoomScale;
+                    CGAffineTransform scaleTrans = CGAffineTransformScale(invertTrans, 1/zoomScale, 1/zoomScale);
+                    label.transform = scaleTrans;
                     label.center = newCenter;
 //                    [weakSelf.zoomView.imageView addSubview:label];
+                    //添加到手势管理view
                     [weakSelf.gestureView addSubview:label];
                     [weakSelf.watermarkArray addObject:label];
+                    //添加手势
                     [weakSelf addRotateAndPinchGestureRecognizer:label];
                     [weakSelf topSelectedView:label];
                 };
-                weakSelf.topNavView.hidden = YES;
-            }else{
-                weakSelf.topNavView.hidden = NO;
             }
             if (editMenuType == SLEditMenuTypePictureClipping) {
                 [weakSelf showImageClipVC];
@@ -581,6 +582,9 @@
                     }
                 }else if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]){
                     [weakSelf dragAction:(UIPanGestureRecognizer *)gesture withView:currentSelectView];
+                    //处理手势冲突
+                    [weakSelf.zoomView.panGestureRecognizer requireGestureRecognizerToFail:gesture];
+
                 }
             }
         };
@@ -678,13 +682,11 @@
 - (void)dragAction:(UIPanGestureRecognizer *)pan withView:(UIView *)view{
     // 返回的是相对于最原始的手指的偏移量
     if (pan.state == UIGestureRecognizerStateBegan) {
-//        self.zoomView.imageView.clipsToBounds = NO;
         [self hiddenEditMenus:YES];
         [self hiddenView:self.trashTips hidden:NO isBottom:YES];
     } else if (pan.state == UIGestureRecognizerStateChanged ) {
         [self hiddenEditMenus:YES];
         [self hiddenView:self.trashTips hidden:NO isBottom:YES];
-        
         //获取拖拽的视图在屏幕上的位置
         CGRect rect = [view convertRect: view.bounds toView:self.view];
         //是否删除 删除视图Y < 视图中心点Y坐标
@@ -709,17 +711,30 @@
             [view  removeFromSuperview];
             [self.watermarkArray removeObject:view];
         }else if (!CGRectIntersectsRect(imageRect, rect)) {
-            //如果出了父视图zoomView的范围，则置于父视图中心
-            CGPoint center = CGPointZero;
-            center.x = fabs(imageRect.origin.x)+self.zoomView.sl_width/2.0;
-            center.y = 0;
-            if (imageRect.origin.y >= 0 && imageRect.size.height <= self.zoomView.sl_height) {
-                center.y = imageRect.size.height/2.0;
-            }else {
-                center.y = fabs(imageRect.origin.y) + self.zoomView.sl_height/2.0;
-            }
-            center = CGPointMake(center.x/self.zoomView.zoomScale, center.y/self.zoomView.zoomScale);
-            view.center = center;
+            //如果出了父视图zoomView的范围，则置于屏幕中心
+            CGPoint center = [self.view convertPoint:self.view.center toView:view.superview];
+            
+            NSLog(@"旧的center===%@ 新的center====%@  frame =%@",NSStringFromCGPoint(view.center),NSStringFromCGPoint(center),NSStringFromCGRect(view.frame));
+            CGPoint newCenter = CGPointApplyAffineTransform(center, view.transform);
+            CGFloat tx =  view.center.x - newCenter.x;
+            CGFloat ty =  view.center.y - newCenter.y;
+            view.transform = CGAffineTransformTranslate(view.transform, tx, ty);
+//            CGRectApplyAffineTransform(view.frame, view.transform);
+            
+//            view.transform = CGAffineTransformMakeTranslation(0, 0);
+//            view.center = center;
+//
+            NSLog(@"转变后的center===%@ frame =%@",NSStringFromCGPoint(newCenter),NSStringFromCGRect(view.frame));
+
+//            center.x = fabs(imageRect.origin.x)+self.zoomView.sl_width/2.0;
+//            center.y = 0;
+//            if (imageRect.origin.y >= 0 && imageRect.size.height <= self.zoomView.sl_height) {
+//                center.y = imageRect.size.height/2.0;
+//            }else {
+//                center.y = fabs(imageRect.origin.y) + self.zoomView.sl_height/2.0;
+//            }
+//            center = CGPointMake(center.x/self.zoomView.zoomScale, center.y/self.zoomView.zoomScale);
+//            view.center = center;
         }
         [self hiddenView:self.trashTips hidden:YES isBottom:YES];
     }
@@ -732,18 +747,9 @@
     self.zoomView.image = clipImage;
     [self changeZoomViewRectWithIsEditing:NO];
 }
-#pragma mark - UIGestureRecognizerDelegate
-// 该方法返回的BOOL值决定了view是否能够同时响应多个手势
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    //     NSLog(@"%@ - %@", gestureRecognizer.class, otherGestureRecognizer.class);
-    return YES;
-}
-
 #pragma mark - SLZoomViewDelegate
 - (void)zoomViewDidEndMoveImage:(SLImageZoomView *)zoomView {
-//    self.drawView.lineWidth = [self.menuSetting[@"lineWidth"] floatValue]/self.zoomView.zoomScale;
-//    self.mosaicView.squareWidth = 15/self.zoomView.zoomScale;
-//    self.mosaicView.paintSize = CGSizeMake(40/self.zoomView.zoomScale, 40/self.zoomView.zoomScale);
+    self.drawView.superViewZoomScale = self.zoomView.zoomScale;
 }
 - (void)zoomViewDidEndZoom:(SLImageZoomView *)zoomView {
 //    _gestureView.frame = zoomView.imageView.frame;

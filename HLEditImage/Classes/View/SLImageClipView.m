@@ -169,16 +169,6 @@
     
 }
 #pragma mark - Getter
-//- (SLImageZoomView *)zoomView {
-//    if(self.lastZoomView){
-//        return self.lastZoomView;
-//    }
-//    return self.currentZoomView;
-//}
-//- (void)setZoomView:(SLImageZoomView *)zoomView {
-//    _zoomView = zoomView;
-//    self.scaleTrans = zoomView.transform;
-//}
 - (SLGridView *)gridView {
     if (!_gridView) {
         _gridView = [[SLGridView alloc] initWithFrame:self.bounds];
@@ -208,7 +198,11 @@
                 [weakSelf.zoomView setZoomScale:weakSelf.zoomView.minimumZoomScale];
             }
             if(selectIndex == 0){
-                weakSelf.gridView.fixedScale = weakSelf.zoomView.image.size.width/weakSelf.zoomView.image.size.height;
+                if(weakSelf.rotateAngle%180 != 0){
+                    weakSelf.gridView.fixedScale =weakSelf.zoomView.image.size.height/ weakSelf.zoomView.image.size.width;
+                }else {
+                    weakSelf.gridView.fixedScale = weakSelf.zoomView.image.size.width/weakSelf.zoomView.image.size.height;
+                }
             }else if (selectIndex == 1){
                 weakSelf.gridView.fixedScale = 0;
             }else if (selectIndex == 2){
@@ -258,42 +252,36 @@
     if(!trans.b){
         return trans.a;
     }
-    CGFloat angleInRadians = 0;
-    NSInteger angle = self.currentPropertyModel.rotateAngle;
-    switch (angle) {
-        case 90:    angleInRadians = M_PI_2;            break;
-        case -90:   angleInRadians = -M_PI_2;           break;
-        case 180:   angleInRadians = M_PI;              break;
-        case -180:  angleInRadians = -M_PI;             break;
-        case 270:   angleInRadians = (M_PI + M_PI_2);   break;
-        case -270:  angleInRadians = -(M_PI + M_PI_2);  break;
-        default:                                        break;
-    }
-
+    CGFloat angleInRadians = [self getRadiansWithRotateAngle:self.currentPropertyModel.rotateAngle];
     double aa = cos(angleInRadians);
     return trans.a/aa;
 }
 - (CGFloat)transScaleY {
-    return [self transScaleX];
+//    return [self transScaleX];
     if(!self.scaleTrans.b){
         return self.scaleTrans.d;
     }
-    CGFloat angleInRadians = 0;
-    NSInteger angle = self.currentPropertyModel.rotateAngle;
-    switch (angle) {
-        case 90:    angleInRadians = M_PI_2;            break;
-        case -90:   angleInRadians = -M_PI_2;           break;
-        case 180:   angleInRadians = M_PI;              break;
-        case -180:  angleInRadians = -M_PI;             break;
-        case 270:   angleInRadians = (M_PI + M_PI_2);   break;
-        case -270:  angleInRadians = -(M_PI + M_PI_2);  break;
-        default:                                        break;
-    }
+    CGFloat angleInRadians = [self getRadiansWithRotateAngle:self.currentPropertyModel.rotateAngle];
     double aa = sin(angleInRadians);
     return self.scaleTrans.d/aa;
 }
 
 #pragma mark - HelpMethods
+//旋转角度转成弧度
+- (CGFloat)getRadiansWithRotateAngle:(NSInteger)angle {
+    CGFloat angleInRadians = 0;
+    switch (angle) {
+        case 90:    angleInRadians = M_PI_2;            break;
+        case -90:   angleInRadians = -M_PI_2;           break;
+        case 180:   angleInRadians = M_PI;              break;
+        case -180:  angleInRadians = -M_PI;             break;
+        case 270:   angleInRadians = (M_PI + M_PI_2);   break;
+        case -270:  angleInRadians = -(M_PI + M_PI_2);  break;
+        default:                                        break;
+    }
+    return angleInRadians;
+}
+//设置zoomView
 - (void)configZoomViewWithPropertyModel:(SLImageClipZoomViewProperty *)model{
     self.zoomView.minimumZoomScale = model.minimumZoomScale;
     self.zoomView.zoomScale = model.zoomScale;
@@ -426,26 +414,12 @@
 #pragma mark - EventsHandle
 - (void)rotateBtnClicked:(id)sender {
     _rotateAngle = (_rotateAngle-=90)%360;
-    CGFloat angleInRadians = 0.0f;
-    switch (_rotateAngle) {
-        case 90:    angleInRadians = M_PI_2;            break;
-        case -90:   angleInRadians = -M_PI_2;           break;
-        case 180:   angleInRadians = M_PI;              break;
-        case -180:  angleInRadians = -M_PI;             break;
-        case 270:   angleInRadians = (M_PI + M_PI_2);   break;
-        case -270:  angleInRadians = -(M_PI + M_PI_2);  break;
-        default:                                        break;
-    }
+    CGFloat angleInRadians = [self getRadiansWithRotateAngle:_rotateAngle];
     //旋转前获得网格框在图片上选择的区域
     CGRect gridRectOfImage = [self rectOfGridOnImageByGridRect:self.gridView.gridRect];
     /// 旋转变形
     CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformIdentity, angleInRadians);
-//    CGAffineTransformMakeRotation(angleInRadians);
-    
-//    CGAffineTransform com = CGAffineTransformConcat(self.scaleTrans, transform);
     CGAffineTransform com = CGAffineTransformConcat(transform, self.scaleTrans);
-
-    
     self.zoomView.transform = com;
     //transform后，bounds不会变，frame会变
     CGFloat width = CGRectGetWidth(self.zoomView.frame);

@@ -8,6 +8,7 @@
 
 #import "SLDrawView.h"
 #import "UIImage+SLCommon.h"
+#import "UIView+SLFrame.h"
 
 
 @interface SLShapelayer : CAShapeLayer
@@ -113,6 +114,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _enableDraw = YES;
+        _superViewZoomScale = 1;
         self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds = YES;
         self.exclusiveTouch = YES;
@@ -192,10 +194,6 @@
                 path = [[SLDrawBezierPath alloc] init];
                 [path appendPath:[self createArrowWithBeginPoint:self.beginPoint endPoint:point]];
                 [path closePath];
-//
-//                [path moveToPoint:self.beginPoint];;
-//                [path addLineToPoint:point];
-//                [path appendPath:[self createArrowWithStartPoint:self.beginPoint endPoint:point]];
             }
             //重新设置属性
             if(self.brushTool.shapeType != SLDrawShapeRandom){
@@ -247,14 +245,16 @@
     SLShapelayer *slayer = [SLShapelayer layer];
     slayer.path = path.CGPath;
     slayer.backgroundColor = [UIColor clearColor].CGColor;
-    if(self.brushTool.shapeType != SLDrawShapeArrow){
+    if(self.brushTool.shapeType == SLDrawShapeArrow){
+        slayer.fillColor = path.color.CGColor;
+        slayer.lineWidth = 0.1;
+    }else {
         slayer.fillColor = [UIColor clearColor].CGColor;
         slayer.lineCap = kCALineCapRound;
         slayer.lineJoin = kCALineJoinRound;
-        slayer.lineWidth = path.lineWidth;
-    }else {
-        slayer.fillColor = path.color.CGColor;
-        slayer.lineWidth = 0.1;
+        //缩放画笔大小
+        CGFloat transScale = self.sl_scaleX*self.superViewZoomScale;
+        slayer.lineWidth = path.lineWidth/transScale;
     }
     slayer.strokeColor = path.color.CGColor;
     
@@ -322,6 +322,12 @@
         arrowGapWidth = 20.f;
         radius = 3.5f;
     }
+    //缩放箭头大小
+    CGFloat zoomScale = self.sl_scaleX*self.superViewZoomScale;
+    arrowWaistLength = arrowWaistLength/zoomScale;
+    arrowGapWidth = arrowGapWidth/zoomScale;
+    radius = radius/zoomScale;
+    
     CGPoint point2 = CGPointZero;//左边内角
     CGPoint point3 = CGPointZero;//左边外角
     CGPoint point4 = endPoint;//终点
@@ -336,7 +342,7 @@
     CGFloat arrowVerticalLenght = arrowWaistLength *cos(arrowAngle/2.f);
     
     //图形最小长度
-    CGFloat minLength = 12 + arrowVerticalLenght;
+    CGFloat minLength = 12/zoomScale + arrowVerticalLenght;
     
     if([self distanceBetweenStartPoint:beginPoint endPoint:endPoint] < minLength){
         //尾巴长度小于这个长度
@@ -368,10 +374,10 @@
     //底部半圆弧形
     if(endPoint.x > beginPoint.x){
         CGPoint arcCenter = CGPointMake(beginPoint.x + radius*cos(lineAngle), beginPoint.y - radius*sin(lineAngle));
-        [path addArcWithCenter:arcCenter radius:M_PI startAngle:M_PI_2 - lineAngle endAngle:M_PI_2 - lineAngle + M_PI clockwise:YES];
+        [path addArcWithCenter:arcCenter radius:radius startAngle:M_PI_2 - lineAngle endAngle:M_PI_2 - lineAngle + M_PI clockwise:YES];
     }else {
         CGPoint arcCenter = CGPointMake(beginPoint.x - radius*cos(lineAngle), beginPoint.y + radius*sin(lineAngle));
-        [path addArcWithCenter:arcCenter radius:M_PI startAngle:M_PI_2 - lineAngle endAngle:M_PI_2 - lineAngle + M_PI clockwise:NO];
+        [path addArcWithCenter:arcCenter radius:radius startAngle:M_PI_2 - lineAngle endAngle:M_PI_2 - lineAngle + M_PI clockwise:NO];
     }
     [path addLineToPoint:point2];
     [path addLineToPoint:point3];
