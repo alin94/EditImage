@@ -568,6 +568,7 @@
     if(!_gestureView){
         _gestureView = [[SLTransformGestureView alloc] initWithFrame:self.zoomView.imageView.bounds];
         _gestureView.watermarkArray = self.watermarkArray;
+        [_gestureView changeEditBtnSuperView:self.view];
         WS(weakSelf);
         _gestureView.gestureActionBlock = ^(UIGestureRecognizer *gesture, UIView *currentSelectView) {
             if(currentSelectView){
@@ -681,6 +682,12 @@
 // 拖拽 水印视图
 - (void)dragAction:(UIPanGestureRecognizer *)pan withView:(UIView *)view{
     // 返回的是相对于最原始的手指的偏移量
+    CGRect rect = [view convertRect:view.bounds toView:self.view];
+    if([view isKindOfClass:[SLPaddingLabel class]]){
+        //去掉空白区域的padding
+        SLPaddingLabel *label = (SLPaddingLabel *)view;
+        rect = CGRectMake(rect.origin.x - label.textPadding.left, rect.origin.y - label.textPadding.top, rect.size.width - label.textPadding.left - label.textPadding.right, rect.size.height - label.textPadding.top - label.textPadding.bottom);
+    }
     if (pan.state == UIGestureRecognizerStateBegan) {
         [self hiddenEditMenus:YES];
         [self hiddenView:self.trashTips hidden:NO isBottom:YES];
@@ -688,7 +695,6 @@
         [self hiddenEditMenus:YES];
         [self hiddenView:self.trashTips hidden:NO isBottom:YES];
         //获取拖拽的视图在屏幕上的位置
-        CGRect rect = [view convertRect: view.bounds toView:self.view];
         //是否删除 删除视图Y < 视图中心点Y坐标
         if (self.trashTips.center.y < rect.origin.y+rect.size.height/2.0) {
             [self.trashTips setTitle:kNSLocalizedString(@"松手即可删除") forState:UIControlStateNormal];
@@ -704,37 +710,14 @@
         [self hiddenEditMenus:NO];
 //        self.zoomView.imageView.clipsToBounds = YES;
         //获取拖拽的视图在屏幕上的位置
-        CGRect rect = [view convertRect: view.bounds toView:self.view];
         CGRect imageRect = [self.zoomView convertRect:self.zoomView.imageView.frame toView:self.view];
         //删除拖拽的视图
         if (self.trashTips.center.y < rect.origin.y+rect.size.height/2.0) {
-            [view  removeFromSuperview];
-            [self.watermarkArray removeObject:view];
+            [self.gestureView removeEditingView:view];
         }else if (!CGRectIntersectsRect(imageRect, rect)) {
             //如果出了父视图zoomView的范围，则置于屏幕中心
             CGPoint center = [self.view convertPoint:self.view.center toView:view.superview];
-            
-            NSLog(@"旧的center===%@ 新的center====%@  frame =%@",NSStringFromCGPoint(view.center),NSStringFromCGPoint(center),NSStringFromCGRect(view.frame));
-            CGPoint newCenter = CGPointApplyAffineTransform(center, view.transform);
-            CGFloat tx =  view.center.x - newCenter.x;
-            CGFloat ty =  view.center.y - newCenter.y;
-            view.transform = CGAffineTransformTranslate(view.transform, tx, ty);
-//            CGRectApplyAffineTransform(view.frame, view.transform);
-            
-//            view.transform = CGAffineTransformMakeTranslation(0, 0);
-//            view.center = center;
-//
-            NSLog(@"转变后的center===%@ frame =%@",NSStringFromCGPoint(newCenter),NSStringFromCGRect(view.frame));
-
-//            center.x = fabs(imageRect.origin.x)+self.zoomView.sl_width/2.0;
-//            center.y = 0;
-//            if (imageRect.origin.y >= 0 && imageRect.size.height <= self.zoomView.sl_height) {
-//                center.y = imageRect.size.height/2.0;
-//            }else {
-//                center.y = fabs(imageRect.origin.y) + self.zoomView.sl_height/2.0;
-//            }
-//            center = CGPointMake(center.x/self.zoomView.zoomScale, center.y/self.zoomView.zoomScale);
-//            view.center = center;
+            [self.gestureView changeEditingViewCenter:center];
         }
         [self hiddenView:self.trashTips hidden:YES isBottom:YES];
     }

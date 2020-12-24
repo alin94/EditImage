@@ -8,6 +8,7 @@
 #import "SLTransformGestureView.h"
 #import "SLDelayPerform.h"
 #import "SLUtilsMacro.h"
+#import "UIView+SLFrame.h"
 
 #define kMaxScale 2
 #define kMinScale 0.2
@@ -80,7 +81,7 @@
         editBtn.contentMode = UIViewContentModeCenter;
         editBtn.userInteractionEnabled = NO;
         editBtn.hidden = YES;
-        editBtn.layer.zPosition = 10;
+//        editBtn.layer.zPosition = 10;
         [self addSubview:editBtn];
         _editBtn = editBtn;
     }
@@ -110,6 +111,10 @@
         [self setup];
     }
     return self;
+}
+//超出bounce范围，依然可以触发事件
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    return YES;
 }
 
 #pragma mark -UI
@@ -259,7 +264,8 @@
             self.currentEditingView = imgView;
         }
         CGPoint loc = [pan locationInView:self];
-        self.editGusture = CGRectContainsPoint(self.editBtn.frame, loc);
+        CGRect editBtnFrame = [self.editBtn.superview convertRect:self.editBtn.frame toView:self];
+        self.editGusture = CGRectContainsPoint(editBtnFrame, loc);
         [self hideEditingBtn:NO];
         self.previousPoint = loc;
     }else if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateFailed) {
@@ -306,7 +312,9 @@
         }else {
             // 此处触发的是平移手势。。。
             CGPoint t = [pan translationInView:self.currentEditingView];
-            self.currentEditingView.transform = CGAffineTransformTranslate(self.currentEditingView.transform, t.x, t.y);
+            t = CGPointApplyAffineTransform(t, self.currentEditingView.transform);
+            self.currentEditingView.center = CGPointMake(self.currentEditingView.center.x + t.x, self.currentEditingView.center.y + t.y);
+//            self.currentEditingView.transform = CGAffineTransformTranslate(self.currentEditingView.transform, t.x, t.y);
             [pan setTranslation:CGPointZero inView:self.currentEditingView];
         }
         self.previousPoint = [pan locationInView:self];
@@ -336,13 +344,12 @@
     return nil;
 }
 
-
 - (void)hideEditingBtn:(BOOL)hidden
 {
     if(!hidden){
         [SLDelayPerform sl_cancelDelayPerform];
     }
-    self.deleteBtn.hidden = hidden;
+//    self.deleteBtn.hidden = hidden;
     self.editBtn.hidden = hidden;
     self.dotBoarderLayer.hidden = hidden;
     if (!hidden) {
@@ -351,8 +358,7 @@
         if(!self.dotBoarderLayer.superlayer || ![self.currentEditingView.layer.sublayers containsObject:self.dotBoarderLayer]){
             [self.currentEditingView.layer addSublayer:self.dotBoarderLayer];
         }
-        self.editBtn.transform = CGAffineTransformInvert(self.transform);
-        self.editBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width, self.currentEditingView.bounds.size.height) toView:self];
+        self.editBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width, self.currentEditingView.bounds.size.height) toView:self.editBtn.superview];
         self.deleteBtn.center = [self.currentEditingView convertPoint:CGPointMake(self.currentEditingView.bounds.size.width,0) toView:self];
     }else {
         self.clipsToBounds = self.superview.clipsToBounds = YES;;
@@ -366,16 +372,12 @@
 #pragma mark -系统方法
 
 - (void)layoutSubviews
-
 {
     [super layoutSubviews];
-    
     CGFloat btnWH = 40;
-    
     self.deleteBtn.bounds = CGRectMake(0, 0, btnWH, btnWH);
     self.editBtn.bounds = CGRectMake(0, 0, btnWH, btnWH);
     if (self.imageView.image.size.width < self.frame.size.width && self.imageView.image.size.height < self.frame.size.height) {
-        
         CGRect frame =  self.imageView.frame;
         frame.size = self.imageView.image.size;
         self.imageView.frame = frame;
@@ -418,7 +420,23 @@
     self.currentEditingView = nil;
     [self hideEditingBtn:YES];
 }
-
+- (void)changeEditingViewCenter:(CGPoint)point {
+    self.currentEditingView.center = point;
+    [self hideEditingBtn:NO];
+}
+- (void)removeEditingView:(UIView *)view;{
+    if([self.watermarkArray containsObject:view]){
+        [self.watermarkArray removeObject:view];
+        [self.currentEditingView removeFromSuperview];
+        self.currentEditingView = nil;
+        [self hideEditingBtn:YES];
+    }
+}
+- (void)changeEditBtnSuperView:(UIView *)view;
+{
+    [self.editBtn removeFromSuperview];
+    [view addSubview:self.editBtn];
+}
 #pragma mark- Event Handle
 // 删除按钮点击
 - (void)deleteBtnClick:(UIButton *)sender

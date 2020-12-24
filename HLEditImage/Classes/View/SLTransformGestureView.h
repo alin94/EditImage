@@ -24,7 +24,7 @@
 // 结束编辑状态
 - (void)endEditing;
 - (void)changeEditingViewCenter:(CGPoint)point;
-
-
+- (void)removeEditingView:(UIView *)view;
+- (void)changeEditBtnSuperView:(UIView *)view;
 
 @end
