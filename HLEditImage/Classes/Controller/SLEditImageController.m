@@ -314,7 +314,8 @@
             NSLog(@"起始值==zoomScale=%f 偏移%@ 图片大小==%@  中心点==%@",zoomScale,NSStringFromCGPoint(offset),NSStringFromCGSize(imageSize),NSStringFromCGPoint(center1));
             weakSelf.zoomView.minimumZoomScale = 1;
             weakSelf.zoomView.zoomScale = 1;
-            weakSelf.zoomView.contentOffset = CGPointZero;
+            weakSelf.zoomView.center = CGPointMake(weakSelf.view.sl_width/2, weakSelf.view.sl_height/2);
+
             //记录编辑状态下视图的转变
             weakSelf.editingTrans = weakSelf.zoomView.transform;
             //正常的trans
@@ -327,19 +328,21 @@
                 weakSelf.normalTrans =
                 weakSelf.zoomView.transform = CGAffineTransformScale(weakSelf.editingTrans, scaleX, scaleX);
             }
-            weakSelf.zoomView.center = CGPointMake(self.view.sl_width/2.f, self.view.sl_height/2.f);
+            weakSelf.zoomView.contentOffset = CGPointZero;
+            weakSelf.zoomView.imageView.bounds = weakSelf.zoomView.bounds;
             weakSelf.zoomView.imageView.frame = weakSelf.zoomView.bounds;
-            weakSelf.zoomView.contentSize = weakSelf.zoomView.imageView.bounds.size;
+            weakSelf.zoomView.fixedImageViewCenter = weakSelf.zoomView.imageView.center;
+            CGSizeApplyAffineTransform(weakSelf.zoomView.frame.size, weakSelf.zoomView.transform);
+//            weakSelf.zoomView.contentSize = weakSelf.zoomView.frame.size;
 
+//            weakSelf.zoomView.contentSize = CGSizeMake(fabs(tranSize.width), fabs(tranSize.height));
             CGPoint center2 = weakSelf.zoomView.imageView.center;
             NSLog(@"设置完==图片大小==%@  中心点==%@",NSStringFromCGSize(weakSelf.zoomView.imageView.frame.size),NSStringFromCGPoint(center2));
 
             //imageview上的子视图做对应的transform
             for(UIView *subView in weakSelf.zoomView.imageView.subviews){
                 CGSize oldSize = subView.frame.size;
-                NSLog(@"老的中心点===%@",NSStringFromCGPoint(subView.center));
                 subView.transform = CGAffineTransformScale(subView.transform, zoomScale, zoomScale);
-                NSLog(@"转变后的的中心点===%@",NSStringFromCGPoint(subView.center));
                     CGPoint center = subView.center;
                     center.x+= (subView.sl_width - oldSize.width)/2 - offset.x;
                     center.y+= (subView.sl_height - oldSize.height)/2 - offset.y;
@@ -614,40 +617,11 @@
     if(!self.clipView.superview){
         [self.view addSubview:self.clipView];
     }
-//    CGAffineTransform retrans =  CGAffineTransformInvert(self.editingTrans);
-//    self.zoomView.transform = retrans;
     [self.clipView startEditWithZoomView:self.zoomView];
-    return;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        SLImageClipController *imageClipController = [[SLImageClipController alloc] init];
-
-//        WS(weakSelf);
-//        imageClipController.clipFinishedBlock = ^(SLImageZoomView * _Nonnull zoomImage) {
-//            [weakSelf.zoomView removeFromSuperview];
-//            [weakSelf.view insertSubview:zoomImage belowSubview:weakSelf.editMenuView];
-//            [weakSelf changeZoomViewRectWithIsEditing:NO];
-//            weakSelf.editingMenuType = SLEditObjectUnknow;
-//        };
-        imageClipController.modalPresentationStyle = UIModalPresentationFullScreen;
-        UIImage *image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
-        imageClipController.image = image;
-//        imageClipController.originalImage = self.image;
-        [self presentViewController:imageClipController animated:NO completion:nil];
-        
-        if(!self.clipView.superview){
-            [self.view addSubview:self.clipView];
-
-        }
-    });
-}
-//取消编辑
-- (void)cancelEditBtnClicked:(id)sender {
-    [self dismissViewControllerAnimated:NO completion:^{
-        
-    }];
 }
 //完成编辑 导出编辑后的对象
 - (void)doneEditBtnClicked:(id)sender {
+    [self.gestureView endEditing];
     self.image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
     if(self.editFinishedBlock){
         self.editFinishedBlock(self.image);
@@ -655,7 +629,12 @@
     [self dismissViewControllerAnimated:NO completion:^{
         
     }];
-
+}
+//取消编辑
+- (void)cancelEditBtnClicked:(id)sender {
+    [self dismissViewControllerAnimated:NO completion:^{
+        
+    }];
 }
 //双击 文本水印 开始编辑文本
 - (void)doubleTapAction:(UITapGestureRecognizer *)doubleTap withView:(UIView *)view {
@@ -673,7 +652,7 @@
         [tapLabel removeFromSuperview];
         [self.watermarkArray removeObject:tapLabel];
         [self.watermarkArray addObject:label];
-        [self.zoomView.imageView addSubview:label];
+        [self.gestureView addSubview:label];
         [self addRotateAndPinchGestureRecognizer:label];
         [self topSelectedView:label];
     };
@@ -731,12 +710,18 @@
     [self changeZoomViewRectWithIsEditing:NO];
 }
 #pragma mark - SLZoomViewDelegate
+- (void)zoomViewDidBeginMoveImage:(SLImageZoomView *)zoomView {
+    [_clipView showMaskLayer:NO];
+}
 - (void)zoomViewDidEndMoveImage:(SLImageZoomView *)zoomView {
     self.drawView.superViewZoomScale = self.zoomView.zoomScale;
+    [_clipView showMaskLayer:YES];
 }
+
 - (void)zoomViewDidEndZoom:(SLImageZoomView *)zoomView {
 //    _gestureView.frame = zoomView.imageView.frame;
     CGRect rect = [zoomView.imageView convertRect:zoomView.imageView.frame toView:self.zoomView];
+    [_clipView showMaskLayer:YES];
 }
 
 @end

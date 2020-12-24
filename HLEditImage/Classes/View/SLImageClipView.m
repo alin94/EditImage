@@ -112,6 +112,7 @@
     return self;
 }
 - (void)startEditWithZoomView:(SLImageZoomView *)zoomView; {
+    self.hidden = NO;
     if(!self.zoomView){
         self.zoomView = zoomView;
         self.originalRect = self.zoomView.frame;
@@ -138,17 +139,9 @@
     [self resetMinimumZoomScale];
     //显示底部菜单
     [self hiddenView:self.menuViewContainer];
-    double scale =  [self transScaleX];
-    NSLog(@"%f",scale);
-    
 }
-- (void)endEdit {
-    self.gridView.hidden = YES;
-    //隐藏底部菜单
-    [self hiddenView:self.menuViewContainer];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self removeFromSuperview];
-    });
+- (void)showMaskLayer:(BOOL)show {
+    self.gridView.showMaskLayer = show;
 }
 
 #pragma mark - UI
@@ -164,9 +157,16 @@
     [self addSubview:bottomBar];
     [bottomBar addSubview:self.menuView];
     self.menuViewContainer = bottomBar;
-    //    [self addTest];
     [self resetMinimumZoomScale];
     
+}
+- (void)endEdit {
+    self.gridView.hidden = YES;
+    //隐藏底部菜单
+    [self hiddenView:self.menuViewContainer];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.hidden = YES;
+    });
 }
 #pragma mark - Getter
 - (SLGridView *)gridView {
@@ -257,13 +257,7 @@
     return trans.a/aa;
 }
 - (CGFloat)transScaleY {
-//    return [self transScaleX];
-    if(!self.scaleTrans.b){
-        return self.scaleTrans.d;
-    }
-    CGFloat angleInRadians = [self getRadiansWithRotateAngle:self.currentPropertyModel.rotateAngle];
-    double aa = sin(angleInRadians);
-    return self.scaleTrans.d/aa;
+    return [self transScaleX];
 }
 
 #pragma mark - HelpMethods
@@ -281,7 +275,7 @@
     }
     return angleInRadians;
 }
-//设置zoomView
+//配置zoomView
 - (void)configZoomViewWithPropertyModel:(SLImageClipZoomViewProperty *)model{
     self.zoomView.minimumZoomScale = model.minimumZoomScale;
     self.zoomView.zoomScale = model.zoomScale;
@@ -419,7 +413,8 @@
     CGRect gridRectOfImage = [self rectOfGridOnImageByGridRect:self.gridView.gridRect];
     /// 旋转变形
     CGAffineTransform transform = CGAffineTransformRotate(CGAffineTransformIdentity, angleInRadians);
-    CGAffineTransform com = CGAffineTransformConcat(transform, self.scaleTrans);
+    CGAffineTransform scaleTrans = CGAffineTransformScale(CGAffineTransformIdentity,[self transScaleX], [self transScaleY]);
+    CGAffineTransform com = CGAffineTransformConcat(transform, scaleTrans);
     self.zoomView.transform = com;
     //transform后，bounds不会变，frame会变
     CGFloat width = CGRectGetWidth(self.zoomView.frame);
@@ -501,7 +496,7 @@
     self.rotateAngle = self.currentPropertyModel.rotateAngle;
     self.gridView.gridRect = self.zoomView.frame;
     self.gridView.originalGridRect = self.zoomView.frame;
-    self.rotatedOriginalRect = self.originalRect;
+//    self.rotatedOriginalRect = self.originalRect;
     [self checkRecoverBtnIfEnable];
     //结束编辑
     [self endEdit];
@@ -625,19 +620,5 @@
     self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX], gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY]);
 }
 
-#pragma mark - SLZoomViewDelegate
-- (void)zoomViewDidBeginMoveImage:(SLImageZoomView *)zoomView {
-    self.gridView.showMaskLayer = NO;
-}
-- (void)zoomViewDidEndMoveImage:(SLImageZoomView *)zoomView {
-    self.gridView.showMaskLayer = YES;
-}
-
-
-
-- (UIView *)copyView:(UIView *)view{
-    NSData * tempArchive = [NSKeyedArchiver archivedDataWithRootObject:view];
-    return [NSKeyedUnarchiver unarchiveObjectWithData:tempArchive];
-}
 
 @end

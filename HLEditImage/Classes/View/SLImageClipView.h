@@ -18,7 +18,8 @@
 // 缩放视图
 @property (nonatomic, weak) SLImageZoomView *zoomView;
 - (void)startEditWithZoomView:(SLImageZoomView *)zoomView;
-
+- (void)showMaskLayer:(BOOL)show;
+- (void)endEdit;
 @end
 
 

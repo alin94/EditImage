@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 //
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, weak) id<SLImageZoomViewDelegate> zoomViewDelegate;
+
+@property (nonatomic, assign) CGPoint fixedImageViewCenter;
+
 @end
 
 /// 缩放视图代理
