@@ -6,53 +6,7 @@
 //
 
 #import "SLGridView.h"
-
-/// 网格遮罩层  网格透明层
-@interface SLGridMaskLayer : CAShapeLayer
-/// 遮罩颜色
-@property (nonatomic, assign) CGColorRef maskColor;
-/// 遮罩区域的非交集区域
-@property (nonatomic, setter=setMaskRect:) CGRect maskRect;
-@end
-@implementation SLGridMaskLayer
-//@synthesize maskColor = _maskColor;
-#pragma mark - Override
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.contentsScale = [[UIScreen mainScreen] scale];
-    }
-    return self;
-}
-- (void)setMaskColor:(CGColorRef)maskColor {
-    self.fillColor = maskColor;
-    // 填充规则  maskRect和bounds的非交集
-    self.fillRule = kCAFillRuleEvenOdd;
-}
-- (void)setMaskRect:(CGRect)maskRect {
-    [self setMaskRect:maskRect animated:NO];
-}
-- (CGColorRef)maskColor {
-    return self.fillColor;
-}
-- (void)setMaskRect:(CGRect)maskRect animated:(BOOL)animated {
-    CGMutablePathRef mPath = CGPathCreateMutable();
-    CGPathAddRect(mPath, NULL, self.bounds);
-    CGPathAddRect(mPath, NULL, maskRect);
-    [self removeAnimationForKey:@"SL_maskLayer_opacityAnimate"];
-    if (animated) {
-        CABasicAnimation *animate = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        animate.duration = 0.25f;
-        animate.fromValue = @(0.0);
-        animate.toValue = @(1.0);
-        self.path = mPath;
-        [self addAnimation:animate forKey:@"SL_maskLayer_opacityAnimate"];
-    } else {
-        self.path = mPath;
-    }
-}
-@end
-
+#import "SLMaskLayer.h"
 /// 网格层
 @interface SLGridLayer : CAShapeLayer
 ///网格区域 默认CGRectZero
@@ -198,7 +152,7 @@ const CGFloat kSLControlWidth = 30.f;
 //网格视图
 @interface SLGridView ()<SLResizeControlDelegate>
 @property (nonatomic, strong) SLGridLayer *gridLayer; //网格层
-@property (nonatomic, strong) SLGridMaskLayer *gridMaskLayer; // 半透明遮罩层
+@property (nonatomic, strong) SLMaskLayer *gridMaskLayer; // 半透明遮罩层
 @property (nonatomic, assign) CGRect initialRect; //高亮网格框的初始区域
 //四个角
 @property (nonatomic, strong) SLResizeControl *topLeftCornerView;
@@ -287,9 +241,9 @@ const CGFloat kSLControlWidth = 30.f;
 }
 
 #pragma mark - Getter
-- (SLGridMaskLayer *)gridMaskLayer {
+- (SLMaskLayer *)gridMaskLayer {
     if (!_gridMaskLayer) {
-        _gridMaskLayer = [[SLGridMaskLayer alloc] init];
+        _gridMaskLayer = [[SLMaskLayer alloc] init];
         _gridMaskLayer.frame = self.bounds;
         _gridMaskLayer.maskColor = [UIColor colorWithWhite:.0f alpha:0.6f].CGColor;
     }

@@ -58,6 +58,8 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 @property (nonatomic, strong) NSDictionary *data;
 ///父视图缩放比例
 @property (nonatomic, assign) CGFloat superViewZoomScale;
+///显示的区域 其余部分要用黑框z遮起来
+@property (nonatomic, assign) CGRect displayRect;
 
 /// 前进一步
 - (void)goForward;
@@ -67,6 +69,8 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 - (void)clear;
 ///返回上一次画画的状态
 - (void)goBackToLastDrawState;
+///隐藏遮罩
+- (void)hideMaskLayer:(BOOL)hide;
 @end
 
 

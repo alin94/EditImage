@@ -122,6 +122,8 @@
     
     [self.view addSubview:self.topNavView];
     [self hiddenEditMenus:NO];
+    
+//    self.drawView.displayRect = CGRectMake(100, 100, 100, 100);
 }
 
 #pragma mark - HelpMethods
@@ -161,12 +163,13 @@
         } completion:^(BOOL finished) {
             view.hidden = YES;
             view.frame = originalRect;
-            [view removeFromSuperview];
         }];
         
     }else {
         view.hidden = NO;
-        [self.view addSubview:view];
+        if(!view.superview){
+            [self.view addSubview:view];
+        }
         CGRect originalRect = view.frame;
         if(isBottom){
             view.frame = CGRectMake(view.frame.origin.x, self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
@@ -303,6 +306,7 @@
         _clipView = [[SLImageClipView alloc] initWithFrame:self.view.bounds];
         WS(weakSelf);
         _clipView.cancelBtnClickBlock = ^{
+            [weakSelf.drawView hideMaskLayer:NO];
             weakSelf.editingMenuType = SLEditMenuTypeUnknown;
             [weakSelf changeZoomViewRectWithIsEditing:NO isClip:YES];
         };
@@ -332,10 +336,6 @@
             weakSelf.zoomView.imageView.bounds = weakSelf.zoomView.bounds;
             weakSelf.zoomView.imageView.frame = weakSelf.zoomView.bounds;
             weakSelf.zoomView.fixedImageViewCenter = weakSelf.zoomView.imageView.center;
-            CGSizeApplyAffineTransform(weakSelf.zoomView.frame.size, weakSelf.zoomView.transform);
-//            weakSelf.zoomView.contentSize = weakSelf.zoomView.frame.size;
-
-//            weakSelf.zoomView.contentSize = CGSizeMake(fabs(tranSize.width), fabs(tranSize.height));
             CGPoint center2 = weakSelf.zoomView.imageView.center;
             NSLog(@"设置完==图片大小==%@  中心点==%@",NSStringFromCGSize(weakSelf.zoomView.imageView.frame.size),NSStringFromCGPoint(center2));
 
@@ -350,7 +350,9 @@
             }
             weakSelf.editingMenuType = SLEditMenuTypeUnknown;
             weakSelf.isEditing = NO;
-
+            CGRect displayRect = [weakSelf.zoomView.imageView convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.drawView];
+            weakSelf.drawView.displayRect = displayRect;
+            [weakSelf.drawView hideMaskLayer:NO];
         };
     }
     return _clipView;
@@ -614,6 +616,7 @@
 #pragma mark - Events Handle
 - (void)showImageClipVC {
     [self changeZoomViewRectWithIsEditing:YES];
+    [self.drawView hideMaskLayer:YES];
     if(!self.clipView.superview){
         [self.view addSubview:self.clipView];
     }

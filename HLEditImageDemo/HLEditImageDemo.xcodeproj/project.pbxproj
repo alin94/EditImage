@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C72DF2C325949D470062841F /* SLMaskLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C72DF2C225949D470062841F /* SLMaskLayer.m */; };
 		C7683D89257A288C00DA3061 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683D88257A288C00DA3061 /* AppDelegate.m */; };
 		C7683D8F257A288C00DA3061 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683D8E257A288C00DA3061 /* ViewController.m */; };
 		C7683D92257A288C00DA3061 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7683D90257A288C00DA3061 /* Main.storyboard */; };
@@ -181,6 +182,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C72DF2C125949D470062841F /* SLMaskLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLMaskLayer.h; sourceTree = "<group>"; };
+		C72DF2C225949D470062841F /* SLMaskLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLMaskLayer.m; sourceTree = "<group>"; };
 		C7683D84257A288C00DA3061 /* HLEditImageDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HLEditImageDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7683D87257A288C00DA3061 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C7683D88257A288C00DA3061 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -526,6 +529,8 @@
 				C7683DCA257A2C8F00DA3061 /* SLEditVideoClipping.m */,
 				C7683DC5257A2C8F00DA3061 /* SLGridView.h */,
 				C7683DB9257A2C8F00DA3061 /* SLGridView.m */,
+				C72DF2C125949D470062841F /* SLMaskLayer.h */,
+				C72DF2C225949D470062841F /* SLMaskLayer.m */,
 				C7683DBE257A2C8F00DA3061 /* SLImageZoomView.h */,
 				C7683DC7257A2C8F00DA3061 /* SLImageZoomView.m */,
 				C7683DCC257A2C8F00DA3061 /* SLMosaicView.h */,
@@ -919,6 +924,7 @@
 				C7683D9A257A288E00DA3061 /* main.m in Sources */,
 				C7683DD0257A2C8F00DA3061 /* UIView+SLImage.m in Sources */,
 				C7D1FDF925884E0B002D180C /* SLSubMenuClipImageView.m in Sources */,
+				C72DF2C325949D470062841F /* SLMaskLayer.m in Sources */,
 				C7683DD8257A2C8F00DA3061 /* SLEditImageController.m in Sources */,
 				C7683DE2257A2C8F00DA3061 /* SLEditVideoClipping.m in Sources */,
 				C7C12F9F2587083E00B1CC6D /* SLPaddingLabel.m in Sources */,

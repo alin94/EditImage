@@ -9,6 +9,7 @@
 #import "SLDrawView.h"
 #import "UIImage+SLCommon.h"
 #import "UIView+SLFrame.h"
+#import "SLMaskLayer.h"
 
 
 @interface SLShapelayer : CAShapeLayer
@@ -104,6 +105,7 @@
 }
 @property (nonatomic, assign) CGPoint beginPoint;
 @property (nonatomic, assign) NSInteger lastLinePathCount;//之前的路径总数
+@property (nonatomic, strong) SLMaskLayer *maskLayer;//遮挡住不需要显示的区域
 
 @end
 
@@ -122,6 +124,17 @@
     }
     return self;
 }
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    _maskLayer.frame = self.bounds;
+}
+
+- (void)didMoveToSuperview {
+    [super didMoveToSuperview];
+    [self checkLineCount];
+}
+#pragma mark - setter
 - (void)setEnableDraw:(BOOL)enableDraw {
     if(_enableDraw != enableDraw){
         _enableDraw = enableDraw;
@@ -131,10 +144,14 @@
         self.userInteractionEnabled = enableDraw;
     }
 }
-- (void)didMoveToSuperview {
-    [super didMoveToSuperview];
-    [self checkLineCount];
+- (void)setDisplayRect:(CGRect)displayRect {
+    _displayRect = displayRect;
+    if(!self.maskLayer.superlayer){
+        [self.layer insertSublayer:self.maskLayer atIndex:1000];
+    }
+    self.maskLayer.maskRect = displayRect;
 }
+
 //开始绘画
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if ([event allTouches].count == 1) {
@@ -168,7 +185,8 @@
         [self.brushTool.deleteLayerArray removeAllObjects];
         [self.brushTool.deleteLineArray removeAllObjects];
         CAShapeLayer *slayer = [self createShapeLayer:path];
-        [self.layer addSublayer:slayer];
+        [self.layer insertSublayer:slayer below:self.maskLayer];
+//        [self.layer addSublayer:slayer];
         [self.brushTool.layerArray addObject:slayer];
     }
     [super touchesBegan:touches withEvent:event];
@@ -263,6 +281,7 @@
     slayer.isErase = self.brushTool.isErase;
     return slayer;
 }
+//检查线条数量
 - (void)checkLineCount {
     if(self.lineCountChangedBlock){
         self.lineCountChangedBlock(self.canBack, self.canForward);
@@ -290,6 +309,7 @@
     CGFloat rads = atan(height/width);
     return rads;
 }
+//创建箭头
 - (UIBezierPath *)createArrowWithBeginPoint:(CGPoint)beginPoint endPoint:(CGPoint)endPoint {
     //箭头的角度
     CGFloat arrowAngle = 70*M_PI/180.f;
@@ -404,12 +424,21 @@
     }
     return _brushTool;
 }
+- (SLMaskLayer *)maskLayer {
+    if(!_maskLayer){
+        _maskLayer = [[SLMaskLayer alloc] init];
+        _maskLayer.frame = self.bounds;
+        _maskLayer.maskColor = [UIColor blackColor].CGColor;
+    }
+    return _maskLayer;
+}
 #pragma mark - Event Handle
 //前进
 - (void)goForward {
     if ([self canForward]) {
         //添加刚删除的线条
-        [self.layer addSublayer:self.brushTool.deleteLayerArray.lastObject];
+        [self.layer insertSublayer:self.brushTool.deleteLayerArray.lastObject below:self.maskLayer];
+//        [self.layer addSublayer:self.brushTool.deleteLayerArray.lastObject];
         [self.brushTool.lineArray addObject:self.brushTool.deleteLineArray.lastObject];
         [self.brushTool.layerArray addObject:self.brushTool.deleteLayerArray.lastObject];
         //从删除池中除去
@@ -455,6 +484,9 @@
     }];
     [self checkLineCount];
 }
+- (void)hideMaskLayer:(BOOL)hide {
+    self.maskLayer.hidden = hide;
+}
 
 #pragma mark  - 数据
 - (NSDictionary *)data {
@@ -468,7 +500,8 @@
     if (lineArray.count) {
         for (SLDrawBezierPath *path in lineArray) {
             CAShapeLayer *slayer = [self createShapeLayer:path];
-            [self.layer addSublayer:slayer];
+//            [self.layer addSublayer:slayer];
+            [self.layer insertSublayer:slayer below:self.maskLayer];
             [self.brushTool.layerArray addObject:slayer];
         }
         [self.brushTool.lineArray addObjectsFromArray:lineArray];
