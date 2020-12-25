@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+//管理视图的缩放、旋转、拖动的view
 @interface SLTransformGestureView : UIView
 /// 编辑的视图数组
 @property (nonatomic, strong) NSMutableArray *watermarkArray;

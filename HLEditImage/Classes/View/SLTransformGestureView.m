@@ -234,9 +234,7 @@
     [self hideEditingBtn:!imgView];
     if(self.gestureActionBlock){
         self.gestureActionBlock(tap, self.currentEditingView);
-    }
-
-    
+    }    
     //    [self resetBorder];
 }
 - (void)doubleTap:(UITapGestureRecognizer *)tap {

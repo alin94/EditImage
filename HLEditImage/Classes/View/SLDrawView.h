@@ -42,23 +42,28 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 @property (nonatomic, strong) SLDrawBrushTool *brushTool;
 ///是否可以画画
 @property (nonatomic, assign) BOOL enableDraw;
+///本次添加的图形视图
+@property (nonatomic, strong) NSMutableArray *tempShapeViewArray;
 /// 正在绘画 
 @property (nonatomic, readonly) BOOL isDrawing;
 /// 能否返回
 @property (nonatomic, readonly) BOOL canBack;
 /// 能否前进
 @property (nonatomic, readonly) BOOL canForward;
+
 /// 开始绘画
 @property (nonatomic, copy) void(^drawBegan)(void);
 /// 结束绘画
 @property (nonatomic, copy) void(^drawEnded)(void);
 /// 可撤销状态改变
 @property (nonatomic, copy) void (^lineCountChangedBlock)(BOOL canBack,BOOL canForward);
+///画完图形
+@property (nonatomic, copy) void (^drawShapeViewFinishedBlock)(UIView *shapeView,CAShapeLayer *layer);
 /// 数据  笔画数据
 @property (nonatomic, strong) NSDictionary *data;
 ///父视图缩放比例
 @property (nonatomic, assign) CGFloat superViewZoomScale;
-///显示的区域 其余部分要用黑框z遮起来
+///显示的区域 其余部分要用黑框遮起来
 @property (nonatomic, assign) CGRect displayRect;
 
 /// 前进一步

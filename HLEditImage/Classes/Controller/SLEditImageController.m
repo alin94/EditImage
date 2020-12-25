@@ -28,7 +28,6 @@
 #import "SLPaddingLabel.h"
 #import "SLImageClipView.h"
 
-
 #define SL_DISPATCH_ON_MAIN_THREAD(mainQueueBlock) dispatch_async(dispatch_get_main_queue(),mainQueueBlock);
 
 #define KBottomMenuHeight (144+kSafeAreaBottomHeight)  //底部菜单高度
@@ -113,17 +112,8 @@
     self.zoomView.imageView.frame = self.zoomView.bounds;
     [self.zoomView.imageView addSubview:self.drawView];
     [self.zoomView.imageView addSubview:self.gestureView];
-
-
-//    [self reConfigZoomImageViewRectWithMaxRect:self.view.bounds];
-//    [self reConfigZoomImageViewRect];
-    //添加裁剪完成监听
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(imageClippingComplete:) name:@"sl_ImageClippingComplete" object:nil];
-    
     [self.view addSubview:self.topNavView];
     [self hiddenEditMenus:NO];
-    
-//    self.drawView.displayRect = CGRectMake(100, 100, 100, 100);
 }
 
 #pragma mark - HelpMethods
@@ -132,7 +122,11 @@
     if(!self.gestureView.superview){
         [self.zoomView.imageView addSubview:self.gestureView];
     }
+    [self.gestureView addSubview:view];
+    [self.watermarkArray addObject:view];
     [self.gestureView addWatermarkView:view];
+    [self topSelectedView:view];
+
 }
 //置顶视图
 - (void)topSelectedView:(UIView *)topView {
@@ -217,9 +211,7 @@
     if(maxRect.size.width != self.view.sl_width){
         CGSize newSize = zoomViewBounds.size;
         CGFloat scaleX = newSize.width/self.zoomView.imageView.frame.size.width;
-        CGAffineTransform rotate = CGAffineTransformRotate(CGAffineTransformIdentity, self.clipView.rotateAngle/180.f*M_PI);
         CGAffineTransform scale = CGAffineTransformScale(CGAffineTransformIdentity, scaleX, scaleX);
-        //        self.zoomView.transform = CGAffineTransformConcat(rotate,scale);
         if(CGAffineTransformEqualToTransform(CGAffineTransformIdentity, self.editingTrans)){
             //最开始时候赋值
             self.editingTrans = scale;
@@ -229,9 +221,6 @@
         
     }else {
         //正常状态
-        CGAffineTransform rotate = CGAffineTransformRotate(CGAffineTransformIdentity, self.clipView.rotateAngle/180.f*M_PI);
-        //        self.zoomView.transform = CGAffineTransformConcat(rotate,scale);
-        
         if(CGAffineTransformEqualToTransform(CGAffineTransformIdentity, self.normalTrans)){
             CGAffineTransform scale = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
             //最开始时候赋值
@@ -364,7 +353,6 @@
         _zoomView.userInteractionEnabled = YES;
         _zoomView.maximumZoomScale = 4;
         _zoomView.zoomViewDelegate = self;
-//        _zoomView.imageView.autoresizesSubviews =YES;
         _zoomView.imageView.autoresizesSubviews = NO;
 
     }
@@ -425,9 +413,6 @@
                     weakSelf.drawView.brushTool = weakSelf.drawMosicBrushTool;
                 }
                 [weakSelf changeZoomViewRectWithIsEditing:YES];
-//                if(setting[@"hidden"]){
-//                    weakSelf.drawView.enableDraw = ![setting[@"hidden"] boolValue];
-//                }
                 if (setting[@"lineColor"]) {
                     weakSelf.drawView.brushTool.isErase = NO;
                     weakSelf.drawView.brushTool.lineColor = setting[@"lineColor"];
@@ -449,6 +434,18 @@
                 }
                 if(setting[@"goBackToLast"]) {
                     [weakSelf.drawView goBackToLastDrawState];
+                    if(weakSelf.editingMenuType == SLEditMenuTypeGraffiti){
+                        if(weakSelf.drawView.tempShapeViewArray.count){
+                            //去掉之前画的线条
+                            for(UIView *view in weakSelf.drawView.tempShapeViewArray){
+                                if([weakSelf.gestureView.watermarkArray containsObject:view]){
+                                    [weakSelf.gestureView.watermarkArray removeObject:view];
+                                    [view removeFromSuperview];
+                                }
+                            }
+                        }
+                        [weakSelf.drawView.tempShapeViewArray removeAllObjects];
+                    }
                 }
                 if (setting[@"lineWidth"]) {
                     weakSelf.drawView.brushTool.lineWidth = [setting[@"lineWidth"] floatValue];
@@ -482,13 +479,9 @@
                     center = CGPointMake(center.x/weakSelf.zoomView.zoomScale, center.y/weakSelf.zoomView.zoomScale);
                     imageView.center = center;
                     imageView.image = image;
-                    [weakSelf.watermarkArray addObject:imageView];
-                    [weakSelf.zoomView.imageView addSubview:imageView];
                     [weakSelf addRotateAndPinchGestureRecognizer:imageView];
-                    [weakSelf topSelectedView:imageView];
                 }
             }
-#pragma mark- 添加文字
             if (editMenuType == SLEditMenuTypeText) {
                 weakSelf.isEditing = YES;
                 weakSelf.editingMenuType = SLEditMenuTypeText;
@@ -510,13 +503,8 @@
                     CGAffineTransform scaleTrans = CGAffineTransformScale(invertTrans, 1/zoomScale, 1/zoomScale);
                     label.transform = scaleTrans;
                     label.center = newCenter;
-//                    [weakSelf.zoomView.imageView addSubview:label];
-                    //添加到手势管理view
-                    [weakSelf.gestureView addSubview:label];
-                    [weakSelf.watermarkArray addObject:label];
                     //添加手势
                     [weakSelf addRotateAndPinchGestureRecognizer:label];
-                    [weakSelf topSelectedView:label];
                 };
             }
             if (editMenuType == SLEditMenuTypePictureClipping) {
@@ -565,7 +553,11 @@
         _drawView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
             [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
         };
-
+        _drawView.drawShapeViewFinishedBlock = ^(UIView *shapeView, CAShapeLayer *layer) {
+            //添加到手势管理view上
+            CGRectApplyAffineTransform(shapeView.frame, weakSelf.gestureView.transform);
+            [weakSelf addRotateAndPinchGestureRecognizer:shapeView];
+        };
     }
     return _drawView;
 }
@@ -641,6 +633,9 @@
 }
 //双击 文本水印 开始编辑文本
 - (void)doubleTapAction:(UITapGestureRecognizer *)doubleTap withView:(UIView *)view {
+    if(![view isKindOfClass:[SLPaddingLabel class]]){
+        return;
+    }
     view.hidden = YES;
     SLPaddingLabel *tapLabel = (SLPaddingLabel *)view;
     SLEditTextView *editTextView = [[SLEditTextView alloc] initWithFrame:CGRectMake(0, kSafeAreaTopHeight, kScreenWidth, kScreenHeight - kSafeAreaTopHeight - kSafeAreaBottomHeight)];
@@ -654,10 +649,7 @@
         label.center = tapLabel.center;
         [tapLabel removeFromSuperview];
         [self.watermarkArray removeObject:tapLabel];
-        [self.watermarkArray addObject:label];
-        [self.gestureView addSubview:label];
         [self addRotateAndPinchGestureRecognizer:label];
-        [self topSelectedView:label];
     };
     [self.view addSubview:editTextView];
 }
@@ -704,27 +696,16 @@
         [self hiddenView:self.trashTips hidden:YES isBottom:YES];
     }
 }
-
-// 图片裁剪完成
-- (void)imageClippingComplete:(NSNotification *)notification {
-    UIImage *clipImage = notification.userInfo[@"image"];
-    self.zoomView.zoomScale = 1;
-    self.zoomView.image = clipImage;
-    [self changeZoomViewRectWithIsEditing:NO];
-}
 #pragma mark - SLZoomViewDelegate
 - (void)zoomViewDidBeginMoveImage:(SLImageZoomView *)zoomView {
-    [_clipView showMaskLayer:NO];
+    if(self.editingMenuType == SLEditMenuTypePictureClipping){
+        [_clipView showMaskLayer:NO];
+    }
 }
 - (void)zoomViewDidEndMoveImage:(SLImageZoomView *)zoomView {
     self.drawView.superViewZoomScale = self.zoomView.zoomScale;
-    [_clipView showMaskLayer:YES];
+    if(self.editingMenuType == SLEditMenuTypePictureClipping){
+        [_clipView showMaskLayer:YES];
+    }
 }
-
-- (void)zoomViewDidEndZoom:(SLImageZoomView *)zoomView {
-//    _gestureView.frame = zoomView.imageView.frame;
-    CGRect rect = [zoomView.imageView convertRect:zoomView.imageView.frame toView:self.zoomView];
-    [_clipView showMaskLayer:YES];
-}
-
 @end

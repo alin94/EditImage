@@ -15,6 +15,10 @@
 @interface SLShapelayer : CAShapeLayer
 @property (nonatomic, assign) SLDrawShapeType shapeType;//类型
 @property (nonatomic, assign) BOOL isErase;//是否是橡皮檫
+@property (nonatomic, assign) CGPoint beginPoint;
+@property (nonatomic, assign) CGPoint endPoint;
+
+
 @end
 @implementation SLShapelayer
 
@@ -77,7 +81,6 @@
             _mosicImage = [_image sl_transToMosaicImageWithBlockLevel:squareWidth*4];
         }
     }
-    
 }
 
 - (void)createPatternImage {
@@ -106,9 +109,7 @@
 @property (nonatomic, assign) CGPoint beginPoint;
 @property (nonatomic, assign) NSInteger lastLinePathCount;//之前的路径总数
 @property (nonatomic, strong) SLMaskLayer *maskLayer;//遮挡住不需要显示的区域
-
 @end
-
 @implementation SLDrawView
 
 #pragma mark - Override
@@ -140,6 +141,7 @@
         _enableDraw = enableDraw;
         if(enableDraw){
             self.lastLinePathCount = self.brushTool.lineArray.count;
+            [self.tempShapeViewArray removeAllObjects];
         }
         self.userInteractionEnabled = enableDraw;
     }
@@ -228,6 +230,23 @@
 //结束绘画
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event {
     if (_isWork) {
+        //把图形layer转成view 以便响应手势 方便管理
+        if(self.drawShapeViewFinishedBlock){
+            UITouch *touch = [touches anyObject];
+            CGPoint point = [touch locationInView:self];
+            SLShapelayer *slayer =  (SLShapelayer *)self.brushTool.layerArray.lastObject;
+            slayer.endPoint = point;
+            //创建view
+            UIView *shapeView = [self createViewWithShapeLayer:slayer];
+            if(shapeView){
+                self.drawShapeViewFinishedBlock(shapeView,shapeView.layer.sublayers.firstObject);
+                //删除上一步添加的layer
+                [self.brushTool.layerArray.lastObject removeFromSuperlayer];
+                [self.brushTool.layerArray removeLastObject];
+                [self.brushTool.lineArray removeLastObject];
+                [self.tempShapeViewArray addObject:shapeView];
+            }
+        }
         if (self.drawEnded) self.drawEnded();
     } else {
         if ((_isBegan)) {
@@ -254,8 +273,25 @@
 }
 
 #pragma mark - Help Methods
+- (UIView *)createViewWithShapeLayer:(SLShapelayer *)slayer{
+    if(slayer.shapeType != SLDrawShapeRandom && slayer.shapeType != SLDrawShapeMosic && !self.brushTool.isErase){
+        CGRect rect =  [self getRectWithStartPoint:slayer.beginPoint endPoint:slayer.endPoint];
+        slayer.backgroundColor = [UIColor clearColor].CGColor;
+        UIView *view = [[UIView alloc] initWithFrame:rect];
+        view.backgroundColor = [UIColor clearColor];
+        CGPoint newPosition = [[UIApplication sharedApplication].keyWindow convertPoint:CGPointZero toView:view];
+        SLDrawBezierPath *path = [SLDrawBezierPath bezierPathWithCGPath:slayer.path];
+        path.lineWidth = self.brushTool.lineWidth;
+        path.color = self.brushTool.lineColor;
+        SLShapelayer *newLayer = [self createShapeLayer:path];
+        newLayer.position = newPosition;
+        [view.layer addSublayer:newLayer];
+        return view;
+    }
+    return nil;
+}
 //创建线条图层
-- (CAShapeLayer *)createShapeLayer:(SLDrawBezierPath *)path {
+- (SLShapelayer *)createShapeLayer:(SLDrawBezierPath *)path {
     /** 1、渲染快速。CAShapeLayer使用了硬件加速，绘制同一图形会比用Core Graphics快很多。Core Graphics实现示例： https://github.com/wsl2ls/Draw.git
      2、高效使用内存。一个CAShapeLayer不需要像普通CALayer一样创建一个寄宿图形，所以无论有多大，都不会占用太多的内存。
      3、不会被图层边界剪裁掉。
@@ -279,23 +315,13 @@
     //自定义路径的描述
     slayer.shapeType = self.brushTool.shapeType;
     slayer.isErase = self.brushTool.isErase;
+    slayer.beginPoint = self.beginPoint;
     return slayer;
-}
-//检查线条数量
-- (void)checkLineCount {
-    if(self.lineCountChangedBlock){
-        self.lineCountChangedBlock(self.canBack, self.canForward);
-    }
 }
 - (CGRect)getRectWithStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
 {
-    CGPoint orignal = startPoint;
-    if (startPoint.x > endPoint.x) {
-        orignal = endPoint;
-    }
-    CGFloat width = fabs(startPoint.x - endPoint.x);
-    CGFloat height = fabs(startPoint.y - endPoint.y);
-    return CGRectMake(orignal.x , orignal.y , width, height);
+    CGRect rect = CGRectMake(MIN(startPoint.x, endPoint.x), MIN(startPoint.y, endPoint.y), fabs(startPoint.x - endPoint.x), fabs(startPoint.y - endPoint.y));
+    return rect;
 }
 - (CGFloat)distanceBetweenStartPoint:(CGPoint)startPoint endPoint:(CGPoint)endPoint
 {
@@ -353,7 +379,7 @@
     CGPoint point4 = endPoint;//终点
     CGPoint point5 = CGPointZero;//右边外角
     CGPoint point6 = CGPointZero;//右边内角
-    
+    //水平夹角
     CGFloat lineAngle = [self angleBetweenStartPoint:beginPoint endPoint:endPoint];
     //箭头底边长
     CGFloat arrowBottomLength = arrowWaistLength*sin(arrowAngle/2.f)*2;
@@ -407,7 +433,12 @@
     [path closePath];
     return path;
 }
-
+//检查线条数量
+- (void)checkLineCount {
+    if(self.lineCountChangedBlock){
+        self.lineCountChangedBlock(self.canBack, self.canForward);
+    }
+}
 #pragma mark - Getter
 - (BOOL)isDrawing {
     return _isWork;
@@ -431,6 +462,12 @@
         _maskLayer.maskColor = [UIColor blackColor].CGColor;
     }
     return _maskLayer;
+}
+- (NSMutableArray *)tempShapeViewArray {
+    if(!_tempShapeViewArray){
+        _tempShapeViewArray = [NSMutableArray array];
+    }
+    return _tempShapeViewArray;
 }
 #pragma mark - Event Handle
 //前进
