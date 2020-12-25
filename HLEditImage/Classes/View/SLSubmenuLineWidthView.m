@@ -26,7 +26,7 @@
 - (void)setupUI{
     [self createSubmenu];
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake((self.frame.size.width - 50)/2, self.frame.size.height - 50, 50, 50);
+    closeBtn.frame = CGRectMake((self.frame.size.width - 50)/2, self.frame.size.height - kSafeAreaBottomHeight - 50, 50, 50);
     [closeBtn setImage:[UIImage imageNamed:@"EditMenuArrowDown"] forState:UIControlStateNormal];
     [closeBtn addTarget:self action:@selector(closeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:closeBtn];

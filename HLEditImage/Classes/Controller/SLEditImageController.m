@@ -72,6 +72,15 @@
 @implementation SLEditImageController
 
 #pragma mark - Override
+- (instancetype)initWithImage:(UIImage *)image tipText:(NSString *)tipText {
+    self = [super init];
+    if(self){
+        self.image = image;
+        self.tipText = tipText;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _normalTrans = CGAffineTransformIdentity;
@@ -349,7 +358,7 @@
 - (SLImageZoomView *)zoomView {
     if (_zoomView == nil) {
         _zoomView = [[SLImageZoomView alloc] initWithFrame:self.view.bounds];
-        _zoomView.backgroundColor = [UIColor redColor];
+        _zoomView.backgroundColor = [UIColor clearColor];
         _zoomView.userInteractionEnabled = YES;
         _zoomView.maximumZoomScale = 4;
         _zoomView.zoomViewDelegate = self;
@@ -389,6 +398,7 @@
     if (!_editMenuView) {
         _editMenuView = [[SLEditMenuView alloc] initWithFrame:CGRectMake(0, self.view.sl_height - 144 - kSafeAreaBottomHeight, self.view.sl_width, 144 + kSafeAreaBottomHeight)];
         _editMenuView.hidden = YES;
+        _editMenuView.tipText = self.tipText;
         __weak typeof(self) weakSelf = self;
         _editMenuView.editObject = SLEditObjectPicture;
         _editMenuView.doneBtnClickBlock = ^{
@@ -617,9 +627,10 @@
 //完成编辑 导出编辑后的对象
 - (void)doneEditBtnClicked:(id)sender {
     [self.gestureView endEditing];
-    self.image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
+    UIImage *newImage = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
+    UIImage *roImage = [UIImage imageWithCGImage:newImage.CGImage scale:[UIScreen mainScreen].scale orientation:self.clipView.imageOrientation];
     if(self.editFinishedBlock){
-        self.editFinishedBlock(self.image);
+        self.editFinishedBlock(roImage);
     }
     [self dismissViewControllerAnimated:NO completion:^{
         

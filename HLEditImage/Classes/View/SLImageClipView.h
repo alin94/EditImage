@@ -13,8 +13,8 @@
 @interface SLImageClipView : UIView
 @property (nonatomic, copy) void (^doneBtnClickBlock)(void);
 @property (nonatomic, copy) void (^cancelBtnClickBlock)(void);
-@property (nonatomic, assign) CGAffineTransform scaleTrans;
-@property (nonatomic, assign) NSInteger rotateAngle;
+/// 图像方向
+@property (nonatomic, assign) UIImageOrientation imageOrientation;
 // 缩放视图
 @property (nonatomic, weak) SLImageZoomView *zoomView;
 - (void)startEditWithZoomView:(SLImageZoomView *)zoomView;

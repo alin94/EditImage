@@ -48,7 +48,7 @@
     [self addSubview:topContainer];
     [self createSubMenusOnView:topContainer];
     self.topContainerView = topContainer;
-    UIView *footerContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 60, self.frame.size.width, 60)];
+    UIView *footerContainer = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - kSafeAreaBottomHeight - 60, self.frame.size.width, 60)];
     [self addSubview:footerContainer];
     [self createFooterMenusOnView:footerContainer];
 

@@ -117,13 +117,14 @@
 @property (nonatomic, strong) NSArray *imageNames; //编辑图标名称
 @property (nonatomic, strong) NSArray *imageNamesSelected; //选中的 编辑图标名称
 @property (nonatomic, strong) NSMutableArray *menuBtns; //编辑菜单按钮集合
+@property (nonatomic, assign) SLEditMenuType currentMenuType; //当前编辑类型
 
 @property (nonatomic, strong) UIView *currentSubmenu; //当前显示的子菜单
 @property (nonatomic, strong) SLSubmenuGraffitiView *submenuGraffiti; //涂鸦子菜单
 @property (nonatomic, strong) SLSubmenuStickingView *submenuSticking; //贴图子菜单
 @property (nonatomic, strong) SLSubmenuMosaicView *submenuMosaic;  //图片马赛克
 @property (nonatomic, strong) UIButton *doneBtn;//完成按钮
-@property (nonatomic, assign) SLEditMenuType currentMenuType; //当前编辑类型
+@property (nonatomic, strong) UILabel *tipLabel;
 
 @end
 @implementation SLEditMenuView
@@ -133,6 +134,14 @@
     if (self) {
     }
     return self;
+}
+//不影响别的视图的手势
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *view = [super hitTest:point withEvent:event];
+    if(view == self){
+        return nil;
+    }
+    return view;
 }
 #pragma mark - UI
 ///设置back按钮是否可点
@@ -182,6 +191,16 @@
     doneBtn.frame =  CGRectMake(self.frame.size.width - 75, 70, 60, 30);
     self.doneBtn = doneBtn;
 }
+- (void)createTipLabel {
+    CGFloat maxWidth = self.frame.size.width*156/414.f;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.size.width - maxWidth - 16, self.frame.size.height - kSafeAreaBottomHeight - 17 - 10, maxWidth, 17)];
+    label.textAlignment = NSTextAlignmentRight;
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont systemFontOfSize:12];
+    label.text = self.tipText;
+    [self addSubview:label];
+    self.tipLabel = label;
+}
 - (void)createEditMenus {
     for (UIView *subView in self.subviews) {
         if (subView == _submenuGraffiti || subView == _submenuSticking || subView == _submenuMosaic) {
@@ -190,12 +209,12 @@
         [subView removeFromSuperview];
     }
     int count = (int)_menuTypes.count;
-    CGSize itemSize = CGSizeMake(23, 23);
+    CGFloat w = (self.frame.size.width - 80 - 15*2)/count;
+    CGSize itemSize = CGSizeMake(w, 24);
     CGFloat x = 15;
-    CGFloat space = (self.frame.size.width - 80 - count * itemSize.width - x)/count;
     _menuBtns = [NSMutableArray array];
     for (int i = 0; i < count; i++) {
-        UIButton * menuBtn = [[UIButton alloc] initWithFrame:CGRectMake(x+space/2.0 + (itemSize.width + space)*i, 72, itemSize.width, itemSize.height)];
+        UIButton * menuBtn = [[UIButton alloc] initWithFrame:CGRectMake(x+w*i, 72, itemSize.width, itemSize.height)];
         menuBtn.tag = [_menuTypes[i] intValue];
         [menuBtn setImage:[UIImage imageNamed:_imageNames[i]] forState:UIControlStateNormal];
         [menuBtn setImage:[UIImage imageNamed:_imageNamesSelected[i]] forState:UIControlStateSelected];
@@ -204,6 +223,7 @@
         [_menuBtns addObject:menuBtn];
     }
 }
+
 - (void)setEditObject:(SLEditObject)editObject {
     _editObject = editObject;
     if (editObject == SLEditObjectPicture) {
@@ -220,9 +240,18 @@
     _imageNames = @[@"EditMenuGraffiti", @"EditMenuSticker", @"EditMenuText", @"EditMenuCut"];
     _imageNamesSelected = @[@"EditMenuGraffitiSelected", @"EditMenuStickerSelected", @"EditMenuText", @"EditMenuCut"];
     }
+    //添加渐变黑遮罩
     [self createGradientLayer];
+    //添加菜单
     [self createEditMenus];
+    //添加完成按钮
     [self createDoneBtn];
+    //添加提示文字
+    [self createTipLabel];
+}
+- (void)setTipText:(NSString *)tipText {
+    _tipText = tipText;
+    self.tipLabel.text = tipText;
 }
 #pragma mark - Getter
 - (SLSubmenuGraffitiView *)submenuGraffiti {
@@ -316,6 +345,7 @@
     }
     return _submenuSticking;
 }
+
 #pragma mark - Evenst Handle
 - (void)doneBtnClick:(UIButton *)btn {
     if(self.doneBtnClickBlock){

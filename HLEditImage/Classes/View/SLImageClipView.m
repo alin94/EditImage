@@ -86,8 +86,9 @@
 /// 最大裁剪区域
 @property (nonatomic, assign) CGRect maxGridRect;
 /// 当前旋转角度
-/// 图像方向
-@property (nonatomic, assign) UIImageOrientation imageOrientation;
+@property (nonatomic, assign) NSInteger rotateAngle;
+//zoomView的转换
+@property (nonatomic, assign) CGAffineTransform scaleTrans;
 /// 原始位置区域
 @property (nonatomic, assign) CGRect originalRect;
 //旋转过的zoomView原始rect

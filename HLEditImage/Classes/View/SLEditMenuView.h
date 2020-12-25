@@ -39,6 +39,8 @@ typedef NS_ENUM(NSUInteger, SLEditMenuType) {
 @interface SLEditMenuView : UIView
 /// 编辑对象
 @property (nonatomic, assign) SLEditObject editObject;
+///提示文字
+@property (nonatomic, copy) NSString *tipText;
 /// 选择编辑的子菜单回调
 @property (nonatomic, copy) void(^selectEditMenu)(SLEditMenuType editMenuType,  NSDictionary * _Nullable setting);
 //隐藏子菜单
