@@ -75,6 +75,7 @@
 - (instancetype)initWithImage:(UIImage *)image tipText:(NSString *)tipText {
     self = [super init];
     if(self){
+        self.autoDismiss = YES;
         self.image = image;
         self.tipText = tipText;
     }
@@ -632,15 +633,22 @@
     if(self.editFinishedBlock){
         self.editFinishedBlock(roImage);
     }
-    [self dismissViewControllerAnimated:NO completion:^{
-        
-    }];
+    if(self.autoDismiss){
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    }
 }
 //取消编辑
 - (void)cancelEditBtnClicked:(id)sender {
-    [self dismissViewControllerAnimated:NO completion:^{
-        
-    }];
+    if(self.cancelEditBlock){
+        self.cancelEditBlock();
+    }
+    if(self.autoDismiss){
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    }
 }
 //双击 文本水印 开始编辑文本
 - (void)doubleTapAction:(UITapGestureRecognizer *)doubleTap withView:(UIView *)view {
