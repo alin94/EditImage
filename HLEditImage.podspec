@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "HLEditImage"
-  s.version      = "0.1.3"
-  s.summary      = "防微信图片编辑工具"
+  s.version      = "0.2.0"
+  s.summary      = "图片编辑工具"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
-                    个人编辑图片练习 用了别人的开源代码
+                    图片编辑工具 涂鸦（箭头、椭圆、矩形）、裁剪、旋转、添加水印
                    DESC
 
   s.homepage     = "https://github.com/alin94/HLEditImage.git"
@@ -109,6 +109,8 @@ Pod::Spec.new do |s|
     s.subspec 'View' do  |ssv|
       ssv.dependency  'HLEditImage/AnimateImageView'
       ssv.dependency 'HLEditImage/Category'
+      ssv.dependency 'HLEditImage/Tool'
+
       ssv.source_files = "HLEditImage/Classes/View/*.{h,m}" , "HLEditImage/Classes/SLUtilsMacro.h"
     end
 

@@ -25,10 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat sl_right;
 @property (nonatomic, assign) CGFloat sl_top;
 @property (nonatomic, assign) CGFloat sl_bottom;
-
-@property (nonatomic, assign) CGFloat sl_scaleX;
-@property (nonatomic, assign) CGFloat sl_scaleY;
-
+- (CGFloat)sl_scaleX;
+- (CGFloat)sl_scaleY;
 
 @end
 

@@ -328,7 +328,7 @@
 }
 #pragma mark - Help Methods
 // 返回一个文本水印视图
-- (UITextView *)copyTextView:(UITextView *)textView {
+- (UILabel *)copyTextView:(UITextView *)textView {
     if(![textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length){
         //只有空格时候不显示
         return nil;

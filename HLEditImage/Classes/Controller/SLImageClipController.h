@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImage *originalImage;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, copy) void (^clipFinishedBlock)(SLImageZoomView *zoomImage);
-- (instancetype)initWithZoomView:(SLImageZoomView *)zoomView;
 @end
 
 NS_ASSUME_NONNULL_END
