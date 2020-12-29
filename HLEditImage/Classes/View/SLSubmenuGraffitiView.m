@@ -300,21 +300,25 @@
 - (void)menuBtnClicked:(UIButton *)btn {
     NSInteger index = btn.tag - 100;
     if(index == 0){
-        if(btn.selected){
-            return;
-        }
         //橡皮檫
-        //取消选中之前的颜色按钮
+        btn.selected = !btn.isSelected;
+        //之前选中的颜色按钮
         UIButton *previousBtn = (UIButton *)[self viewWithTag:(10 + _currentColorIndex)];
-        previousBtn.selected = NO;
-        previousBtn.imageView.layer.cornerRadius = 9;
-        [previousBtn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
-        [self.selectedColorCircleView removeFromSuperview];
-        //选中橡皮檫按钮
-        btn.selected = YES;
-        if(self.selectEraseBlock){
-            self.selectEraseBlock();
+        if(btn.selected){
+            //取消选中之前的颜色按钮
+            previousBtn.selected = NO;
+            previousBtn.imageView.layer.cornerRadius = 9;
+            [previousBtn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
+            [self.selectedColorCircleView removeFromSuperview];
+            //选中橡皮檫按钮
+            if(self.selectEraseBlock){
+                self.selectEraseBlock();
+            }
+        }else {
+            //选中之前的颜色按钮
+            [self colorBtnClicked:previousBtn];
         }
+        
     }else if (index == 1){
         //形状
         [self hiddenView:self.shapeView];

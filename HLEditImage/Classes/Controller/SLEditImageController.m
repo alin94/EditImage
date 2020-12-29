@@ -127,6 +127,18 @@
 }
 
 #pragma mark - HelpMethods
+- (void)hideTopNavView:(BOOL)isHidden{
+    [self hiddenView:self.topNavView hidden:isHidden isBottom:NO originalRect:CGRectMake(0, 0, kScreenWidth, kNavigationHeight)] ;
+    [self hiddenView:self.cancelEditBtn hidden:isHidden isBottom:NO originalRect:CGRectMake(21, 19+kSafeAreaTopHeight, 26, 26)];
+}
+- (void)hideMenuView:(BOOL)isHidden{
+    [self hiddenView:self.editMenuView hidden:isHidden isBottom:YES originalRect:CGRectMake(0, self.view.sl_height - 144 - kSafeAreaBottomHeight, self.view.sl_width, 144 + kSafeAreaBottomHeight)];
+
+}
+- (void)hideTrashBtn:(BOOL)hide{
+    [self hiddenView:self.trashTips hidden:hide isBottom:YES originalRect:CGRectMake((self.view.frame.size.width - 160)/2, self.view.frame.size.height - 80 - 10 - kSafeAreaBottomHeight, 160, 80)];
+
+}
 // 添加拖拽、缩放、旋转、单击、双击手势
 - (void)addRotateAndPinchGestureRecognizer:(UIView *)view {
     if(!self.gestureView.superview){
@@ -146,27 +158,31 @@
 }
 // 隐藏编辑时菜单按钮
 - (void)hiddenEditMenus:(BOOL)isHidden {
-    [self hiddenView:self.topNavView hidden:isHidden isBottom:NO] ;
-    [self hiddenView:self.cancelEditBtn hidden:isHidden isBottom:NO];
-    [self hiddenView:self.editMenuView hidden:isHidden isBottom:YES];
+    [self hiddenView:self.topNavView hidden:isHidden isBottom:NO originalRect:CGRectMake(0, 0, kScreenWidth, kNavigationHeight)] ;
+    [self hiddenView:self.cancelEditBtn hidden:isHidden isBottom:NO originalRect:CGRectMake(21, 19+kSafeAreaTopHeight, 26, 26)];
+    [self hiddenView:self.editMenuView hidden:isHidden isBottom:YES originalRect:CGRectMake(0, self.view.sl_height - 144 - kSafeAreaBottomHeight, self.view.sl_width, 144 + kSafeAreaBottomHeight)];
 }
-- (void)hiddenView:(UIView *)view hidden:(BOOL)hidden isBottom:(BOOL)isBottom{
+- (void)hiddenView:(UIView *)view hidden:(BOOL)hidden isBottom:(BOOL)isBottom originalRect:(CGRect)originalRect{
     if(view == nil || view.hidden == hidden){
-//        NSLog(@"隐藏视图是%@",view);
+        //        NSLog(@"隐藏视图是%@",view);
         return;
     }
+    [view.layer removeAllAnimations];
     if (hidden) {
-        CGRect originalRect = view.frame;
         [UIView animateWithDuration:0.25 animations:^{
             if(isBottom){
                 view.frame = CGRectMake(view.frame.origin.x, self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
             }else {
-                view.frame = CGRectMake(view.frame.origin.x, -self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
+                view.frame = CGRectMake(view.frame.origin.x, -view.frame.size.height, view.frame.size.width, view.frame.size.height);
             }
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            view.hidden = YES;
-            view.frame = originalRect;
+            if(finished){
+                view.hidden = YES;
+                view.frame = originalRect;
+            }else {
+                NSLog(@"隐藏动画失败%@",view);
+            }
         }];
         
     }else {
@@ -174,17 +190,18 @@
         if(!view.superview){
             [self.view addSubview:view];
         }
-        CGRect originalRect = view.frame;
         if(isBottom){
             view.frame = CGRectMake(view.frame.origin.x, self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
         }else {
-            view.frame = CGRectMake(view.frame.origin.x, -self.view.frame.size.height, view.frame.size.width, view.frame.size.height);
+            view.frame = CGRectMake(view.frame.origin.x, -view.frame.size.height, view.frame.size.width, view.frame.size.height);
         }
         [UIView animateWithDuration:0.25 animations:^{
             view.frame = originalRect;
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            
+            if(!finished){
+                NSLog(@"显示动画失败%@",view);
+            }
         }];
     }
 }
@@ -251,8 +268,7 @@
 #pragma mark - Setter
 - (void)setIsEditing:(BOOL)isEditing {
     _isEditing = isEditing;
-    [self hiddenView:self.topNavView hidden:isEditing isBottom:NO] ;
-    [self hiddenView:self.cancelEditBtn hidden:isEditing isBottom:NO];
+    [self hideTopNavView:isEditing];
 }
 - (void)setEditingMenuType:(SLEditMenuType)editingMenuType {
     _editingMenuType = editingMenuType;
@@ -656,10 +672,13 @@
         return;
     }
     view.hidden = YES;
+    [self hideTopNavView:YES];
     SLPaddingLabel *tapLabel = (SLPaddingLabel *)view;
     SLEditTextView *editTextView = [[SLEditTextView alloc] initWithFrame:CGRectMake(0, kSafeAreaTopHeight, kScreenWidth, kScreenHeight - kSafeAreaTopHeight - kSafeAreaBottomHeight)];
-    editTextView.configureEditParameters(@{@"textColor":tapLabel.textColor, @"backgroundColor":tapLabel.sl_backgroundColor, @"text":tapLabel.text, @"textAlignment":@(tapLabel.textAlignment)});
+    editTextView.configureEditParameters(@{@"textColor":tapLabel.textColor, @"backgroundColor":[UIColor colorWithCGColor:tapLabel.layer.backgroundColor], @"text":tapLabel.text, @"textAlignment":@(tapLabel.textAlignment)});
+    WS(weakSelf);
     editTextView.editTextCompleted = ^(UILabel * _Nullable label) {
+        [weakSelf hideTopNavView:NO];
         view.hidden = NO;
         if (label == nil) {
             return;
@@ -667,8 +686,8 @@
         label.transform = tapLabel.transform;
         label.center = tapLabel.center;
         [tapLabel removeFromSuperview];
-        [self.watermarkArray removeObject:tapLabel];
-        [self addRotateAndPinchGestureRecognizer:label];
+        [weakSelf.gestureView removeEditingView:tapLabel];
+        [weakSelf addRotateAndPinchGestureRecognizer:label];
     };
     [self.view addSubview:editTextView];
 }
@@ -683,13 +702,13 @@
     }
     if (pan.state == UIGestureRecognizerStateBegan) {
         [self hiddenEditMenus:YES];
-        [self hiddenView:self.trashTips hidden:NO isBottom:YES];
+        [self hideTrashBtn:NO];
     } else if (pan.state == UIGestureRecognizerStateChanged ) {
-        [self hiddenEditMenus:YES];
-        [self hiddenView:self.trashTips hidden:NO isBottom:YES];
+//        [self hiddenEditMenus:YES];
+//        [self hiddenView:self.trashTips hidden:NO isBottom:YES];
         //获取拖拽的视图在屏幕上的位置
         //是否删除 删除视图Y < 视图中心点Y坐标
-        if (self.trashTips.center.y < rect.origin.y+rect.size.height/2.0) {
+        if (CGRectIntersectsRect(self.trashTips.frame, rect)) {
             [self.trashTips setTitle:kNSLocalizedString(@"松手即可删除") forState:UIControlStateNormal];
             [self.trashTips setImage:[UIImage imageNamed:@"EditTrashOpen"] forState:UIControlStateNormal];;
             [self.trashTips setBackgroundColor:kColorWithHex(0xDC4747)];
@@ -705,14 +724,14 @@
         //获取拖拽的视图在屏幕上的位置
         CGRect imageRect = [self.zoomView convertRect:self.zoomView.imageView.frame toView:self.view];
         //删除拖拽的视图
-        if (self.trashTips.center.y < rect.origin.y+rect.size.height/2.0) {
+        if (CGRectIntersectsRect(self.trashTips.frame, rect)) {
             [self.gestureView removeEditingView:view];
         }else if (!CGRectIntersectsRect(imageRect, rect)) {
             //如果出了父视图zoomView的范围，则置于屏幕中心
             CGPoint center = [self.view convertPoint:self.view.center toView:view.superview];
             [self.gestureView changeEditingViewCenter:center];
         }
-        [self hiddenView:self.trashTips hidden:YES isBottom:YES];
+        [self hideTrashBtn:YES];
     }
 }
 #pragma mark - SLZoomViewDelegate

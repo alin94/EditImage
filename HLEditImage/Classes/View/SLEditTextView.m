@@ -344,16 +344,15 @@
 //    label.scrollEnabled = NO;
 //    label.editable = NO;
     label.userInteractionEnabled = YES;
-    label.cornerRadius = textView.layer.cornerRadius;
     label.textAlignment = textView.textAlignment;
     label.font = textView.font;
-    label.sl_backgroundColor = textView.backgroundColor;
-    label.textColor = textView.textColor;
+    label.layer.backgroundColor = textView.backgroundColor.CGColor;
+    label.layer.cornerRadius =textView.layer.cornerRadius;
     label.textPadding = textView.textContainerInset;
     label.numberOfLines = 0;
-//    label.textContainerInset = textView.textContainerInset;
     label.text = textView.text;
-    
+    label.textColor = textView.textColor;
+
     return label;
 }
 
@@ -390,9 +389,6 @@
 //键盘即将消失
 - (void)keyboardWillHide:(NSNotification *)notification{
     [self.textView resignFirstResponder];
-    if (self.editTextCompleted) {
-        self.editTextCompleted(nil);
-    }
     [self removeFromSuperview];
 }
 #pragma mark - UITextViewDelegate

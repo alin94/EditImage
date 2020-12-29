@@ -250,8 +250,10 @@
 
 - (void)pan:(UIPanGestureRecognizer *)pan
 {
-    if(self.gestureActionBlock){
-        self.gestureActionBlock(pan, self.currentEditingView);
+    if(self.currentEditingView){
+        if(self.gestureActionBlock){
+            self.gestureActionBlock(pan, self.currentEditingView);
+        }
     }
  //此处注意了，若要使用单指做旋转缩放，就必须要添加平移的手势了，通过平移手势偏移量计算对应的缩放比例以及旋转角度。。。。
     // 开始和结束处理跟上面手势一样。。
@@ -266,6 +268,9 @@
         self.editGusture = CGRectContainsPoint(editBtnFrame, loc);
         [self hideEditingBtn:NO];
         self.previousPoint = loc;
+        if(self.gestureActionBlock){
+            self.gestureActionBlock(pan, self.currentEditingView);
+        }
     }else if (pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateFailed) {
         if (!self.currentEditingView) return;
         // 结束编辑
