@@ -10,13 +10,12 @@
 #import "SLUtilsMacro.h"
 #import "UIView+SLFrame.h"
 
-#define kMaxScale 2
+#define kMaxScale 4
 #define kMinScale 0.2
 
 @interface SLTransformGestureView ()<UIGestureRecognizerDelegate>
 {
     UIImageView *_imageView;
-    UITapGestureRecognizer *_tapGes;
 }
 // 当前正在编辑的水印视图
 @property (nonatomic, weak) UIView *currentEditingView;
@@ -123,8 +122,8 @@
     self.clipsToBounds = YES;
     // 添加手势
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+    tap.delegate = self;
     [self addGestureRecognizer:tap];
-    _tapGes = tap;
     
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
@@ -133,6 +132,8 @@
     [self addGestureRecognizer:doubleTap];
 
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+    pan.delegate = self;
+    [tap requireGestureRecognizerToFail:pan];
     [self addGestureRecognizer:pan];
     
     UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)];
@@ -366,6 +367,9 @@
     }else {
         self.clipsToBounds = self.superview.clipsToBounds = YES;;
     }
+    if(self.editingStateChangedBlock){
+        self.editingStateChangedBlock(self.isEditing);
+    }
 }
 
 - (CGFloat)distanceWithPoint:(CGPoint)point otherPoint:(CGPoint)otherPoint
@@ -453,7 +457,7 @@
 
 #pragma mark -UIGestureDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    if(gestureRecognizer.state == UIGestureRecognizerStateChanged && self.isEditing){
+    if([otherGestureRecognizer.delegate isKindOfClass:[UIScrollView class]] && !self.isEditing){
         return YES;
     }
     return NO;

@@ -15,9 +15,12 @@
 ///背景图片
 @property (nonatomic, weak, readonly) UIImageView *imageView;
 ///是否在编辑
-@property (nonatomic, assign,readonly) BOOL isEditing;
+@property (nonatomic, assign, readonly) BOOL isEditing;
 
+///手势回调
 @property (nonatomic, copy) void (^gestureActionBlock)(UIGestureRecognizer *gesture, UIView *currentSelectView);
+///编辑状态改变回调
+@property (nonatomic, copy) void (^editingStateChangedBlock)(BOOL isEditing);
 
 // 添加水平图片（可旋转缩放）
 - (void)addWatermarkView:(UIView *)watermarkView;

@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UIColor *gridColor;
 /// 背景  默认透明
 @property (nonatomic, strong) UIColor *bgColor;
+
 @end
 @implementation SLGridLayer
 - (instancetype)init {
@@ -23,6 +24,7 @@
         self.contentsScale = [[UIScreen mainScreen] scale];
         _bgColor = [UIColor clearColor];
         _gridColor = [UIColor blackColor];
+        
 //        self.shadowColor = [UIColor blackColor].CGColor;
 //        self.shadowRadius = 3.f;
 //        self.shadowOffset = CGSizeZero;
@@ -55,6 +57,7 @@
     CGRect rct = self.gridRect;
     UIBezierPath *path = [[UIBezierPath alloc] init];
     CGFloat dW = 0;
+    CGFloat lineWidth = self.lineWidth;
     for(int i=0;i<4;++i){ /** 竖线 */
         [path moveToPoint:CGPointMake(rct.origin.x+dW, rct.origin.y)];
         [path addLineToPoint:CGPointMake(rct.origin.x+dW, rct.origin.y+rct.size.height)];
@@ -66,9 +69,12 @@
         [path addLineToPoint:CGPointMake(rct.origin.x+rct.size.width, rct.origin.y+dW)];
         dW += rct.size.height/3;
     }
+    //边框加粗
+    UIBezierPath *rectPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(rct.origin.x - lineWidth, rct.origin.y - lineWidth, rct.size.width+2*lineWidth, rct.size.height+2*lineWidth) cornerRadius:0];
+    [path appendPath:rectPath];
     
     /** 偏移量 */
-    CGFloat offset = 1;
+    CGFloat offset = self.lineWidth*2;
     /** 长度 */
     CGFloat cornerlength = 15.f;
     CGRect newRct = CGRectInset(rct, -offset, -offset);
@@ -219,6 +225,7 @@ const CGFloat kSLControlWidth = 30.f;
     self.topLeftCornerView = [self createResizeControl];
     self.topRightCornerView = [self createResizeControl];
     self.bottomRightCornerView = [self createResizeControl];
+    self.bottomLeftCornerView = [self createResizeControl];
     
     self.topEdgeView = [self createResizeControl];
     self.leftEdgeView = [self createResizeControl];
@@ -253,7 +260,7 @@ const CGFloat kSLControlWidth = 30.f;
     if (!_gridLayer) {
         _gridLayer = [[SLGridLayer alloc] init];
         _gridLayer.frame = self.bounds;
-        _gridLayer.lineWidth = 1;
+        _gridLayer.lineWidth = 0.7;
         _gridLayer.gridColor = [UIColor whiteColor];
         _gridLayer.gridRect = CGRectInset(self.bounds, 20, 20);
     }

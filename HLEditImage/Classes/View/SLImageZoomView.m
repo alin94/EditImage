@@ -121,6 +121,9 @@
 }
 //缩放中
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    if(!CGPointEqualToPoint(self.fixedImageViewCenter, CGPointZero)){
+        return;
+    }
     if (scrollView.isZooming || scrollView.isZoomBouncing) {
         // 延中心点缩放
         CGRect rect = CGRectApplyAffineTransform(scrollView.frame, scrollView.transform);

@@ -607,9 +607,6 @@
                     }
                 }else if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]){
                     [weakSelf dragAction:(UIPanGestureRecognizer *)gesture withView:currentSelectView];
-                    //处理手势冲突
-                    [weakSelf.zoomView.panGestureRecognizer requireGestureRecognizerToFail:gesture];
-
                 }
             }
         };
