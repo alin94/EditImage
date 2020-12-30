@@ -44,7 +44,7 @@
 
 }
 - (void)showEditImageVCWithImage:(UIImage *)image {
-    SLEditImageController *vc = [[SLEditImageController alloc] initWithImage:image tipText:@"<这里是提示文字"];
+    SLEditImageController *vc = [[SLEditImageController alloc] initWithImage:image tipText:@"> 这里是提示文字"];
     WS(weakSelf);
     vc.editFinishedBlock = ^(UIImage * _Nonnull image) {
         weakSelf.imageView.image = image;

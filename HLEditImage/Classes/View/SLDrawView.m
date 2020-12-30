@@ -118,6 +118,7 @@
     if (self) {
         _enableDraw = YES;
         _superViewZoomScale = 1;
+        _shapeViewSuperView = self;
         self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds = YES;
         self.exclusiveTouch = YES;
@@ -136,6 +137,13 @@
     [self checkLineCount];
 }
 #pragma mark - setter
+///是否在画图形
+- (BOOL)isDrawingShapeView {
+    if(self.brushTool.shapeType == SLDrawShapeRandom || self.brushTool.shapeType == SLDrawShapeMosic || self.brushTool.isErase){
+        return NO;
+    }
+    return YES;
+}
 - (void)setEnableDraw:(BOOL)enableDraw {
     if(_enableDraw != enableDraw){
         _enableDraw = enableDraw;
@@ -179,17 +187,24 @@
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:self];
         self.beginPoint = point;
-        if(self.brushTool.shapeType == SLDrawShapeRandom || self.brushTool.shapeType == SLDrawShapeMosic || self.brushTool.isErase){
+        if(![self isDrawingShapeView]){
             [path moveToPoint:point];
         }
-        [self.brushTool.lineArray addObject:path];
         //清理已删除的笔画
         [self.brushTool.deleteLayerArray removeAllObjects];
         [self.brushTool.deleteLineArray removeAllObjects];
-        CAShapeLayer *slayer = [self createShapeLayer:path];
-        [self.layer insertSublayer:slayer below:self.maskLayer];
-//        [self.layer addSublayer:slayer];
-        [self.brushTool.layerArray addObject:slayer];
+        SLShapelayer *slayer = [self createShapeLayer:path];
+        if([self isDrawingShapeView]){
+            //画图形
+            slayer.endPoint = slayer.beginPoint;
+            UIView *shapeView = [self createViewWithShapeLayer:slayer];
+            [self.shapeViewSuperView addSubview:shapeView];
+            [self.tempShapeViewArray addObject:shapeView];
+        }else {
+            [self.brushTool.lineArray addObject:path];
+            [self.layer insertSublayer:slayer below:self.maskLayer];
+            [self.brushTool.layerArray addObject:slayer];
+        }
     }
     [super touchesBegan:touches withEvent:event];
 }
@@ -203,26 +218,44 @@
             if (_isBegan && self.drawBegan) self.drawBegan();
             _isBegan = NO;
             _isWork = YES;
-            if(self.brushTool.shapeType == SLDrawShapeRandom || self.brushTool.shapeType == SLDrawShapeMosic|| self.brushTool.isErase ){
+            if(![self isDrawingShapeView]){
                 [path addLineToPoint:point];
-            }else if (self.brushTool.shapeType == SLDrawShapeEllipse){
-                path = [SLDrawBezierPath bezierPathWithOvalInRect:[self getRectWithStartPoint:self.beginPoint endPoint:point]];
-            }
-            else if (self.brushTool.shapeType == SLDrawShapeRect){
-                path = [SLDrawBezierPath bezierPathWithRect:[self getRectWithStartPoint:self.beginPoint endPoint:point]];
-            }else if (self.brushTool.shapeType == SLDrawShapeArrow){
-                path = [[SLDrawBezierPath alloc] init];
-                [path appendPath:[self createArrowWithBeginPoint:self.beginPoint endPoint:point]];
-                [path closePath];
+            }else{
+                //图形
+                UIView *lastShapeView = self.tempShapeViewArray.lastObject;
+                SLShapelayer *slayer = (SLShapelayer *)                lastShapeView.layer.sublayers.firstObject;
+                slayer.endPoint = point;
+                [self layoutShapeView:lastShapeView withShapeLayer:slayer];
+
+                if (self.brushTool.shapeType == SLDrawShapeEllipse){
+                    path = [SLDrawBezierPath bezierPathWithOvalInRect:lastShapeView.bounds];
+                }
+                else if (self.brushTool.shapeType == SLDrawShapeRect){
+                    path = [SLDrawBezierPath bezierPathWithRect:lastShapeView.bounds];
+                }else if (self.brushTool.shapeType == SLDrawShapeArrow){
+                    path = [[SLDrawBezierPath alloc] init];
+                    CGPoint newBeginPoint = [self convertPoint:self.beginPoint toView:lastShapeView];
+                    CGPoint newEndPoint = [self convertPoint:point toView:lastShapeView];
+                    [path appendPath:[self createArrowWithBeginPoint:newBeginPoint endPoint:newEndPoint]];
+                    [path closePath];
+                }
             }
             //重新设置属性
             if(self.brushTool.shapeType != SLDrawShapeRandom){
                 path.color = self.brushTool.lineColor;//保存线条当前颜色
                 path.lineWidth = self.brushTool.lineWidth;
-                [self.brushTool.lineArray replaceObjectAtIndex:self.brushTool.lineArray.count - 1 withObject:path];
+                if(![self isDrawingShapeView]) {
+                    [self.brushTool.lineArray replaceObjectAtIndex:self.brushTool.lineArray.count - 1 withObject:path];
+                }
             }
-            CAShapeLayer *slayer = self.brushTool.layerArray.lastObject;
-            slayer.path = path.CGPath;
+            if([self isDrawingShapeView]){
+                UIView *lastShapeView = self.tempShapeViewArray.lastObject;
+                SLShapelayer *slayer = (SLShapelayer *)                lastShapeView.layer.sublayers.firstObject;
+                slayer.path = path.CGPath;
+            }else {
+                SLShapelayer *slayer = (SLShapelayer *)self.brushTool.layerArray.lastObject;
+                slayer.path = path.CGPath;
+            }
         }
     }
     [super touchesMoved:touches withEvent:event];
@@ -230,21 +263,10 @@
 //结束绘画
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event {
     if (_isWork) {
-        //把图形layer转成view 以便响应手势 方便管理
-        if(self.drawShapeViewFinishedBlock){
-            UITouch *touch = [touches anyObject];
-            CGPoint point = [touch locationInView:self];
-            SLShapelayer *slayer =  (SLShapelayer *)self.brushTool.layerArray.lastObject;
-            slayer.endPoint = point;
-            //创建view
-            UIView *shapeView = [self createViewWithShapeLayer:slayer];
+        if(self.drawShapeViewFinishedBlock && [self isDrawingShapeView]){
+            UIView *shapeView = self.tempShapeViewArray.lastObject;
             if(shapeView){
                 self.drawShapeViewFinishedBlock(shapeView,shapeView.layer.sublayers.firstObject);
-                //删除上一步添加的layer
-                [self.brushTool.layerArray.lastObject removeFromSuperlayer];
-                [self.brushTool.layerArray removeLastObject];
-                [self.brushTool.lineArray removeLastObject];
-                [self.tempShapeViewArray addObject:shapeView];
             }
         }
         if (self.drawEnded) self.drawEnded();
@@ -278,17 +300,14 @@
         CGRect rect =  [self getRectWithStartPoint:slayer.beginPoint endPoint:slayer.endPoint];
         slayer.backgroundColor = [UIColor clearColor].CGColor;
         UIView *view = [[UIView alloc] initWithFrame:rect];
-        view.backgroundColor = [UIColor clearColor];
-        CGPoint newPosition = [[UIApplication sharedApplication].keyWindow convertPoint:CGPointZero toView:view];
-        SLDrawBezierPath *path = [SLDrawBezierPath bezierPathWithCGPath:slayer.path];
-        path.lineWidth = self.brushTool.lineWidth;
-        path.color = self.brushTool.lineColor;
-        SLShapelayer *newLayer = [self createShapeLayer:path];
-        newLayer.position = newPosition;
-        [view.layer addSublayer:newLayer];
+        [view.layer addSublayer:slayer];
         return view;
     }
     return nil;
+}
+- (void)layoutShapeView:(UIView *)view withShapeLayer:(SLShapelayer *)slayer {
+    CGRect rect = [self getRectWithStartPoint:slayer.beginPoint endPoint:slayer.endPoint];
+    view.frame = rect;
 }
 //创建线条图层
 - (SLShapelayer *)createShapeLayer:(SLDrawBezierPath *)path {

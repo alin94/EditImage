@@ -144,7 +144,9 @@
     if(!self.gestureView.superview){
         [self.zoomView.imageView addSubview:self.gestureView];
     }
-    [self.gestureView addSubview:view];
+    if(!view.superview){
+        [self.gestureView addSubview:view];
+    }
     [self.watermarkArray addObject:view];
     [self.gestureView addWatermarkView:view];
     [self topSelectedView:view];
@@ -575,6 +577,7 @@
 - (SLDrawView *)drawView {
     if(!_drawView){
         _drawView = [[SLDrawView alloc] initWithFrame:self.zoomView.imageView.bounds];
+        _drawView.shapeViewSuperView = self.gestureView;
         _drawView.backgroundColor = [UIColor clearColor];
         WS(weakSelf);
         _drawView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
@@ -582,7 +585,6 @@
         };
         _drawView.drawShapeViewFinishedBlock = ^(UIView *shapeView, CAShapeLayer *layer) {
             //添加到手势管理view上
-            CGRectApplyAffineTransform(shapeView.frame, weakSelf.gestureView.transform);
             [weakSelf addRotateAndPinchGestureRecognizer:shapeView];
         };
     }

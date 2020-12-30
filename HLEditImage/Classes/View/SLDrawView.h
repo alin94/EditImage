@@ -39,6 +39,9 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 
 /// 涂鸦视图 画板   默认白底
 @interface SLDrawView : UIView
+///图形的父视图 默认是自己
+@property (nonatomic, weak) UIView *shapeViewSuperView;
+///画笔工具
 @property (nonatomic, strong) SLDrawBrushTool *brushTool;
 ///是否可以画画
 @property (nonatomic, assign) BOOL enableDraw;
