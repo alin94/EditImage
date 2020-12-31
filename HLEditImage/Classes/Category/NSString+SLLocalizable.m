@@ -14,7 +14,13 @@
     if (bundlePaths.count < 1) {
         return self;
     }
-    NSString *resourcePath = bundlePaths.firstObject;
+    NSString *resourcePath = @"";
+    for(NSString *path in bundlePaths){
+        if([path containsString:@"HLEditImage.bundle"]){
+            resourcePath = path;
+            break;
+        }
+    }
     NSBundle *resourceBundle = [NSBundle bundleWithPath:resourcePath];
     NSString *ret = [resourceBundle localizedStringForKey:self value:@"" table:nil];
     return ret;
