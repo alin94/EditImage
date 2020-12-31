@@ -46,7 +46,7 @@
     NSArray *imageNamesSelected = @[@"EditMenuShapeGraffitiSelected",@"EditShapeCircleSelected",@"EditShapeRectangleSelected",@"EditShapeArrowSelected"];
     NSArray *titles = @[kNSLocalizedString(@"涂鸦"),kNSLocalizedString(@"圆形"),kNSLocalizedString(@"矩形"),kNSLocalizedString(@"箭头")];
     int count = (int)imageNames.count;
-    CGSize itemSize = CGSizeMake(48, 52);
+    CGSize itemSize = CGSizeMake(50, 52);
     CGFloat space = (self.frame.size.width - itemSize.width*count)/(count+1);
     for (int i = 0; i < count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];

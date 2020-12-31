@@ -10,6 +10,7 @@
 #import <Photos/Photos.h>
 #import "UIView+SLImage.h"
 #import "UIView+SLFrame.h"
+#import "NSString+SLLocalizable.h"
 #import "SLEditMenuView.h"
 #import "SLEditSelectedBox.h"
 #import "SLImage.h"
@@ -128,8 +129,8 @@
 
 #pragma mark - HelpMethods
 - (void)hideTopNavView:(BOOL)isHidden{
-    [self hiddenView:self.topNavView hidden:isHidden isBottom:NO originalRect:CGRectMake(0, 0, kScreenWidth, kNavigationHeight)] ;
-    [self hiddenView:self.cancelEditBtn hidden:isHidden isBottom:NO originalRect:CGRectMake(21, 19+kSafeAreaTopHeight, 26, 26)];
+    [self hiddenView:self.topNavView hidden:isHidden isBottom:NO originalRect:CGRectMake(0, 0, kScreenWidth,  64+kSafeAreaTopHeight)] ;
+    [self hiddenView:self.cancelEditBtn hidden:isHidden isBottom:NO originalRect:CGRectMake(0, kSafeAreaTopHeight, 64, 64)];
 }
 - (void)hideMenuView:(BOOL)isHidden{
     [self hiddenView:self.editMenuView hidden:isHidden isBottom:YES originalRect:CGRectMake(0, self.view.sl_height - 144 - kSafeAreaBottomHeight, self.view.sl_width, 144 + kSafeAreaBottomHeight)];
@@ -160,9 +161,8 @@
 }
 // 隐藏编辑时菜单按钮
 - (void)hiddenEditMenus:(BOOL)isHidden {
-    [self hiddenView:self.topNavView hidden:isHidden isBottom:NO originalRect:CGRectMake(0, 0, kScreenWidth, kNavigationHeight)] ;
-    [self hiddenView:self.cancelEditBtn hidden:isHidden isBottom:NO originalRect:CGRectMake(21, 19+kSafeAreaTopHeight, 26, 26)];
-    [self hiddenView:self.editMenuView hidden:isHidden isBottom:YES originalRect:CGRectMake(0, self.view.sl_height - 144 - kSafeAreaBottomHeight, self.view.sl_width, 144 + kSafeAreaBottomHeight)];
+    [self hideTopNavView:isHidden];
+    [self hideMenuView:isHidden];
 }
 - (void)hiddenView:(UIView *)view hidden:(BOOL)hidden isBottom:(BOOL)isBottom originalRect:(CGRect)originalRect{
     if(view == nil || view.hidden == hidden){
@@ -388,7 +388,7 @@
 }
 - (UIView *)topNavView {
     if(!_topNavView){
-        _topNavView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kNavigationHeight)];
+        _topNavView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 64+kSafeAreaTopHeight)];
         // Background Code
         CAGradientLayer *gl = [CAGradientLayer layer];
         gl.frame = _topNavView.bounds;
@@ -406,8 +406,10 @@
 }
 - (UIButton *)cancelEditBtn {
     if (_cancelEditBtn == nil) {
-        _cancelEditBtn = [[UIButton alloc] initWithFrame:CGRectMake(21, 19+kSafeAreaTopHeight, 26, 26)];
-        [_cancelEditBtn setImage:[UIImage imageNamed:@"EditImageCancel"] forState:UIControlStateNormal];
+        _cancelEditBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, kSafeAreaTopHeight, 64, 64)];
+        [_cancelEditBtn setTitle:kNSLocalizedString(@"取消") forState:UIControlStateNormal];
+        [_cancelEditBtn.titleLabel setFont:[UIFont systemFontOfSize:16]];
+        [_cancelEditBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_cancelEditBtn addTarget:self action:@selector(cancelEditBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _cancelEditBtn;
@@ -418,6 +420,7 @@
         _editMenuView = [[SLEditMenuView alloc] initWithFrame:CGRectMake(0, self.view.sl_height - 144 - kSafeAreaBottomHeight, self.view.sl_width, 144 + kSafeAreaBottomHeight)];
         _editMenuView.hidden = YES;
         _editMenuView.tipText = self.tipText;
+        _editMenuView.doneBtnTitle = self.doneBtnTitle;
         __weak typeof(self) weakSelf = self;
         _editMenuView.editObject = SLEditObjectPicture;
         _editMenuView.doneBtnClickBlock = ^{
@@ -711,10 +714,13 @@
             [self.trashTips setTitle:kNSLocalizedString(@"松手即可删除") forState:UIControlStateNormal];
             [self.trashTips setImage:[UIImage imageNamed:@"EditTrashOpen"] forState:UIControlStateNormal];;
             [self.trashTips setBackgroundColor:kColorWithHex(0xDC4747)];
+            [_trashTips sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(22, 22) space:9];
         }else {
             [self.trashTips setTitle:kNSLocalizedString(@"拖动到此处删除") forState:UIControlStateNormal];
             [self.trashTips setImage:[UIImage imageNamed:@"EditTrash"] forState:UIControlStateNormal];;
             [self.trashTips setBackgroundColor:kColorWithHex(0x151515)];
+            [_trashTips sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(22, 22) space:9];
+
         }
 
     } else if (pan.state == UIGestureRecognizerStateFailed || pan.state == UIGestureRecognizerStateEnded) {

@@ -10,6 +10,7 @@
 #import "UIView+SLFrame.h"
 #import "SLUtilsMacro.h"
 #import "SLPaddingLabel.h"
+#import "NSString+SLLocalizable.h"
 
 @interface SLEditTextViewMenuView: UIView
 @property (nonatomic, strong) NSArray *colors;
@@ -267,7 +268,7 @@
 - (UIButton *)cancelEditBtn {
     if (_cancelEditBtn == nil) {
         _cancelEditBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 20, 50, 22)];
-        [_cancelEditBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [_cancelEditBtn setTitle:kNSLocalizedString(@"取消") forState:UIControlStateNormal];
         _cancelEditBtn.contentMode = UIViewContentModeLeft;
         [_cancelEditBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _cancelEditBtn.titleLabel.font = [UIFont systemFontOfSize:16];
@@ -280,7 +281,7 @@
         UIButton *doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         doneBtn.backgroundColor = kColorWithHex(0xFE7B1A);
         [doneBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [doneBtn setTitle:NSLocalizedString(@"完成", @"") forState:UIControlStateNormal];
+        [doneBtn setTitle:kNSLocalizedString(@"完成") forState:UIControlStateNormal];
         doneBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         doneBtn.layer.cornerRadius = 3;
         doneBtn.clipsToBounds = YES;

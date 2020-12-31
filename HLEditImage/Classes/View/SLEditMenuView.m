@@ -12,6 +12,7 @@
 #import "SLUtilsMacro.h"
 #import "SLSubmenuGraffitiView.h"
 #import "SLSubmenuMosaicView.h"
+#import "NSString+SLLocalizable.h"
 
 //贴画CollectionViewCell
 @interface SLSubmenuStickingCell : UICollectionViewCell
@@ -182,7 +183,11 @@
     UIButton *doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     doneBtn.backgroundColor = kColorWithHex(0xFE7B1A);
     [doneBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [doneBtn setTitle:NSLocalizedString(@"完成", @"") forState:UIControlStateNormal];
+    if(!self.doneBtnTitle.length){
+        [doneBtn setTitle:kNSLocalizedString(@"完成") forState:UIControlStateNormal];
+    }else {
+        [doneBtn setTitle:self.doneBtnTitle forState:UIControlStateNormal];
+    }
     doneBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     doneBtn.layer.cornerRadius = 3;
     doneBtn.clipsToBounds = YES;
@@ -252,6 +257,12 @@
 - (void)setTipText:(NSString *)tipText {
     _tipText = tipText;
     self.tipLabel.text = tipText;
+}
+- (void)setDoneBtnTitle:(NSString *)doneBtnTitle {
+    _doneBtnTitle = doneBtnTitle;
+    if(doneBtnTitle.length){
+        [self.doneBtn setTitle:doneBtnTitle forState:UIControlStateNormal];
+    }
 }
 #pragma mark - Getter
 - (SLSubmenuGraffitiView *)submenuGraffiti {
