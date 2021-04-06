@@ -454,9 +454,11 @@
                     weakSelf.drawView.brushTool.image = weakSelf.zoomView.imageView.image;
                     weakSelf.drawView.brushTool.squareWidth = [setting[@"squareWidth"] floatValue];
                 }
-                if([setting[@"erase"] boolValue]) {
-                    weakSelf.drawView.brushTool.isErase = YES;
-                    weakSelf.drawView.brushTool.image = weakSelf.zoomView.imageView.image;
+                if(setting[@"erase"]){
+                    weakSelf.drawView.brushTool.isErase = [setting[@"erase"] boolValue];
+                    if(weakSelf.drawView.brushTool.isErase){
+                        weakSelf.drawView.brushTool.image = weakSelf.zoomView.imageView.image;
+                    }
                 }
                 if (setting[@"goBack"]) {
                     [weakSelf.drawView goBack];
@@ -488,6 +490,8 @@
 
                 if(setting[@"shape"]){
                     weakSelf.drawView.brushTool.shapeType = [setting[@"shape"] integerValue];
+                    weakSelf.drawView.brushTool.isErase = NO;
+                    [weakSelf.editMenuView selectLineColor:weakSelf.drawView.brushTool.lineColor];
                 }
                 //更新设置
                 [weakSelf.menuSetting setValuesForKeysWithDictionary:setting];
@@ -630,7 +634,7 @@
         _menuSetting = [NSMutableDictionary dictionary];
         //默认设置
         _menuSetting[@"lineWidth"] = @(4);
-        _menuSetting[@"lineColor"] = kColorWithHex(0xF2F2F2);
+        _menuSetting[@"lineColor"] = kColorWithHex(0xFA5051);
     }
     return _menuSetting;
 }

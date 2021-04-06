@@ -165,6 +165,11 @@
         return;
     }
 }
+///选中线条颜色
+- (void)selectLineColor:(UIColor *)color {
+    _submenuGraffiti.currentColor = color;
+}
+
 - (void)createGradientLayer {
     // Background Code
     CAGradientLayer *gl = [CAGradientLayer layer];
@@ -274,8 +279,8 @@
         _submenuGraffiti.selectedLineColor = ^(UIColor *lineColor) {
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"lineColor":lineColor,@"erase":@(NO)});
         };
-        _submenuGraffiti.selectEraseBlock = ^{
-            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"erase":@(YES)});
+        _submenuGraffiti.selectEraseBlock = ^(BOOL isErase) {
+            weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"erase":@(isErase)});
         };
         _submenuGraffiti.goBackBlock = ^{
             weakSelf.selectEditMenu(SLEditMenuTypeGraffiti, @{@"goBack":@(YES)});

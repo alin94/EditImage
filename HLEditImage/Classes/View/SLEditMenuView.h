@@ -50,6 +50,8 @@ typedef NS_ENUM(NSUInteger, SLEditMenuType) {
 @property (nonatomic, copy) void (^doneBtnClickBlock)(void);
 ///设置前进后退按钮是否可点
 - (void)enableBackBtn:(BOOL)enableBack forwardBtn:(BOOL)enableForward;
+///选中线条颜色
+- (void)selectLineColor:(UIColor *)color;
 @end
 
 NS_ASSUME_NONNULL_END

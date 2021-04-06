@@ -249,6 +249,35 @@
     self.forwardBtn.hidden = YES;
     self.forwardBtn.enabled = NO;
 }
+- (void)changeCurrentSelectColor:(UIButton *)colorBtn callback:(BOOL)callback {
+    //取消选中橡皮檫按钮
+    self.eraserBtn.selected = NO;
+    if(colorBtn.isSelected){
+        return;
+    }
+    //前一个选中的按钮
+    UIButton *previousBtn = (UIButton *)[self viewWithTag:(10 + _currentColorIndex)];
+    previousBtn.selected = NO;
+    previousBtn.imageView.layer.cornerRadius = 9;
+    [previousBtn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
+    
+    //当前选中的按钮
+    colorBtn.selected = YES;
+    colorBtn.imageView.layer.cornerRadius = 12;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [colorBtn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
+    });
+    _currentColorIndex = (int)colorBtn.tag - 10;
+    _currentColor = self.colors[_currentColorIndex];
+    [self.selectedColorCircleView removeFromSuperview];
+    self.selectedColorCircleView.layer.borderColor = _currentColor.CGColor;
+    [colorBtn insertSubview:self.selectedColorCircleView belowSubview:colorBtn.imageView];
+    self.selectedColorCircleView.center = colorBtn.imageView.center;
+    if(self.selectedLineColor && callback){
+        self.selectedLineColor(_currentColor);
+    }
+}
+
 #pragma mark - Help Method
 - (void)showBackAndForwardBtn {
     self.backBtn.hidden = NO;
@@ -312,7 +341,7 @@
             [self.selectedColorCircleView removeFromSuperview];
             //选中橡皮檫按钮
             if(self.selectEraseBlock){
-                self.selectEraseBlock();
+                self.selectEraseBlock(YES);
             }
         }else {
             //选中之前的颜色按钮
@@ -320,6 +349,10 @@
         }
         
     }else if (index == 1){
+        self.eraserBtn.selected = NO;
+        if(self.selectEraseBlock){
+            self.selectEraseBlock(NO);
+        }
         //形状
         [self hiddenView:self.shapeView];
     }else if (index == 2){
@@ -331,31 +364,7 @@
 // 选中当前画笔颜色
 - (void)colorBtnClicked:(UIButton *)colorBtn {
     //取消选中橡皮檫按钮
-    self.eraserBtn.selected = NO;
-    if(colorBtn.isSelected){
-        return;
-    }
-    //前一个选中的按钮
-    UIButton *previousBtn = (UIButton *)[self viewWithTag:(10 + _currentColorIndex)];
-    previousBtn.selected = NO;
-    previousBtn.imageView.layer.cornerRadius = 9;
-    [previousBtn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
-
-    //当前选中的按钮
-    colorBtn.selected = YES;
-    colorBtn.imageView.layer.cornerRadius = 12;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [colorBtn sl_changeButtonType:SLButtonTypeTopImageBottomText withImageMaxSize:CGSizeMake(28, 28) space:9];
-    });
-    _currentColorIndex = (int)colorBtn.tag - 10;
-    _currentColor = self.colors[_currentColorIndex];
-    [self.selectedColorCircleView removeFromSuperview];
-    self.selectedColorCircleView.layer.borderColor = _currentColor.CGColor;
-    [colorBtn insertSubview:self.selectedColorCircleView belowSubview:colorBtn.imageView];
-    self.selectedColorCircleView.center = colorBtn.imageView.center;
-    if(self.selectedLineColor){
-        self.selectedLineColor(_currentColor);
-    }
+    [self changeCurrentSelectColor:colorBtn callback:YES];
 }
 //返回上一步
 - (void)backBtnClicked:(id)sender {
@@ -377,6 +386,22 @@
 - (void)setForwardBtnEnable:(BOOL)forwardBtnEnable {
     _forwardBtnEnable = forwardBtnEnable;
     self.forwardBtn.enabled = forwardBtnEnable;
+}
+- (void)setCurrentColor:(UIColor *)currentColor {
+    int index = 0;
+    BOOL contain = NO;
+    for(UIColor *color in self.colors){
+        if(CGColorEqualToColor(color.CGColor, currentColor.CGColor)){
+            contain = YES;
+            _currentColor = currentColor;
+            break;
+        }
+        index++;
+    }
+    UIButton *btn =[self viewWithTag:(10 + index)];
+    if(btn && contain){
+        [self changeCurrentSelectColor:btn callback:NO];
+    }
 }
 #pragma mark- getter
 - (UIView *)menuContainerView {
@@ -422,6 +447,9 @@
         };
         _shapeView.closeBlock = ^{
             [weakSelf hiddenView:weakSelf.shapeView];
+            if(weakSelf.brushShapeChangedBlock){
+                weakSelf.brushShapeChangedBlock(weakSelf.currentShapeType);
+            }
         };
     }
     return _shapeView;
