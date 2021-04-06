@@ -258,6 +258,14 @@
     return trans.a/aa;
 }
 - (CGFloat)transScaleY {
+//    CGAffineTransform trans = self.scaleTrans;
+//    if(!trans.b){
+//        return trans.d;
+//    }
+//    CGFloat angleInRadians = [self getRadiansWithRotateAngle:self.currentPropertyModel.rotateAngle];
+//    double aa = sin(angleInRadians);
+//    return trans.d/aa;
+//
     return [self transScaleX];
 }
 
@@ -354,17 +362,13 @@
         return;
     }
     //设置最小缩放系数
-    CGFloat zoomScale = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect));
     CGFloat zoomScale1 = MAX(CGRectGetWidth(self.zoomView.frame) / CGRectGetWidth(rotateoriginalRect), CGRectGetHeight(self.zoomView.frame) / CGRectGetHeight(rotateoriginalRect)) * [self transScaleX];
-    
-    NSLog(@"最小比例是===%f ====%f",zoomScale,zoomScale1);
     self.zoomView.minimumZoomScale = zoomScale1;
-    //    self.zoomView.minimumZoomScale = 1;
-    
 }
 //获取网格区域在图片上的相对位置
 - (CGRect)rectOfGridOnImageByGridRect:(CGRect)cropRect {
     CGRect rect = [self convertRect:cropRect toView:self.zoomView.imageView];
+    NSLog(@"frame是这样的%@",NSStringFromCGRect(rect));
     return rect;
 }
 //保存图片完成后调用的方法
@@ -471,10 +475,10 @@
     [self.zoomView setZoomScale:self.zoomView.zoomScale * scale];
     // 调整contentOffset
     if(_rotateAngle%180 != 0){
-        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX] - (self.gridView.gridRect.origin.y - self.zoomView.sl_y), gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY] - (self.gridView.gridRect.origin.x - self.zoomView.sl_x));
-        
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale - (self.gridView.gridRect.origin.y - self.zoomView.sl_y)*self.zoomView.zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale - (self.gridView.gridRect.origin.x - self.zoomView.sl_x)*self.zoomView.zoomScale);
+
     }else {
-        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX] - (self.gridView.gridRect.origin.x - self.zoomView.sl_x), gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY] - (self.gridView.gridRect.origin.y - self.zoomView.sl_y));
+        self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale- (self.gridView.gridRect.origin.x - self.zoomView.sl_x)*self.zoomView.zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale- (self.gridView.gridRect.origin.y - self.zoomView.sl_y)*self.zoomView.zoomScale);
     }
     NSLog(@"偏移===%@",NSStringFromCGPoint(self.zoomView.contentOffset));
     //检查还原按钮
@@ -504,9 +508,6 @@
     if(self.cancelBtnClickBlock){
         self.cancelBtnClickBlock();
     }
-//    if(self.doneBtnClickBlock){
-//        self.doneBtnClickBlock();
-//    }
 }
 //还原
 - (void)recoveryClicked:(id)sender {
@@ -564,6 +565,7 @@
 - (void)gridViewDidEndResizing:(SLGridView *)gridView {
     CGRect gridRectOfImage = [self rectOfGridOnImageByGridRect:gridView.gridRect];
     CGRect preZoomViewRect = self.zoomView.frame;
+    CGFloat preZoomScale = MIN(preZoomViewRect.size.width/gridView.gridRect.size.width, preZoomViewRect.size.height/gridView.gridRect.size.height);
     //居中
     [UIView animateWithDuration:0.25
                           delay:0.0
@@ -575,20 +577,24 @@
                              self.zoomView.sl_size = newSize;
                              self.zoomView.sl_y = KGridTopMargin;
                              self.zoomView.sl_centerX = self.sl_width/2.0;
+
                          }else {
                              self.zoomView.sl_size = newSize;
                              self.zoomView.center = CGPointMake(self.sl_width/2.0, (self.sl_height - KBottomMenuHeight)/2.0);
+                         }
+                         CGFloat zoomScale = MIN(newSize.width/gridView.gridRect.size.width, newSize.height/gridView.gridRect.size.height);
+                         if(self.zoomView.zoomScale == 1){
+                             zoomScale = preZoomScale;
                          }
                          //重置最小缩放系数
                          [self resetMinimumZoomScale];
                          [self.zoomView setZoomScale:self.zoomView.zoomScale];
                          // 调整contentOffset
-                         //        CGFloat zoomScale = self.zoomView.sl_width/gridView.gridRect.size.width;
-                         CGFloat zoomScale = MIN(preZoomViewRect.size.width/gridView.gridRect.size.width, preZoomViewRect.size.height/gridView.gridRect.size.height);
                          gridView.gridRect = self.zoomView.frame;
-                         NSLog(@"现在的缩放比例是===%f",zoomScale);
                          [self.zoomView setZoomScale:self.zoomView.zoomScale * zoomScale];
-                         self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX], gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY]);
+                         // 调整contentOffset
+                         self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale);
+                         
                      } completion:^(BOOL finished) {
                          [self checkRecoverBtnIfEnable];
                      }];
@@ -598,6 +604,8 @@
     SLGridView *gridView = self.gridView;
     CGRect gridRectOfImage = [self rectOfGridOnImageByGridRect:gridView.gridRect];
     CGRect preZoomViewRect = self.zoomView.frame;
+    CGFloat preZoomScale = MIN(preZoomViewRect.size.width/gridView.gridRect.size.width, preZoomViewRect.size.height/gridView.gridRect.size.height);
+
 
     CGSize newSize = CGSizeMake(self.sl_width - 2 * KGridLRMargin, (self.sl_width - 2 * KGridLRMargin)*gridView.gridRect.size.height/gridView.gridRect.size.width);
     if (newSize.height > self.gridView.maxGridRect.size.height) {
@@ -609,16 +617,18 @@
         self.zoomView.sl_size = newSize;
         self.zoomView.center = CGPointMake(self.sl_width/2.0, (self.sl_height - KBottomMenuHeight)/2.0);
     }
+    CGFloat zoomScale = MIN(newSize.width/gridView.gridRect.size.width, newSize.height/gridView.gridRect.size.height);
+    if(self.zoomView.zoomScale == 1){
+        zoomScale = preZoomScale;
+    }
     //重置最小缩放系数
     [self resetMinimumZoomScale];
     [self.zoomView setZoomScale:self.zoomView.zoomScale];
     // 调整contentOffset
-    //        CGFloat zoomScale = self.zoomView.sl_width/gridView.gridRect.size.width;
-    CGFloat zoomScale = MIN(preZoomViewRect.size.width/gridView.gridRect.size.width, preZoomViewRect.size.height/gridView.gridRect.size.height);
     gridView.gridRect = self.zoomView.frame;
     NSLog(@"现在的缩放比例是===%f",zoomScale);
     [self.zoomView setZoomScale:self.zoomView.zoomScale * zoomScale];
-    self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale*[self transScaleX], gridRectOfImage.origin.y*self.zoomView.zoomScale*[self transScaleY]);
+    self.zoomView.contentOffset = CGPointMake(gridRectOfImage.origin.x*self.zoomView.zoomScale, gridRectOfImage.origin.y*self.zoomView.zoomScale);
 }
 
 

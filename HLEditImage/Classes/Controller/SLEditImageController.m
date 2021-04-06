@@ -379,7 +379,7 @@
         _zoomView = [[SLImageZoomView alloc] initWithFrame:self.view.bounds];
         _zoomView.backgroundColor = [UIColor clearColor];
         _zoomView.userInteractionEnabled = YES;
-        _zoomView.maximumZoomScale = 4;
+        _zoomView.maximumZoomScale = MAXFLOAT;
         _zoomView.zoomViewDelegate = self;
         _zoomView.imageView.autoresizesSubviews = NO;
 
