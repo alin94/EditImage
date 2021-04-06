@@ -120,7 +120,7 @@
         _currentColorIndex = 0;
         _currentLineWidth = 8;
         _currentShapeType = SLGraffitiShapeRandom;
-        NSArray *colors = @[kColorWithHex(0xF2F2F2), kColorWithHex(0x2B2B2B), kColorWithHex(0xFA5051), kColorWithHex(0xFFC300), kColorWithHex(0x04C160), kColorWithHex(0x11AEFF)];
+        NSArray *colors = @[kColorWithHex(0xFA5051),kColorWithHex(0x04C160), kColorWithHex(0x11AEFF),kColorWithHex(0xFFC300), kColorWithHex(0x2B2B2B),kColorWithHex(0xF2F2F2)];
         _colors = colors;
         _currentColor = _colors[0];
         _backBtnEnable = YES;
@@ -177,7 +177,7 @@
     _colorsContainerView.showsVerticalScrollIndicator = NO;
     _colorsContainerView.showsHorizontalScrollIndicator = NO;
     [self.menuContainerView addSubview:_colorsContainerView];
-    NSArray *titles = @[kNSLocalizedString(@"浅灰"),kNSLocalizedString(@"黑色"),kNSLocalizedString(@"红色"),kNSLocalizedString(@"黄色"),kNSLocalizedString(@"绿色"),kNSLocalizedString(@"蓝色")];
+    NSArray *titles = @[kNSLocalizedString(@"红色"),kNSLocalizedString(@"绿色"),kNSLocalizedString(@"蓝色"),kNSLocalizedString(@"黄色"),kNSLocalizedString(@"黑色"),kNSLocalizedString(@"浅灰")];
     int count = (int)self.colors.count;
     CGSize itemSize = CGSizeMake(48, 51);
     CGFloat x = 10;

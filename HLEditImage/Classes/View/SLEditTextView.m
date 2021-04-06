@@ -33,7 +33,7 @@
     self = [super initWithFrame:frame];
     if(self){
         _currentTextAlign = NSTextAlignmentLeft;
-        NSArray *colors = @[kColorWithHex(0xF2F2F2), kColorWithHex(0x2B2B2B), kColorWithHex(0xFA5051), kColorWithHex(0xFFC300), kColorWithHex(0x04C160), kColorWithHex(0x11AEFF)];
+        NSArray *colors = @[kColorWithHex(0xFA5051),kColorWithHex(0x04C160), kColorWithHex(0x11AEFF),kColorWithHex(0xFFC300), kColorWithHex(0x2B2B2B),kColorWithHex(0xF2F2F2)];
         _colors = colors;
         _currentColor = _colors[0];
         _currentTextColor = _currentColor;

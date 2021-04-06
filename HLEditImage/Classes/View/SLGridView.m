@@ -252,7 +252,7 @@ const CGFloat kSLControlWidth = 30.f;
     if (!_gridMaskLayer) {
         _gridMaskLayer = [[SLMaskLayer alloc] init];
         _gridMaskLayer.frame = self.bounds;
-        _gridMaskLayer.maskColor = [UIColor colorWithWhite:.0f alpha:0.6f].CGColor;
+        _gridMaskLayer.maskColor = [UIColor colorWithWhite:.0f alpha:0.7f].CGColor;
     }
     return _gridMaskLayer;
 }
@@ -314,7 +314,7 @@ const CGFloat kSLControlWidth = 30.f;
         [self setNeedsLayout];
         [self.gridLayer setGridRect:gridRect animated:animated];
         if (isMaskLayer) {
-            [self.gridMaskLayer setMaskRect:gridRect animated:YES];
+            [self.gridMaskLayer setMaskRect:gridRect animated:NO];
         }
     }
 }
@@ -446,14 +446,14 @@ const CGFloat kSLControlWidth = 30.f;
 - (void)resizeConrolDidBeginResizing:(SLResizeControl *)resizeConrol {
     self.initialRect = self.gridRect;
     _dragging = YES;
-    self.showMaskLayer = NO;
+    [self changeMaskLayerColor:[[UIColor blackColor] colorWithAlphaComponent:0.4]];
     if ([self.delegate respondsToSelector:@selector(gridViewDidBeginResizing:)]) {
         [self.delegate gridViewDidBeginResizing:self];
     }
 }
 - (void)resizeConrolDidResizing:(SLResizeControl *)resizeConrol {
     CGRect gridRect = [self cropRectMakeWithResizeControlView:resizeConrol];
-    [self setGridRect:gridRect maskLayer:NO];
+    [self setGridRect:gridRect maskLayer:self.showMaskLayer];
     if ([self.delegate respondsToSelector:@selector(gridViewDidResizing:)]) {
         [self.delegate gridViewDidResizing:self];
     }
@@ -461,7 +461,7 @@ const CGFloat kSLControlWidth = 30.f;
 - (void)resizeConrolDidEndResizing:(SLResizeControl *)resizeConrol {
     [self enableCornerViewUserInteraction:nil];
     _dragging = NO;
-    self.showMaskLayer = YES;
+    [self changeMaskLayerColor:[[UIColor blackColor] colorWithAlphaComponent:0.7]];
     if ([self.delegate respondsToSelector:@selector(gridViewDidEndResizing:)]) {
         [self.delegate gridViewDidEndResizing:self];
     }
