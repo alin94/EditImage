@@ -451,13 +451,15 @@
                 }
                 if(setting[@"squareWidth"]){
                     weakSelf.drawView.brushTool.isErase = NO;
-                    weakSelf.drawView.brushTool.image = weakSelf.zoomView.imageView.image;
+                    CGRect rect = [weakSelf.zoomView.imageView.superview convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.drawView];
+                    [weakSelf.drawView.brushTool setPatternImage:weakSelf.zoomView.imageView.image drawRect:rect];
                     weakSelf.drawView.brushTool.squareWidth = [setting[@"squareWidth"] floatValue];
                 }
                 if(setting[@"erase"]){
                     weakSelf.drawView.brushTool.isErase = [setting[@"erase"] boolValue];
                     if(weakSelf.drawView.brushTool.isErase){
-                        weakSelf.drawView.brushTool.image = weakSelf.zoomView.imageView.image;
+                        CGRect rect = [weakSelf.zoomView.imageView.superview convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.drawView];
+                        [weakSelf.drawView.brushTool setPatternImage:weakSelf.zoomView.imageView.image drawRect:rect];
                     }
                 }
                 if (setting[@"goBack"]) {

@@ -70,10 +70,24 @@
     }
     return self;
 }
-- (void)setImage:(UIImage *)image {
+///设置画笔图案
+- (void)setPatternImage:(UIImage *)image drawRect:(CGRect)rect {
     _image = image;
-    [self createPatternImage];
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+    //获得当前Context
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    //CTM变换，调整坐标系，*重要*，否则橡皮擦使用的背景图片会发生翻转。
+    CGContextScaleCTM(context, 1, -1);
+    CGContextTranslateCTM(context, 0, -rect.size.height);
+    //图片适配到当前View的矩形区域，会有拉伸
+    [self.image drawInRect:rect];
+    //获取拉伸并翻转后的图片
+    UIImage *stretchedImg = UIGraphicsGetImageFromCurrentImageContext();
+    _image = stretchedImg;
+    UIGraphicsEndImageContext();
+
 }
+
 - (void)setSquareWidth:(CGFloat)squareWidth {
     if(_squareWidth != squareWidth){
         _squareWidth = squareWidth;
@@ -82,22 +96,6 @@
         }
     }
 }
-
-- (void)createPatternImage {
-    UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, [UIScreen mainScreen].scale);
-    //获得当前Context
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    //CTM变换，调整坐标系，*重要*，否则橡皮擦使用的背景图片会发生翻转。
-    CGContextScaleCTM(context, 1, -1);
-    CGContextTranslateCTM(context, 0, -self.bounds.size.height);
-    //图片适配到当前View的矩形区域，会有拉伸
-    [self.image drawInRect:self.bounds];
-    //获取拉伸并翻转后的图片
-    UIImage *stretchedImg = UIGraphicsGetImageFromCurrentImageContext();
-    _image = stretchedImg;
-    UIGraphicsEndImageContext();
-}
-
 
 @end
 

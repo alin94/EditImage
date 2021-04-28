@@ -34,7 +34,8 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 @property (nonatomic, assign) NSInteger lineWidthIndex;
 
 - (instancetype)initWithDrawBounds:(CGRect)bounds;
-
+///设置画笔图案
+- (void)setPatternImage:(UIImage *)image drawRect:(CGRect)rect;
 @end
 
 /// 涂鸦视图 画板   默认白底
