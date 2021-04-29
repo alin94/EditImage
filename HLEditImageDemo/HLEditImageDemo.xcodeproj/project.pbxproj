@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BBF3A45663BA15A37286659E /* libPods-HLEditImageDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F337DA6A8FE4F7A377C0D46A /* libPods-HLEditImageDemo.a */; };
+		C70C7CF7261BF3A400B61EB6 /* EditTraditionalMosaicSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C70C7CF6261BF3A300B61EB6 /* EditTraditionalMosaicSelected@3x.png */; };
 		C72DF2C325949D470062841F /* SLMaskLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C72DF2C225949D470062841F /* SLMaskLayer.m */; };
 		C7683D89257A288C00DA3061 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683D88257A288C00DA3061 /* AppDelegate.m */; };
 		C7683D8F257A288C00DA3061 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7683D8E257A288C00DA3061 /* ViewController.m */; };
@@ -98,7 +100,6 @@
 		C7C12F25258063C600B1CC6D /* EditMenuClipScaleSelected_16:9@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC1258063BD00B1CC6D /* EditMenuClipScaleSelected_16:9@3x.png */; };
 		C7C12F26258063C600B1CC6D /* EditTextAlignCenter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC2258063BE00B1CC6D /* EditTextAlignCenter@2x.png */; };
 		C7C12F27258063C600B1CC6D /* EditMenuBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC3258063BE00B1CC6D /* EditMenuBack@2x.png */; };
-		C7C12F28258063C600B1CC6D /* EditTraditionalMosaicSelected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC4258063BE00B1CC6D /* EditTraditionalMosaicSelected@3x.png */; };
 		C7C12F29258063C600B1CC6D /* EditMenuClipScaleRam@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC5258063BE00B1CC6D /* EditMenuClipScaleRam@2x.png */; };
 		C7C12F2A258063C600B1CC6D /* EditShapeCircle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC6258063BE00B1CC6D /* EditShapeCircle@2x.png */; };
 		C7C12F2B258063C600B1CC6D /* EditTextAlignRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C7C12EC7258063BE00B1CC6D /* EditTextAlignRight@2x.png */; };
@@ -182,6 +183,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		404402BF8F817AC24999A295 /* Pods-HLEditImageDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HLEditImageDemo.release.xcconfig"; path = "Target Support Files/Pods-HLEditImageDemo/Pods-HLEditImageDemo.release.xcconfig"; sourceTree = "<group>"; };
+		9DB007A0C31653C6E4B8A8B6 /* Pods-HLEditImageDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HLEditImageDemo.debug.xcconfig"; path = "Target Support Files/Pods-HLEditImageDemo/Pods-HLEditImageDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		C70C7CF6261BF3A300B61EB6 /* EditTraditionalMosaicSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTraditionalMosaicSelected@3x.png"; sourceTree = "<group>"; };
 		C72DF2C125949D470062841F /* SLMaskLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLMaskLayer.h; sourceTree = "<group>"; };
 		C72DF2C225949D470062841F /* SLMaskLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLMaskLayer.m; sourceTree = "<group>"; };
 		C7683D84257A288C00DA3061 /* HLEditImageDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HLEditImageDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -301,7 +305,6 @@
 		C7C12EC1258063BD00B1CC6D /* EditMenuClipScaleSelected_16:9@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleSelected_16:9@3x.png"; sourceTree = "<group>"; };
 		C7C12EC2258063BE00B1CC6D /* EditTextAlignCenter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTextAlignCenter@2x.png"; sourceTree = "<group>"; };
 		C7C12EC3258063BE00B1CC6D /* EditMenuBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuBack@2x.png"; sourceTree = "<group>"; };
-		C7C12EC4258063BE00B1CC6D /* EditTraditionalMosaicSelected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "EditTraditionalMosaicSelected@3x.png"; path = "../../../Downloads/图片编辑图标/EditTraditionalMosaicSelected@3x.png"; sourceTree = "<group>"; };
 		C7C12EC5258063BE00B1CC6D /* EditMenuClipScaleRam@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditMenuClipScaleRam@2x.png"; sourceTree = "<group>"; };
 		C7C12EC6258063BE00B1CC6D /* EditShapeCircle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditShapeCircle@2x.png"; sourceTree = "<group>"; };
 		C7C12EC7258063BE00B1CC6D /* EditTextAlignRight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EditTextAlignRight@2x.png"; sourceTree = "<group>"; };
@@ -390,6 +393,7 @@
 		C7D1FDFB258B27DD002D180C /* SLTransformGestureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTransformGestureView.m; sourceTree = "<group>"; };
 		C7D1FE052590AF1B002D180C /* SLImageClipView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLImageClipView.h; sourceTree = "<group>"; };
 		C7D1FE062590AF1B002D180C /* SLImageClipView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLImageClipView.m; sourceTree = "<group>"; };
+		F337DA6A8FE4F7A377C0D46A /* libPods-HLEditImageDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HLEditImageDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -398,17 +402,38 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7C12EA1257F2D5200B1CC6D /* WebP.framework in Frameworks */,
+				BBF3A45663BA15A37286659E /* libPods-HLEditImageDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		58E3BE8A748AB4E8CDC12A12 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9DB007A0C31653C6E4B8A8B6 /* Pods-HLEditImageDemo.debug.xcconfig */,
+				404402BF8F817AC24999A295 /* Pods-HLEditImageDemo.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		8F82AA9514E061172F4F1220 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F337DA6A8FE4F7A377C0D46A /* libPods-HLEditImageDemo.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C7683D7B257A288C00DA3061 = {
 			isa = PBXGroup;
 			children = (
 				C7683D86257A288C00DA3061 /* HLEditImageDemo */,
 				C7683D85257A288C00DA3061 /* Products */,
+				58E3BE8A748AB4E8CDC12A12 /* Pods */,
+				8F82AA9514E061172F4F1220 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -690,7 +715,7 @@
 				C7C12F72258065D500B1CC6D /* EditTraditionalMosaic@2x.png */,
 				C7683DFA257DD6E300DA3061 /* EditTraditionalMosaic@3x.png */,
 				C7C12F75258065D500B1CC6D /* EditTraditionalMosaicSelected@2x.png */,
-				C7C12EC4258063BE00B1CC6D /* EditTraditionalMosaicSelected@3x.png */,
+				C70C7CF6261BF3A300B61EB6 /* EditTraditionalMosaicSelected@3x.png */,
 				C7C12EDA258063C000B1CC6D /* EditTrash@2x.png */,
 				C7C12EBA258063BD00B1CC6D /* EditTrash@3x.png */,
 				C7C12F0A258063C500B1CC6D /* EditTrashOpen@2x.png */,
@@ -706,6 +731,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C7683D9D257A288E00DA3061 /* Build configuration list for PBXNativeTarget "HLEditImageDemo" */;
 			buildPhases = (
+				2704D58840D56AAB78FABFB9 /* [CP] Check Pods Manifest.lock */,
 				C7683D80257A288C00DA3061 /* Sources */,
 				C7683D81257A288C00DA3061 /* Frameworks */,
 				C7683D82257A288C00DA3061 /* Resources */,
@@ -839,7 +865,6 @@
 				C7683E08257DD6E300DA3061 /* EditMenuTextBackgroundColor@3x.png in Resources */,
 				C7C12F21258063C600B1CC6D /* EditBrushSize4Selected@2x.png in Resources */,
 				C7683D92257A288C00DA3061 /* Main.storyboard in Resources */,
-				C7C12F28258063C600B1CC6D /* EditTraditionalMosaicSelected@3x.png in Resources */,
 				C7683E2C257DD70300DA3061 /* EditImageCancel@2x.png in Resources */,
 				C7683E25257DD70300DA3061 /* EditImageClipCancel@2x.png in Resources */,
 				C7C12F53258063C600B1CC6D /* EditTextAlignLeft@3x.png in Resources */,
@@ -869,6 +894,7 @@
 				C7C12F1C258063C600B1CC6D /* EditMenuClipScale_4:3@2x.png in Resources */,
 				C7C12F7A258065D500B1CC6D /* EditBrushMosaicSelected@2x.png in Resources */,
 				C7C12F0C258063C600B1CC6D /* EditMenuArrowDown@3x.png in Resources */,
+				C70C7CF7261BF3A400B61EB6 /* EditTraditionalMosaicSelected@3x.png in Resources */,
 				C7C12F77258065D500B1CC6D /* EditBrushMosaic@2x.png in Resources */,
 				C7C12F3C258063C600B1CC6D /* EditMenuEraserDisable@2x.png in Resources */,
 				C7C12F2A258063C600B1CC6D /* EditShapeCircle@2x.png in Resources */,
@@ -901,6 +927,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2704D58840D56AAB78FABFB9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HLEditImageDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C7683D80257A288C00DA3061 /* Sources */ = {
@@ -1079,6 +1130,7 @@
 		};
 		C7683D9E257A288E00DA3061 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9DB007A0C31653C6E4B8A8B6 /* Pods-HLEditImageDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -1104,6 +1156,7 @@
 		};
 		C7683D9F257A288E00DA3061 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 404402BF8F817AC24999A295 /* Pods-HLEditImageDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";

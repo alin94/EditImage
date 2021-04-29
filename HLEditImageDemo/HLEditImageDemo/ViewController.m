@@ -11,6 +11,7 @@
 #import "SLUtilsMacro.h"
 @interface ViewController () <UIImagePickerControllerDelegate,UINavigationBarDelegate>
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIImagePickerController *pickVC;
 
 @end
 
@@ -63,6 +64,7 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.delegate = self;
         [self presentViewController:imagePicker animated:YES completion:nil];
+        self.pickVC = imagePicker;
     }
 }
 //保存照片
