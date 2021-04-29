@@ -331,21 +331,14 @@
             weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goForward":@(YES)});
         };
         _submenuMosaic.cancelBlock = ^{
-            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goBackToLast":@(YES),@"hidden":@(YES)});
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goBackToLast":@(YES),@"hidden":@(YES),@"erase":@(NO)});
             [weakSelf hiddenView:weakSelf.submenuMosaic];
         };
         _submenuMosaic.doneBlock = ^{
-            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"hidden":@(YES)});
+            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"hidden":@(YES),@"erase":@(NO)});
             [weakSelf hiddenView:weakSelf.submenuMosaic];
             
         };
-
-        //        _submenuMosaic.selectedMosaicType = ^(NSInteger currentTypeIndex) {
-        //            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"mosaicType":@(currentTypeIndex)});
-        //        };
-        //        _submenuMosaic.goBack = ^{
-        //            weakSelf.selectEditMenu(SLEditMenuTypePictureMosaic, @{@"goBack":@(YES)});
-        //        };
     }
     return _submenuMosaic;
 }
@@ -395,7 +388,8 @@
         case SLEditMenuTypePictureMosaic:
             [self hiddenView:self.submenuMosaic];
             if(!self.submenuMosaic.hidden){
-                self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuMosaic.hidden),@"lineWidth":@(self.submenuMosaic.currentLineWidth),@"squareWidth":@(self.submenuMosaic.squareWidth),@"erase":@(self.submenuMosaic.isErase),@"shape":[NSNumber numberWithInteger:4]});
+                self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuMosaic.hidden),@"lineWidth":@(self.submenuMosaic.currentLineWidth),@"squareWidth":@(self.submenuMosaic.squareWidth),@"shape":[NSNumber numberWithInteger:4]});
+                [self.submenuMosaic showUp];
             }else {
                 self.selectEditMenu(editMenuType, @{@"hidden":@(self.submenuMosaic.hidden)});
             }

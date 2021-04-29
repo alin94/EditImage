@@ -22,5 +22,6 @@
 @property (nonatomic, assign) BOOL backBtnEnable;
 @property (nonatomic, assign) BOOL forwardBtnEnable;
 - (void)showBackAndForwardBtn;
+- (void)showUp;
 @end
 

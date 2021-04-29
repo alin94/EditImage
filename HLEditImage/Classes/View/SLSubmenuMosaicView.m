@@ -25,6 +25,9 @@
 @property (nonatomic, strong) UIButton *forwardBtn;//前进按钮
 @property (nonatomic, strong) UIButton *eraserBtn;//橡皮檫按钮
 @property (nonatomic, strong) UIButton *lineWidthBtn;//大小按钮
+@property (nonatomic, strong) UIButton *squareBtn8;//马赛克按钮
+@property (nonatomic, strong) UIButton *squareBtn4;//马赛克按钮
+
 @property (nonatomic, assign) NSInteger currentSelectIndex;
 
 
@@ -82,6 +85,10 @@
             self.eraserBtn.enabled = NO;
         }else if (i == 1){
             self.lineWidthBtn = btn;
+        }else if (i == 2){
+            self.squareBtn8 = btn;
+        }else if (i == 3){
+            self.squareBtn4 = btn;
         }
         if (i == self.currentSelectIndex){
             btn.selected = YES;
@@ -139,6 +146,20 @@
     self.backBtn.hidden = NO;
     self.forwardBtn.hidden = NO;
     self.titleLabel.hidden = YES;
+}
+- (void)showUp {
+    UIButton *selectBtn = nil;
+    if(self.squareWidth == 4){
+        selectBtn = self.squareBtn4;
+    }else {
+        selectBtn = self.squareBtn8;
+    }
+    UIButton *preBtn = [self.topContainerView viewWithTag:self.currentSelectIndex+10];
+    if(preBtn != selectBtn){
+        preBtn.selected = NO;
+        self.currentSelectIndex = selectBtn.tag - 10;
+        selectBtn.selected = YES;
+    }
 }
 - (void)hiddenView:(UIView *)view {
     [self hiddenView:view hidden:!view.hidden];
