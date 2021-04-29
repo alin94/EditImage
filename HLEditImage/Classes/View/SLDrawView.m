@@ -545,7 +545,10 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextScaleCTM(context, 1, -1);
     CGContextTranslateCTM(context, 0, -viewBounds.size.height);
+    //防止留黑边
+    self.maskLayer.hidden = YES;
     [self.layer renderInContext:context];
+    self.maskLayer.hidden = NO;
     UIImage *stretchedImg = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
