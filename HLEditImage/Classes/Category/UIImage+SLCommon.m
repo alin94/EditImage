@@ -193,13 +193,6 @@
     
 }
 - (UIImage *)sl_clipImageWithRect:(CGRect)range {
-//    UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
-//    [self drawInRect:rect];
-//    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//
-//
-    
     //上面我们获得了一个全屏的截图，下边的方法是对这个图片进行裁剪。
     CGImageRef imageRef = self.CGImage;
     //注意：这里的宽/高 CGImageGetWidth(imageRef) 是图片的像素宽/高，所以计算截图区域时需要按比例来 * [UIScreen mainScreen].scale；

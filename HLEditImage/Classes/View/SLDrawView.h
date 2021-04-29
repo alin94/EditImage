@@ -32,6 +32,11 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 @property (nonatomic, assign) SLDrawShapeType shapeType;
 //箭头大小
 @property (nonatomic, assign) NSInteger lineWidthIndex;
+///画板画图区域
+@property (nonatomic, assign) CGRect drawBounds;
+///画板视图大小
+@property (nonatomic, assign) CGRect viewBounds;
+
 
 - (instancetype)initWithDrawBounds:(CGRect)bounds;
 ///设置画笔图案
@@ -80,6 +85,8 @@ typedef NS_ENUM(NSUInteger, SLDrawShapeType) {
 - (void)goBackToLastDrawState;
 ///隐藏遮罩
 - (void)hideMaskLayer:(BOOL)hide;
+///把画板转换成图片
+- (UIImage *)getDrawViewRenderImage;
 @end
 
 

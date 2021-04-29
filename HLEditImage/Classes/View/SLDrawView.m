@@ -44,14 +44,13 @@
 /// 删除的图层
 @property (nonatomic, strong) NSMutableArray <CAShapeLayer *>*deleteLayerArray;
 @property (nonatomic, strong) UIImage *mosicImage;//马赛克图片
-@property (nonatomic, assign) CGRect bounds;
 
 @end
 @implementation SLDrawBrushTool
 - (instancetype)initWithDrawBounds:(CGRect)bounds {
     self = [self init];
     if(self){
-        self.bounds = bounds;
+        self.drawBounds = bounds;
     }
     return self;
 }
@@ -72,20 +71,17 @@
 }
 ///设置画笔图案
 - (void)setPatternImage:(UIImage *)image drawRect:(CGRect)rect {
-    _image = image;
-    UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+    UIGraphicsBeginImageContextWithOptions(self.viewBounds.size, NO, [UIScreen mainScreen].scale);
     //获得当前Context
     CGContextRef context = UIGraphicsGetCurrentContext();
     //CTM变换，调整坐标系，*重要*，否则橡皮擦使用的背景图片会发生翻转。
     CGContextScaleCTM(context, 1, -1);
-    CGContextTranslateCTM(context, 0, -rect.size.height);
-    //图片适配到当前View的矩形区域，会有拉伸
-    [self.image drawInRect:rect];
+    CGContextTranslateCTM(context, 0, -self.viewBounds.size.height);
+    [image drawInRect:rect];
     //获取拉伸并翻转后的图片
     UIImage *stretchedImg = UIGraphicsGetImageFromCurrentImageContext();
     _image = stretchedImg;
     UIGraphicsEndImageContext();
-
 }
 
 - (void)setSquareWidth:(CGFloat)squareWidth {
@@ -541,7 +537,28 @@
 - (void)hideMaskLayer:(BOOL)hide {
     self.maskLayer.hidden = hide;
 }
-
+///获取画板视图图片
+- (UIImage *)getDrawViewRenderImage {
+    CGRect viewBounds = self.bounds;
+    //先转换坐标系 绘制成一张倒立的图片
+    UIGraphicsBeginImageContextWithOptions(viewBounds.size, NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextScaleCTM(context, 1, -1);
+    CGContextTranslateCTM(context, 0, -viewBounds.size.height);
+    [self.layer renderInContext:context];
+    UIImage *stretchedImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    //再转换回来重新绘制成正常
+    UIGraphicsBeginImageContextWithOptions(viewBounds.size, NO, [UIScreen mainScreen].scale);
+    CGContextRef context1 = UIGraphicsGetCurrentContext();
+    CGContextScaleCTM(context1, 1, -1);
+    CGContextTranslateCTM(context1, 0, -viewBounds.size.height);
+    [stretchedImg drawInRect:viewBounds];
+    stretchedImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return stretchedImg;
+}
 #pragma mark  - 数据
 - (NSDictionary *)data {
     if (self.brushTool.lineArray.count) {

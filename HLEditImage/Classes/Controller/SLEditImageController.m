@@ -368,6 +368,7 @@
             weakSelf.editingMenuType = SLEditMenuTypeUnknown;
             weakSelf.isEditing = NO;
             CGRect displayRect = [weakSelf.zoomView.imageView convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.drawView];
+            //设置显示区域
             weakSelf.drawView.displayRect = displayRect;
             [weakSelf.drawView hideMaskLayer:NO];
         };
@@ -452,14 +453,16 @@
                 if(setting[@"squareWidth"]){
                     weakSelf.drawView.brushTool.isErase = NO;
                     CGRect rect = [weakSelf.zoomView.imageView.superview convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.drawView];
+                    weakSelf.drawView.brushTool.viewBounds =  weakSelf.drawView.bounds;
                     [weakSelf.drawView.brushTool setPatternImage:weakSelf.zoomView.imageView.image drawRect:rect];
                     weakSelf.drawView.brushTool.squareWidth = [setting[@"squareWidth"] floatValue];
                 }
                 if(setting[@"erase"]){
                     weakSelf.drawView.brushTool.isErase = [setting[@"erase"] boolValue];
                     if(weakSelf.drawView.brushTool.isErase){
-                        CGRect rect = [weakSelf.zoomView.imageView.superview convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.drawView];
-                        [weakSelf.drawView.brushTool setPatternImage:weakSelf.zoomView.imageView.image drawRect:rect];
+                            CGRect rect = [weakSelf.zoomView.imageView.superview convertRect:weakSelf.zoomView.imageView.frame toView:weakSelf.drawView];
+                        weakSelf.drawView.brushTool.viewBounds =  weakSelf.drawView.bounds;
+                            [weakSelf.drawView.brushTool setPatternImage:weakSelf.zoomView.imageView.image drawRect:rect];
                     }
                 }
                 if (setting[@"goBack"]) {
@@ -649,11 +652,23 @@
     }
     [self.clipView startEditWithZoomView:self.zoomView];
 }
+//先把画板视图转成一整张图片加在imageView上（防止橡皮擦画笔图案位置错乱）
+- (void)transDrawViewToImage {
+    //把drawView拷贝成imageView贴上，并移除drawView
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[self.drawView getDrawViewRenderImage]];
+    [self.zoomView.imageView addSubview:imageView];
+    imageView.contentMode = UIViewContentModeScaleToFill;
+    imageView.transform = self.drawView.transform;
+    imageView.frame = self.drawView.frame;
+    imageView.bounds = self.drawView.bounds;
+    [self.drawView removeFromSuperview];
+}
 //完成编辑 导出编辑后的对象
 - (void)doneEditBtnClicked:(id)sender {
     [self.gestureView endEditing];
-    UIImage *newImage = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:YES];
-    UIImage *roImage = [UIImage imageWithCGImage:newImage.CGImage scale:[UIScreen mainScreen].scale orientation:self.clipView.imageOrientation];
+    [self transDrawViewToImage];
+    UIImage *image = [self.zoomView.imageView sl_imageByViewInRect:self.zoomView.imageView.bounds shouldTranslateCTM:NO];
+    UIImage *roImage = [UIImage imageWithCGImage:image.CGImage scale:[UIScreen mainScreen].scale orientation:self.clipView.imageOrientation];
     if(self.editFinishedBlock){
         self.editFinishedBlock(roImage);
     }
