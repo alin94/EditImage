@@ -312,7 +312,7 @@
     SLShapelayer *slayer = [SLShapelayer layer];
     slayer.path = path.CGPath;
     slayer.backgroundColor = [UIColor clearColor].CGColor;
-    if(self.brushTool.shapeType == SLDrawShapeArrow){
+    if(self.brushTool.shapeType == SLDrawShapeArrow && !self.brushTool.isErase){
         slayer.fillColor = path.color.CGColor;
         slayer.lineWidth = 0.1;
     }else {
