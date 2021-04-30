@@ -593,6 +593,12 @@
         _drawView.backgroundColor = [UIColor clearColor];
         WS(weakSelf);
         _drawView.lineCountChangedBlock = ^(BOOL canBack, BOOL canForward) {
+            if(!canBack){
+                weakSelf.drawView.brushTool.isErase = NO;
+                if(weakSelf.editingMenuType == SLEditMenuTypeGraffiti){
+                    [weakSelf.editMenuView selectLineColor:weakSelf.drawView.brushTool.lineColor];
+                }
+            }
             [weakSelf.editMenuView enableBackBtn:canBack forwardBtn:canForward];
         };
         _drawView.drawShapeViewFinishedBlock = ^(UIView *shapeView, CAShapeLayer *layer) {

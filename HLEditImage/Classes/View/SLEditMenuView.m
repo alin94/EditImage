@@ -162,6 +162,9 @@
         }
         self.submenuMosaic.backBtnEnable = enableBack;
         self.submenuMosaic.forwardBtnEnable = enableForward;
+        if(!enableBack){
+            [self.submenuMosaic showUp];
+        }
         return;
     }
 }
